@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<HBox fx:id="hBoxAccount" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onMouseClicked="#select" onMouseEntered="#onMouseEntered" onMouseExited="#onMouseExited" prefHeight="50.0" prefWidth="434.0" styleClass="hBoxAccount" stylesheets="@../css/login-style.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.controllers.AccountContainerController">
+   <padding>
+      <Insets bottom="2.5" left="2.5" right="2.5" top="2.5" />
+   </padding>
+   <children>
+      <ImageView fitHeight="45.0" fitWidth="45.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../images/user-icon-b.png" />
+         </image>
+      </ImageView>
+      <VBox alignment="CENTER_LEFT" prefHeight="44.0" prefWidth="369.0" spacing="5.0">
+         <children>
+            <HBox alignment="CENTER_LEFT" prefHeight="17.0" prefWidth="359.0">
+               <children>
+                  <Label prefWidth="50.0" styleClass="label-1" text="Name:" />
+                  <Label fx:id="labelName" prefWidth="125.0" />
+                  <Label prefWidth="50.0" styleClass="label-1" text="Server:" />
+                  <Label fx:id="labelServer" prefWidth="125.0" />
+               </children>
+            </HBox>
+            <HBox alignment="CENTER_LEFT" layoutX="15.0" layoutY="24.0" prefHeight="17.0" prefWidth="359.0">
+               <children>
+                  <Label prefWidth="0.0" />
+                  <Label fx:id="labelWebAddress" styleClass="label-1" prefWidth="300.0" />
+               </children>
+            </HBox>
+         </children>
+         <padding>
+            <Insets left="5.0" right="5.0" />
+         </padding>
+      </VBox>
+   </children>
+</HBox>

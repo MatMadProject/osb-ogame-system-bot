@@ -1,0 +1,27 @@
+/*Styl dla wszystkich AnchorPane*/
+AnchorPane{
+    -fx-background-color: #0A369D;
+}
+.button{
+    -fx-font-size: 12px;
+    -fx-font-weight: 700;
+    -fx-background-color: #92B4F4;
+}
+.hoover{
+    -fx-background-color: #0A369D;
+    -fx-text-fill: white;
+}
+.label{
+    -fx-font-size: 12px;
+    -fx-font-weight: 700;
+    -fx-text-fill: white;
+}
+#labelError{
+    -fx-font-size: 12px;
+    -fx-font-weight: 700;
+    -fx-text-fill: #941B0C;
+}
+/*Styl dla wszystkich VBox*/
+VBox{
+    -fx-background-color: #4472CA;
+}

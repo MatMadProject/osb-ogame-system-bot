@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="1200.0" stylesheets="@../css/bot-window.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.controllers.BotWindowController">
+   <center>
+      <AnchorPane prefHeight="608.0" prefWidth="777.0" BorderPane.alignment="CENTER">
+         <BorderPane.margin>
+            <Insets bottom="2.5" left="2.5" right="2.5" top="2.5" />
+         </BorderPane.margin></AnchorPane>
+   </center>
+   <bottom>
+      <AnchorPane prefHeight="25.0" prefWidth="1189.0" BorderPane.alignment="CENTER">
+         <BorderPane.margin>
+            <Insets bottom="2.5" left="2.5" right="2.5" top="2.5" />
+         </BorderPane.margin>
+         <children>
+            <HBox alignment="CENTER_LEFT" prefHeight="23.0" prefWidth="1192.0" spacing="10.0" AnchorPane.bottomAnchor="1.0" AnchorPane.leftAnchor="1.0" AnchorPane.rightAnchor="1.0" AnchorPane.topAnchor="1.0">
+               <children>
+                  <HBox alignment="CENTER_LEFT" prefHeight="23.0" prefWidth="380.0" spacing="10.0">
+                     <children>
+                        <Label fx:id="labelStartTime" prefWidth="150.0" text="2021-15-12 00:00:00" />
+                     </children>
+                     <HBox.margin>
+                        <Insets left="10.0" />
+                     </HBox.margin>
+                  </HBox>
+                  <HBox alignment="CENTER" layoutX="487.0" layoutY="10.0" prefHeight="23.0" prefWidth="390.0" styleClass="footer">
+                     <children>
+                        <Label styleClass="footer" text="©Copyright 2021 MatMadProject" />
+                     </children>
+                  </HBox>
+                  <HBox alignment="CENTER_RIGHT" layoutX="822.0" layoutY="10.0" prefHeight="23.0" prefWidth="380.0" spacing="10.0">
+                     <children>
+                        <Label fx:id="labelCurrentTime" prefWidth="150.0" text="2021-01-01 00:00:00" />
+                        <Label fx:id="labelInternetStatus" alignment="CENTER" prefWidth="90.0" styleClass="label-connected" text="Connected" />
+                     </children>
+                     <HBox.margin>
+                        <Insets right="10.0" />
+                     </HBox.margin>
+                  </HBox>
+               </children>
+            </HBox>
+         </children>
+      </AnchorPane>
+   </bottom>
+   <left>
+      <AnchorPane prefHeight="638.0" prefWidth="200.0" stylesheets="@../css/bot-window.css" BorderPane.alignment="CENTER">
+         <children>
+            <VBox prefHeight="608.0" prefWidth="195.0" AnchorPane.bottomAnchor="2.5" AnchorPane.leftAnchor="2.5" AnchorPane.rightAnchor="2.5" AnchorPane.topAnchor="2.5">
+               <children>
+                  <fx:include fx:id="loggedContainer" prefWidth="195.0" source="logged-container.fxml" />
+                  <ScrollPane hbarPolicy="NEVER" prefHeight="413.0" prefWidth="195.0">
+                     <content>
+                        <VBox prefHeight="411.0" prefWidth="190.0" />
+                     </content>
+                  </ScrollPane>
+               </children></VBox>
+         </children>
+         <BorderPane.margin>
+            <Insets bottom="2.5" left="2.5" right="2.5" top="2.5" />
+         </BorderPane.margin>
+      </AnchorPane>
+   </left>
+   <right>
+      <AnchorPane prefHeight="608.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+         <BorderPane.margin>
+            <Insets bottom="2.5" left="2.5" right="2.5" top="2.5" />
+         </BorderPane.margin>
+      </AnchorPane>
+   </right>
+   <top>
+      <MenuBar prefHeight="25.0" BorderPane.alignment="CENTER">
+        <menus>
+          <Menu mnemonicParsing="false" text="File">
+            <items>
+              <MenuItem mnemonicParsing="false" text="Close" />
+            </items>
+          </Menu>
+          <Menu mnemonicParsing="false" text="Edit">
+            <items>
+              <MenuItem mnemonicParsing="false" text="Delete" />
+            </items>
+          </Menu>
+          <Menu mnemonicParsing="false" text="Help">
+            <items>
+              <MenuItem mnemonicParsing="false" text="About" />
+            </items>
+          </Menu>
+        </menus>
+      </MenuBar>
+   </top>
+</BorderPane>

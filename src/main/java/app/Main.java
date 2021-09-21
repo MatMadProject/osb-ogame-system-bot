@@ -22,12 +22,11 @@ public class Main extends Application {
         loadStartWindow(primaryStage);
     }
 
-
     private void loadStartWindow(Stage primaryStage) throws IOException {
-        Parent root = FXMLLoader.load(getClass().getResource("/resources/gui/login-window.fxml"));
+        Parent root = FXMLLoader.load(getClass().getResource("/gui/login-window.fxml"));
         primaryStage.setTitle("OGame System Bot - Login");
         Scene scene = new Scene(root);
-        scene.getStylesheets().add("/resources/css/login-style.css");
+        scene.getStylesheets().add("/css/login-style.css");
         primaryStage.setScene(scene);
         primaryStage.setResizable(false);
         primaryStage.sizeToScene();

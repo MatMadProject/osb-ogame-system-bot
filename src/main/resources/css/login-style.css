@@ -1,0 +1,104 @@
+#footer{
+    -fx-background-color: color-b;
+}
+#main{
+    color-a: #0A369D;
+    color-b: #4472CA;
+    color-c: #92B4F4;
+    color-error: #941B0C;
+    color-selected: #1DAE4D;
+    color-pane: #2754B4;
+    color-pane-hoover: #0A369D;
+
+
+    -fx-background-color: color-a;
+}
+
+.button{
+    -fx-font-size: 12px;
+    -fx-font-weight: 700;
+    -fx-background-color: color-c;
+}
+.container{
+    -fx-background-color: color-b;
+}
+.hBoxAccount{
+    -fx-background-color: color-c;
+}
+.pane{
+    -fx-background-color: color-pane;
+    -fx-background-radius: 2 2 2 2;
+
+      /* top-left, top-right, bottom-right, and bottom-left corners, in that order. */
+}
+.hoover{
+    -fx-background-color: color-pane-hoover;
+    -fx-text-fill: white;
+}
+.selected{
+    -fx-background-color: color-selected;
+}
+.label{
+    -fx-font-size: 12px;
+    -fx-font-weight: 700;
+    -fx-text-fill: white;
+}
+.label-1{
+    -fx-font-size: 10px;
+    -fx-font-weight: 700;
+    -fx-text-fill: white;
+}
+#labelError{
+    -fx-font-size: 12px;
+    -fx-font-weight: 700;
+    -fx-text-fill: color-error;
+}
+#labelFooter{
+    -fx-font-size: 10px;
+    -fx-font-weight: 700;
+    -fx-text-fill: white;
+}
+#labelUser{
+    -fx-font-size: 30px;
+    -fx-font-weight: 700;
+    -fx-text-fill: white;
+}
+/* Zmiana tła scroll-pane*/
+.scroll-pane > .viewport {
+   -fx-background-color: transparent;
+}
+.scroll-pane {
+   -fx-background-color: transparent;
+}
+/* Róg na połączeniu scroll-pane poziomego i pionowego*/
+.scroll-pane > .corner {
+    -fx-background-color: transparent;
+}
+/*Scroll-bar - tło*/
+.scroll-bar:vertical{
+    -fx-background-color: transparent;
+    -fx-pref-width: 12;
+}
+
+/*Tło pasaka przeuswania*/
+.scroll-bar:vertical .track{
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+    -fx-background-radius: 5em;
+}
+/*Przycisk przesuwania*/
+.scroll-bar:vertical .thumb {
+    -fx-background-color: color-a;
+    -fx-background-radius: 1em;
+}
+/*Przyciski ikrementacji i dekrementacji bez znaku w środku nich*/
+.scroll-bar .increment-button,.scroll-bar .decrement-button {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+}
+/*Znaki ikrementacji i dekrementacji*/
+.scroll-bar .increment-arrow,
+  .scroll-bar .decrement-arrow{
+      -fx-shape : " ";
+      -fx-padding :0.15em 0.0;
+ }

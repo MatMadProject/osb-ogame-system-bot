@@ -1,0 +1,71 @@
+BorderPane{
+    color-a: #0A369D;
+    color-b: #4472CA;
+    color-c: #92B4F4;
+    color-error: #941B0C;
+    color-selected: #1DAE4D;
+    color-pane: #2754B4;
+    color-pane-hoover: #0A369D;
+
+
+    -fx-background-color: color-a;
+}
+AnchorPane{
+    -fx-background-color: color-b;
+}
+Label{
+    -fx-font-size: 12px;
+    -fx-font-weight: 700;
+    -fx-text-fill: white;
+    -fx-background-radius: 5 5 5 5;
+}
+.footer{
+    -fx-background-color: color-c;
+    -fx-background-radius: 2 2 2 2;
+    -fx-text-fill: black;
+}
+.label-connected{
+    -fx-background-color: color-selected;
+}
+.label-disconnected{
+    -fx-background-color: color-error;
+}
+/* Zmiana tła scroll-pane*/
+.scroll-pane > .viewport {
+   -fx-background-color: transparent;
+}
+.scroll-pane {
+   -fx-background-color: transparent;
+}
+/* Róg na połączeniu scroll-pane poziomego i pionowego*/
+.scroll-pane > .corner {
+    -fx-background-color: transparent;
+}
+/*Scroll-bar - tło*/
+.scroll-bar:vertical{
+    -fx-background-color: transparent;
+    -fx-pref-width: 12;
+}
+
+/*Tło pasaka przeuswania*/
+.scroll-bar:vertical .track{
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+    -fx-background-radius: 5em;
+}
+/*Przycisk przesuwania*/
+.scroll-bar:vertical .thumb {
+    -fx-background-color: color-a;
+    -fx-background-radius: 1em;
+}
+/*Przyciski ikrementacji i dekrementacji bez znaku w środku nich*/
+.scroll-bar .increment-button,.scroll-bar .decrement-button {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+}
+/*Znaki ikrementacji i dekrementacji*/
+.scroll-bar .increment-arrow,
+  .scroll-bar .decrement-arrow{
+      -fx-shape : " ";
+      -fx-padding :0.15em 0.0;
+ }

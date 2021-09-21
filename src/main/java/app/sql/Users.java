@@ -99,11 +99,12 @@ public class Users
             if(connection != null){
                 PreparedStatement preparedStatement = connection.prepareStatement(
                         "SELECT " + User.STATUS_WEB_APP_DB_COL_NAME + " FROM users WHERE id="+user.getId());
+
                 ResultSet resultSet = preparedStatement.executeQuery();
-
-                //Wykonuję pętle do ostatniego rekordu w tabeli.
-
-                String statusWebApp = resultSet.getString(User.STATUS_WEB_APP_DB_COL_NAME);
+                String statusWebApp = "0";
+                while(resultSet.next()){
+                    statusWebApp = resultSet.getString(User.STATUS_WEB_APP_DB_COL_NAME);
+                }
                 return statusWebApp.equals("0");
             }
         }

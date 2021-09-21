@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="215.0" prefWidth="250.0" spacing="5.0" stylesheets="@../css/login-style.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.controllers.LoginContainerController">
+   <children>
+      <Label text="Username">
+         <font>
+            <Font size="10.0" />
+         </font>
+      </Label>
+      <TextField fx:id="editTextUsername">
+         <font>
+            <Font size="10.0" />
+         </font>
+      </TextField>
+      <Label text="Password">
+         <font>
+            <Font size="10.0" />
+         </font>
+      </Label>
+      <PasswordField fx:id="editTextPassword">
+         <font>
+            <Font size="10.0" />
+         </font>
+      </PasswordField>
+      <Button fx:id="buttonLogin" alignment="TOP_CENTER" mnemonicParsing="false" onAction="#login" onMouseEntered="#onMouseEntered" onMouseExited="#onMouseExited" prefWidth="100.0" text="Login">
+         <font>
+            <Font size="10.0" />
+         </font>
+      </Button>
+      <Label fx:id="labelError">
+         <font>
+            <Font size="10.0" />
+         </font>
+      </Label>
+   </children>
+   <padding>
+      <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+   </padding>
+</VBox>
