@@ -73,6 +73,17 @@ public class Task implements Runnable{
      * @param sleep Czas [ms]; Time [ms].
      */
     public void setSleep(long sleep) { this.sleep = sleep; }
+
+    public void terminate(){
+        if(thread != null){
+            stop();
+            try {
+                thread.join();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+    }
     /*
     GETTERS
     */

@@ -45,6 +45,15 @@ public class CheckInternet extends Task{
             }
 //            log = ogame.zegar.CzasGry.string();
             count = 0;
+
+            if(!OgameWeb.closed &&
+                    (OgameWeb.webDriver.getTitle().contains(StaticStrings.OGAME_SITE_TITLE_WHEN_INTERNET_DISCONNECTED)
+                            || OgameWeb.webDriver.getTitle().contains(StaticStrings.OGAME_SITE_TITLE_WHEN_INTERNET_DISCONNECTED2)
+                            || OgameWeb.webDriver.getTitle().contains(StaticStrings.OGAME_SITE_TITLE_WHEN_INTERNET_DISCONNECTED3))) {
+                OgameWeb.webDriver.navigate().refresh();
+
+                AppLog.print(CheckInternet.class.getName(),0,"Page refreshed when detects the disconnect page.");
+            }
         }
         catch (IOException e) {
             connected = false;
@@ -58,15 +67,6 @@ public class CheckInternet extends Task{
                 OgameWeb.webDriver.navigate().refresh();
                 AppLog.print(CheckInternet.class.getName(),0,"Page refreshed after disconnect.");
             }
-        }
-
-        if(!OgameWeb.closed &&
-                (OgameWeb.webDriver.getTitle().contains(StaticStrings.OGAME_SITE_TITLE_WHEN_INTERNET_DISCONNECTED)
-                || OgameWeb.webDriver.getTitle().contains(StaticStrings.OGAME_SITE_TITLE_WHEN_INTERNET_DISCONNECTED2)
-                || OgameWeb.webDriver.getTitle().contains(StaticStrings.OGAME_SITE_TITLE_WHEN_INTERNET_DISCONNECTED3))) {
-            OgameWeb.webDriver.navigate().refresh();
-
-            AppLog.print(CheckInternet.class.getName(),0,"Page refreshed when detects the disconnect page.");
         }
     }
 }

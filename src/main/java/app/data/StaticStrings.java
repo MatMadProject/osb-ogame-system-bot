@@ -48,7 +48,12 @@ public class StaticStrings
     /*
     STRINGS
      */
-    public static final String SNIPPEST_OF_TITILE_OF_OGAME_SITE = "OGame - najpopularniejsza gra";
+    public static final String SNIPPEST_OF_TITILE_OF_OGAME_SITE_PL = "OGame - najpopularniejsza gra";
+    public static final String SNIPPEST_OF_TITILE_OF_OGAME_SITE_DE = "OGame - Das erfolgreichste Browsergame";
+    public static final String [] SNIPPESTS_OF_TITILE_OF_OGAME_SITE ={
+            SNIPPEST_OF_TITILE_OF_OGAME_SITE_PL,
+            SNIPPEST_OF_TITILE_OF_OGAME_SITE_DE
+    };
     public static final String CHROMEDRIVER_FILE = "chromedriver.exe";
     public static final String FIREFOXDRIVER_FILE = "geckodriver.exe";
     public static String APP_INFO_STRING = "Błąd. Uruchom ponownie.";

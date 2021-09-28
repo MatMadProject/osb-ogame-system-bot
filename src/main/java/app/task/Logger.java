@@ -1,5 +1,6 @@
 package app.task;
 
+import app.controllers.BotWindowController;
 import app.data.Session;
 import app.data.StaticStrings;
 import app.data.accounts.Accounts;
@@ -21,9 +22,20 @@ public class Logger extends Task{
     public static boolean stoppedOnWebApp = false;
     private final OgameWeb ogameWeb = new OgameWeb(Accounts.getSelected().getWeb());
     private  BotClient botClient = null;
+    private BotWindowController botWindowController;
 
     public Logger(){
         SERVER = Accounts.getSelected().getSerwer();
+        setThread(new Thread(this));
+        startThread();
+        OgameWeb.setPath(PATH);
+        OgameWeb.open();
+        AppLog.print(Logger.class.getName(),0,"Logger started.");
+    }
+
+    public Logger(BotWindowController botWindowController){
+        SERVER = Accounts.getSelected().getSerwer();
+        this.botWindowController = botWindowController;
         setThread(new Thread(this));
         startThread();
         OgameWeb.setPath(PATH);
@@ -47,8 +59,18 @@ public class Logger extends Task{
                         AppLog.print(Logger.class.getName(),0,"Detected login on web app - "+webAppCount+".");
                         webAppCount = 0;
                     }
+                    String title = "";
+                    if(!OgameWeb.closed){
+                        try{
+                            title = OgameWeb.webDriver.getTitle();
+                        }
+                        catch (Exception e){
+                            AppLog.print(Logger.class.getName(),1,"While try download web page title.");
+                        }
+                    }
+
                     //Pierwsze uruchomienie lub wylogowało z gry.
-                    if(OgameWeb.webDriver.getTitle().contains(StaticStrings.SNIPPEST_OF_TITILE_OF_OGAME_SITE)) {
+                    if(isTextContains(title,StaticStrings.SNIPPESTS_OF_TITILE_OF_OGAME_SITE)) {
                         if(firtsTimeExecute)
                             firstLogin();
                         else {
@@ -59,10 +81,10 @@ public class Logger extends Task{
                         }
                     }
                     // Sprawdza czy gracz zalogował się do gry
-                    else if(OgameWeb.webDriver.getTitle().contains(SERVER) && firtsTimeExecute) {
+                    else if(isTextContains(title,SERVER) && firtsTimeExecute) {
                         StaticStrings.APP_INFO_STRING = "BotClient is running.";
                         //Uruchamianie bota.
-                        botClient = new BotClient();
+                        botClient = new BotClient(botWindowController);
                         //Odznaczam, że było to pierwsze logowanie.
                         firtsTimeExecute = false;
                     }
@@ -127,7 +149,8 @@ public class Logger extends Task{
     }
 
     private  void changeTab() {
-        boolean b = OgameWeb.webDriver.getTitle().contains(StaticStrings.SNIPPEST_OF_TITILE_OF_OGAME_SITE);
+        String title = OgameWeb.webDriver.getTitle();
+        boolean b = isTextContains(title,StaticStrings.SNIPPESTS_OF_TITILE_OF_OGAME_SITE);
         while(b) {
             Set<String> s = OgameWeb.webDriver.getWindowHandles();
 
@@ -139,8 +162,36 @@ public class Logger extends Task{
         }
     }
 
+    /**
+     * Checks  text to see if it contains a string.
+     * @param s checked text.
+     * @param containedString String which has to text contains.
+     * @return Return true if text contains a string.
+     */
+    private boolean isTextContains(String s, String containedString){
+        return s.contains(containedString);
+    }
+
+    /**
+     * Checks  text to see if it contains a string.
+     * @param s checked text.
+     * @param containedStrings An array of strings that may contain text.
+     * @return Return true if text contains a string.
+     */
+    private boolean isTextContains(String s, String [] containedStrings){
+        for(String tmp : containedStrings){
+            if(s.contains(tmp))
+                return true;
+        }
+        return false;
+    }
+
     public BotClient getBotClient() {
         return botClient;
+    }
+
+    public BotWindowController getBotWindowController() {
+        return botWindowController;
     }
 
     public OgameWeb getOgameWeb() {
