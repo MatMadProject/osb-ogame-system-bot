@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.String?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+
+<AnchorPane prefHeight="30.0" prefWidth="190.0" stylesheets="@../css/bot-window.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.controllers.TaskContainerControllers">
+   <children>
+      <HBox alignment="CENTER_LEFT" prefHeight="30.0" prefWidth="190.0" spacing="5.0" styleClass="hbox-task" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <children>
+            <Label fx:id="labelName" prefHeight="25.0" prefWidth="125.0" styleClass="hbox-task-label" stylesheets="@../css/bot-window.css" text="Lorem ipsum ">
+               <padding>
+                  <Insets left="5.0" />
+               </padding></Label>
+            <Button fx:id="buttonOnOff" mnemonicParsing="false" onAction="#onOff" prefHeight="25.0" prefWidth="45.0" text="OFF">
+               <styleClass>
+                  <String fx:value="hbox-task-button" />
+                  <String fx:value="off" />
+               </styleClass></Button>
+         </children>
+         <padding>
+            <Insets bottom="2.5" left="2.5" right="2.5" top="2.5" />
+         </padding>
+      </HBox>
+   </children>
+</AnchorPane>

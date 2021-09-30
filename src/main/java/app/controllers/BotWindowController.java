@@ -1,15 +1,25 @@
 package app.controllers;
 
+import app.controllers_connector.TaskContainerConnector;
 import app.task.CheckInternet;
 import app.task.GameTime;
 import app.task.Logger;
+import app.task.Task;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import ogame.utils.log.AppLog;
 import ogame.utils.watch.Calendar;
 
 public class BotWindowController {
 
+    @FXML
+    public VBox vBoxTaskList;
+    @FXML
+    public HBox hBoxTaskList;
+    @FXML
+    public HBox hBoxTaskList2;
     @FXML
     private Label labelInternetStatus;
     @FXML
@@ -30,6 +40,7 @@ public class BotWindowController {
         logger = new Logger(this);
         loggedContainerController.setOnBotWindow(true);
         loggedContainerController.setBotWindowController(this);
+        fillTaskList();
     }
 
     public void stopLogger(){
@@ -68,5 +79,12 @@ public class BotWindowController {
 
     public void setActualGameTime(){
         labelCurrentTime.setText(GameTime.datetime);
+    }
+
+    private void fillTaskList(){
+        for(int i = 1; i < 15; i++){
+            TaskContainerConnector connector = new TaskContainerConnector(new Task("Example task no "+i));
+            vBoxTaskList.getChildren().add(connector.getContainer());
+        }
     }
 }

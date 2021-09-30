@@ -24,6 +24,34 @@ Label{
     -fx-background-radius: 2 2 2 2;
     -fx-text-fill: black;
 }
+.hbox-task:hover{
+    -fx-background-color: color-pane-hoover;
+    -fx-text-fill: white;
+}
+
+.hbox-task-label{
+    -fx-font-size: 12px;
+    -fx-font-weight: 700;
+    -fx-text-fill: white;
+    -fx-font-family: arial;
+}
+
+.hbox-task-button{
+    -fx-font-size: 12px;
+    -fx-font-weight: 700;
+    -fx-text-fill: white;
+    -fx-font-family: arial;
+    -fx-background-radius: 3 3 3 3;
+}
+
+.on{
+    -fx-background-color: color-selected;
+}
+
+.off{
+    -fx-background-color: color-error;
+}
+
 .label-connected{
     -fx-background-color: color-selected;
 }
