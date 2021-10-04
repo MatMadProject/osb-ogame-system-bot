@@ -6,6 +6,7 @@ BorderPane{
     color-selected: #1DAE4D;
     color-pane: #2754B4;
     color-pane-hoover: #0A369D;
+    color-task-container-selected: #06256B;
 
 
     -fx-background-color: color-a;
@@ -29,18 +30,20 @@ Label{
     -fx-text-fill: white;
 }
 
+.hbox-task-selected{
+    -fx-background-color: color-task-container-selected;
+}
+
 .hbox-task-label{
     -fx-font-size: 12px;
-    -fx-font-weight: 700;
+    -fx-font-weight: 300;
     -fx-text-fill: white;
-    -fx-font-family: arial;
 }
 
 .hbox-task-button{
     -fx-font-size: 12px;
-    -fx-font-weight: 700;
+    -fx-font-weight: 300;
     -fx-text-fill: white;
-    -fx-font-family: arial;
     -fx-background-radius: 3 3 3 3;
 }
 

@@ -9,7 +9,7 @@
 
 <AnchorPane prefHeight="30.0" prefWidth="190.0" stylesheets="@../css/bot-window.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.controllers.TaskContainerControllers">
    <children>
-      <HBox alignment="CENTER_LEFT" prefHeight="30.0" prefWidth="190.0" spacing="5.0" styleClass="hbox-task" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+      <HBox fx:id="hBox" alignment="CENTER_LEFT" onMouseClicked="#select" prefHeight="30.0" prefWidth="190.0" spacing="5.0" styleClass="hbox-task" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
             <Label fx:id="labelName" prefHeight="25.0" prefWidth="125.0" styleClass="hbox-task-label" stylesheets="@../css/bot-window.css" text="Lorem ipsum ">
                <padding>

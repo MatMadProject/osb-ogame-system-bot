@@ -1,6 +1,8 @@
 package app.controllers_connector;
 
+import app.controllers.BotWindowController;
 import app.controllers.TaskContainerControllers;
+import app.leaftask.LeafTask;
 import app.task.Task;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.layout.AnchorPane;
@@ -9,13 +11,10 @@ import java.io.IOException;
 
 public class TaskContainerConnector {
 
-    private final Task task;
     private TaskContainerControllers controller;
     private AnchorPane container;
 
-    public TaskContainerConnector(Task task) {
-        this.task = task;
-
+    public TaskContainerConnector(LeafTask task, BotWindowController botWindowController) {
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/gui/task-container.fxml"));
         try {
             container = fxmlLoader.load();
@@ -27,6 +26,7 @@ public class TaskContainerConnector {
 
         if(controller != null) {
             controller.setTask(task);
+            controller.setBotWindowController(botWindowController);
         }
     }
 

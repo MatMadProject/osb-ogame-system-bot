@@ -13,19 +13,10 @@
 
 <BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="1200.0" stylesheets="@../css/bot-window.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.controllers.BotWindowController">
    <center>
-      <AnchorPane prefHeight="638.0" prefWidth="777.0" BorderPane.alignment="CENTER">
+      <AnchorPane fx:id="anchorPaneTaskContent" prefHeight="638.0" prefWidth="777.0" BorderPane.alignment="CENTER">
          <BorderPane.margin>
             <Insets bottom="2.5" left="2.5" right="2.5" top="2.5" />
-         </BorderPane.margin>
-         <children>
-            <VBox prefHeight="638.0" prefWidth="777.0" spacing="2.0">
-               <children>
-                  <HBox fx:id="hBoxTaskList" prefHeight="30.0" prefWidth="777.0" />
-                  <HBox fx:id="hBoxTaskList2" prefHeight="30.0" prefWidth="777.0" />
-                  <AnchorPane fx:id="anchorPaneTaskContent" prefHeight="574.0" prefWidth="777.0" />
-               </children>
-            </VBox>
-         </children></AnchorPane>
+         </BorderPane.margin></AnchorPane>
    </center>
    <bottom>
       <AnchorPane prefHeight="25.0" prefWidth="1189.0" BorderPane.alignment="CENTER">
