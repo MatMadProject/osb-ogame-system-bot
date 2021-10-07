@@ -13,7 +13,6 @@ public class TaskContainerControllers {
     private BotWindowController botWindowController;
 
     private boolean on = false;
-    private boolean selected = false;
 
     @FXML
     private Label labelName;
@@ -43,6 +42,12 @@ public class TaskContainerControllers {
     public void setTask(LeafTask task) {
         this.leafTask = task;
         labelName.setText(task.getName());
+        if(this.leafTask.isRun()){
+            on = true;
+            buttonOnOff.setText("ON");
+            buttonOnOff.getStyleClass().removeAll("off");
+            buttonOnOff.getStyleClass().add("on");
+        }
     }
 
     public void setBotWindowController(BotWindowController botWindowController) {
@@ -51,19 +56,16 @@ public class TaskContainerControllers {
 
     public void select() {
         if(botWindowController.isSelectedLeafTask()){
-            botWindowController.unselecteLeafTask();
+            botWindowController.unselectLeafTask();
             botWindowController.selectedLeafTask(this);
-            selected = true;
             hBox.getStyleClass().add("hbox-task-selected");
         }
         else{
             botWindowController.selectedLeafTask(this);
-            selected = true;
             hBox.getStyleClass().add("hbox-task-selected");
         }
     }
     public void unselect(){
-        selected = false;
         hBox.getStyleClass().removeAll("hbox-task-selected");
     }
 }

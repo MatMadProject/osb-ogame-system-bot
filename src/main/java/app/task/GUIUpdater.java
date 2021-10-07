@@ -22,6 +22,7 @@ public class GUIUpdater extends Task {
                     startTime();
                     internetStatus();
                     actualGameTime();
+                    initializeTasksList();
                 };
                 Platform.runLater(updater);
             }
@@ -44,6 +45,13 @@ public class GUIUpdater extends Task {
     private void actualGameTime(){
         if(botWindowController != null){
             botWindowController.setActualGameTime();
+        }
+    }
+
+    private void initializeTasksList(){
+        if(botWindowController != null){
+            if(botWindowController.isFillTaskList())
+                botWindowController.fillTaskList();
         }
     }
 }

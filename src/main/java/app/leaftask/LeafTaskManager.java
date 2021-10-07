@@ -1,21 +1,21 @@
 package app.leaftask;
 
-import app.task.BotClient;
 import ogame.utils.log.AppLog;
 
 public class LeafTaskManager {
 
     private LeafTask[] leafTasks;
+    private int listSize;
 
     public LeafTaskManager() {
-
+        initLeafTask();
     }
 
     private  void initLeafTask(){
-
         leafTasks = new LeafTask[]{
-
+            new BuildQueueLeafTask(0,1000,"Build Queue")
         };
+        listSize = leafTasks.length;
     }
 
     public  void startTask(int taskIndex) {
@@ -44,5 +44,9 @@ public class LeafTaskManager {
                 if(a == task.getIndex())
                     task.stop();
         }
+    }
+
+    public int getListSize() {
+        return listSize;
     }
 }

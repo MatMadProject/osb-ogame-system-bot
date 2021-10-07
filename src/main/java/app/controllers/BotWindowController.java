@@ -2,6 +2,7 @@ package app.controllers;
 
 import app.controllers_connector.TaskContainerConnector;
 import app.leaftask.LeafTask;
+import app.leaftask.LeafTaskManager;
 import app.task.CheckInternet;
 import app.task.GameTime;
 import app.task.Logger;
@@ -32,14 +33,13 @@ public class BotWindowController {
     private LoggedContainerController loggedContainerController;
 
     private Logger logger = null;
+    private LeafTaskManager leafTaskManager;
 
     @FXML
     private void initialize(){
-
         logger = new Logger(this);
         loggedContainerController.setOnBotWindow(true);
         loggedContainerController.setBotWindowController(this);
-        fillTaskList();
     }
 
     public void stopLogger(){
@@ -80,11 +80,21 @@ public class BotWindowController {
         labelCurrentTime.setText(GameTime.datetime);
     }
 
-    private void fillTaskList(){
-        for(int i = 1; i < 15; i++){
+    private boolean fillTaskList = true;
+    public void fillTaskList(){
+        for(int i = 0; i < leafTaskManager.getListSize(); i++){
+            TaskContainerConnector connector = new TaskContainerConnector(leafTaskManager.getTasks()[i], this);
+            vBoxTaskList.getChildren().add(connector.getContainer());
+        }
+        for(int i = 1; i < 5; i++){
             TaskContainerConnector connector = new TaskContainerConnector(new LeafTask(1,1000,"Example task no "+i), this);
             vBoxTaskList.getChildren().add(connector.getContainer());
         }
+        fillTaskList = false;
+    }
+
+    public boolean isFillTaskList() {
+        return fillTaskList;
     }
 
     public boolean isSelectedLeafTask() {
@@ -95,7 +105,11 @@ public class BotWindowController {
         this.selectedLeafTask = controllers;
     }
 
-    public void unselecteLeafTask() {
+    public void unselectLeafTask() {
         this.selectedLeafTask.unselect();
+    }
+
+    public void setLeafTaskManager(LeafTaskManager leafTaskManager) {
+        this.leafTaskManager = leafTaskManager;
     }
 }
