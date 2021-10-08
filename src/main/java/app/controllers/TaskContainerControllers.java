@@ -55,14 +55,18 @@ public class TaskContainerControllers {
     }
 
     public void select() {
+        //Kolejne zaznaczenie
         if(botWindowController.isSelectedLeafTask()){
             botWindowController.unselectLeafTask();
             botWindowController.selectedLeafTask(this);
             hBox.getStyleClass().add("hbox-task-selected");
+            botWindowController.setTaskInformation(leafTask);
         }
+        //Zaznaczenie po raz pierwszy
         else{
             botWindowController.selectedLeafTask(this);
             hBox.getStyleClass().add("hbox-task-selected");
+            botWindowController.setTaskInformation(leafTask);
         }
     }
     public void unselect(){

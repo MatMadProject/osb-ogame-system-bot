@@ -10,7 +10,7 @@ public class BuildQueueLeafTask extends LeafTask{
     public void execute() {
         if(isRun()){
             if(isSleepTimeOut(System.currentTimeMillis())){
-
+                setLastTimeExecute(System.currentTimeMillis());
             }
         }
     }

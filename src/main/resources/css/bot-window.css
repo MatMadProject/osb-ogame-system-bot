@@ -20,6 +20,10 @@ Label{
     -fx-text-fill: white;
     -fx-background-radius: 5 5 5 5;
 }
+Separator{
+    -fx-background-color: color-b;
+    -fx-border-width: 0;
+}
 .footer{
     -fx-background-color: color-c;
     -fx-background-radius: 2 2 2 2;
@@ -45,6 +49,10 @@ Label{
     -fx-font-weight: 300;
     -fx-text-fill: white;
     -fx-background-radius: 3 3 3 3;
+}
+.label-task-info{
+    -fx-font-size: 10px;
+    -fx-text-fill: black;
 }
 
 .on{

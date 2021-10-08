@@ -6,6 +6,7 @@ public class LeafTask implements Execute{
 
     private boolean run = false;
     private long lastTimeExecute = 0;
+    private long nextTimeExecute = 0;
     private long sleep;
     private final int index;
     private final String name;
@@ -32,7 +33,7 @@ public class LeafTask implements Execute{
      */
     protected boolean isSleepTimeOut(long currentTime)
     {
-        return  (currentTime - lastTimeExecute) > sleep;
+        return  currentTime >= nextTimeExecute;
     }
     /**
      * Body of executing task.
@@ -56,6 +57,13 @@ public class LeafTask implements Execute{
      */
     protected void setLastTimeExecute(long lastTimeExecute) {
         this.lastTimeExecute = lastTimeExecute;
+        setLastNextExecute();
+    }
+    /**
+     * Set time of last execute task.
+     */
+    protected void setLastNextExecute() {
+        this.nextTimeExecute = this.lastTimeExecute + sleep;
     }
     /**
      * Set task sleep time.
@@ -89,8 +97,14 @@ public class LeafTask implements Execute{
     /**
      * Time of last execute task.
      */
-    protected long getLastTimeExecute() {
+    public long getLastTimeExecute() {
         return lastTimeExecute;
+    }
+    /**
+     * Time of nextxecute task.
+     */
+    public long getNextTimeExecute() {
+        return nextTimeExecute;
     }
     /**
      * Task sleep time.

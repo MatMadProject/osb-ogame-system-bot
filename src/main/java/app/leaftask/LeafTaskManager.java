@@ -13,7 +13,7 @@ public class LeafTaskManager {
 
     private  void initLeafTask(){
         leafTasks = new LeafTask[]{
-            new BuildQueueLeafTask(0,1000,"Build Queue")
+            new BuildQueueLeafTask(0,1500,"Build Queue")
         };
         listSize = leafTasks.length;
     }
@@ -44,6 +44,11 @@ public class LeafTaskManager {
                 if(a == task.getIndex())
                     task.stop();
         }
+    }
+
+    public void stopAllTask(){
+        for(LeafTask task : leafTasks)
+            task.stop();
     }
 
     public int getListSize() {

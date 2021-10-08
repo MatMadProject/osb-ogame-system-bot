@@ -6,6 +6,7 @@
 <?import javafx.scene.control.MenuBar?>
 <?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.Separator?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
@@ -72,10 +73,59 @@
       </AnchorPane>
    </left>
    <right>
-      <AnchorPane prefHeight="608.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+      <AnchorPane prefHeight="638.0" prefWidth="200.0" BorderPane.alignment="CENTER">
          <BorderPane.margin>
             <Insets bottom="2.5" left="2.5" right="2.5" top="2.5" />
          </BorderPane.margin>
+         <children>
+            <VBox prefHeight="638.0" prefWidth="200.0" spacing="2.0">
+               <children>
+                  <HBox alignment="CENTER" prefHeight="23.0" prefWidth="200.0" styleClass="footer">
+                     <children>
+                        <Label prefWidth="85.0" styleClass="footer" text="Status" />
+                        <Separator orientation="VERTICAL" prefHeight="200.0" />
+                        <Label fx:id="labelStatus" alignment="CENTER_RIGHT" contentDisplay="RIGHT" prefWidth="99.0" styleClass="label-task-info" />
+                     </children>
+                     <padding>
+                        <Insets bottom="2.5" left="2.5" right="2.5" top="2.5" />
+                     </padding>
+                     <VBox.margin>
+                        <Insets />
+                     </VBox.margin>
+                  </HBox>
+                  <HBox alignment="CENTER" prefHeight="23.0" prefWidth="200.0" styleClass="footer">
+                     <children>
+                        <Label prefWidth="85.0" styleClass="footer" text="Sleep" />
+                        <Separator orientation="VERTICAL" prefHeight="200.0" />
+                        <Label fx:id="labelSleep" alignment="CENTER_RIGHT" contentDisplay="CENTER" prefWidth="99.0" styleClass="label-task-info" />
+                     </children>
+                     <padding>
+                        <Insets bottom="2.5" left="2.5" right="2.5" top="2.5" />
+                     </padding>
+                  </HBox>
+                  <HBox alignment="CENTER" prefHeight="23.0" prefWidth="200.0" styleClass="footer">
+                     <children>
+                        <Label prefWidth="85.0" styleClass="footer" text="Last execute" />
+                        <Separator orientation="VERTICAL" prefHeight="200.0" />
+                        <Label fx:id="labelLastExecute" alignment="CENTER_RIGHT" contentDisplay="CENTER" prefWidth="99.0" styleClass="label-task-info" />
+                     </children>
+                     <padding>
+                        <Insets bottom="2.5" left="2.5" right="2.5" top="2.5" />
+                     </padding>
+                  </HBox>
+                  <HBox alignment="CENTER" prefHeight="23.0" prefWidth="200.0" styleClass="footer">
+                     <children>
+                        <Label prefWidth="85.0" styleClass="footer" text="Next execute" />
+                        <Separator orientation="VERTICAL" prefHeight="200.0" />
+                        <Label fx:id="labelNextExecute" alignment="CENTER_RIGHT" contentDisplay="CENTER" prefWidth="99.0" styleClass="label-task-info" />
+                     </children>
+                     <padding>
+                        <Insets bottom="2.5" left="2.5" right="2.5" top="2.5" />
+                     </padding>
+                  </HBox>
+               </children>
+            </VBox>
+         </children>
       </AnchorPane>
    </right>
    <top>

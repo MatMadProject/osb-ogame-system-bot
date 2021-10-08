@@ -45,8 +45,10 @@ public class BotWindowController {
     public void stopLogger(){
         if(logger != null){
             logger.stop();
-            if(logger.getBotClient() != null)
+            if(logger.getBotClient() != null) {
                 logger.getBotClient().off();
+                leafTaskManager.stopAllTask();
+            }
             logger = null;
             AppLog.print(BotWindowController.class.getName(),0,"Logger stopped.");
         }
@@ -93,8 +95,26 @@ public class BotWindowController {
         fillTaskList = false;
     }
 
+
     public boolean isFillTaskList() {
         return fillTaskList;
+    }
+    @FXML
+    private Label labelStatus;
+    @FXML
+    private Label labelSleep;
+    @FXML
+    private Label labelLastExecute;
+    @FXML
+    private Label labelNextExecute;
+
+    public void setTaskInformation(LeafTask leafTask){
+        labelStatus.setText(leafTask.isRun() ? "ON":"OFF");
+        labelSleep.setText(leafTask.getSleep()+" ms");
+        if(leafTask.getLastTimeExecute() != 0){
+            labelLastExecute.setText(Calendar.getDateTime(leafTask.getLastTimeExecute()));
+            labelNextExecute.setText(Calendar.getDateTime(leafTask.getNextTimeExecute()));
+        }
     }
 
     public boolean isSelectedLeafTask() {
