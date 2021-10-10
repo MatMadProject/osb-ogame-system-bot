@@ -1,8 +1,8 @@
 package app.leaftask;
 
-public class BuildQueueLeafTask extends LeafTask{
+public class AutoBuilderLeafTask extends LeafTask{
 
-    public BuildQueueLeafTask(int index, long sleepms, String name) {
+    public AutoBuilderLeafTask(int index, long sleepms, String name) {
         super(index, sleepms, name);
     }
 

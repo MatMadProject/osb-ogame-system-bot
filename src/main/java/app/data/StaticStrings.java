@@ -1,11 +1,16 @@
 package app.data;
 
+import java.io.File;
+
 public class StaticStrings
 {
     public static String DISK = ""; // Nazwa dysku przypisywana jest podczas uruchomienia.
     public static final String MAIN_FOLDER = "ogamebot";
     public static final String FILE_EXTEND = ".obt";
     public static final String FILE_EXTEND_TXT = ".txt";
+    public static final String PLAYER_FOLDER_PATH = StaticStrings.DISK + File.separator +
+            StaticStrings.MAIN_FOLDER + File.separator +
+            StaticStrings.PLAYER_FOLDER + File.separator;
 
     /*
     FILES
@@ -25,6 +30,8 @@ public class StaticStrings
     public static final String FLEETSAVE_CONFIG_FILE = "fleetsave-config";
     //Badania
     public static final String BADANIA_FILE = "research";
+    //Planety
+    public static final String PLANETS_FILE = "planets-config";
     /*
     FOLDERS
      */

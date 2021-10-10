@@ -7,7 +7,6 @@ import ogame.utils.log.AppLog;
 
 public class BotClient{
 
-    private static DataLoader dataLoader = null;
     private CheckInternet checkInternet;
     private GUIUpdater guiUpdater;
     private GameTime gameTime;
@@ -16,7 +15,8 @@ public class BotClient{
 
     public BotClient(BotWindowController botWindowController){
         leafTaskManager = new LeafTaskManager();
-        dataLoader = new DataLoader();
+        //Wczytywanie danych
+        new DataLoader();
         //Sprawdzanie połączenia z internetem
         checkInternet = new CheckInternet();
         guiUpdater = new GUIUpdater(botWindowController);
@@ -35,8 +35,6 @@ public class BotClient{
 
         guiUpdater.stop();
         guiUpdater = null;
-
-        dataLoader = null;
 
         botLogic.stop();
         botLogic = null;

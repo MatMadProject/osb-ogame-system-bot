@@ -7,6 +7,7 @@ import app.task.CheckInternet;
 import app.task.GameTime;
 import app.task.Logger;
 import javafx.fxml.FXML;
+import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
@@ -19,6 +20,7 @@ public class BotWindowController {
     public VBox vBoxTaskList;
     @FXML
     public AnchorPane anchorPaneTaskContent;
+
     @FXML
     private Label labelInternetStatus;
     @FXML
@@ -27,13 +29,21 @@ public class BotWindowController {
     private Label labelStartTime;
 
     private boolean startTimeFlag = true;
-    private TaskContainerControllers selectedLeafTask = null;
-
-    @FXML
-    private LoggedContainerController loggedContainerController;
+    private TaskContainerController selectedLeafTask = null;
 
     private Logger logger = null;
     private LeafTaskManager leafTaskManager;
+
+    //Controllers
+    @FXML
+    private LoggedContainerController loggedContainerController;
+    @FXML
+    public PlanetLeafTaskController planetsLeafTaskController;
+
+    //Getters - Controllers
+    public PlanetLeafTaskController getPlanetsLeafTaskController() {
+        return planetsLeafTaskController;
+    }
 
     @FXML
     private void initialize(){
@@ -88,10 +98,10 @@ public class BotWindowController {
             TaskContainerConnector connector = new TaskContainerConnector(leafTaskManager.getTasks()[i], this);
             vBoxTaskList.getChildren().add(connector.getContainer());
         }
-        for(int i = 1; i < 5; i++){
-            TaskContainerConnector connector = new TaskContainerConnector(new LeafTask(1,1000,"Example task no "+i), this);
-            vBoxTaskList.getChildren().add(connector.getContainer());
-        }
+//        for(int i = 1; i < 5; i++){
+//            TaskContainerConnector connector = new TaskContainerConnector(new LeafTask(1,1000,"Example task no "+i), this);
+//            vBoxTaskList.getChildren().add(connector.getContainer());
+//        }
         fillTaskList = false;
     }
 
@@ -115,13 +125,23 @@ public class BotWindowController {
             labelLastExecute.setText(Calendar.getDateTime(leafTask.getLastTimeExecute()));
             labelNextExecute.setText(Calendar.getDateTime(leafTask.getNextTimeExecute()));
         }
+        else{
+            labelLastExecute.setText("");
+            labelNextExecute.setText("");
+        }
+    }
+
+
+    public void setAnchorPaneTaskContent(Node content){
+        anchorPaneTaskContent.getChildren().clear();
+        anchorPaneTaskContent.getChildren().add(content);
     }
 
     public boolean isSelectedLeafTask() {
         return selectedLeafTask != null;
     }
 
-    public void selectedLeafTask(TaskContainerControllers controllers) {
+    public void selectedLeafTask(TaskContainerController controllers) {
         this.selectedLeafTask = controllers;
     }
 
@@ -131,5 +151,9 @@ public class BotWindowController {
 
     public void setLeafTaskManager(LeafTaskManager leafTaskManager) {
         this.leafTaskManager = leafTaskManager;
+    }
+
+    public LeafTaskManager getLeafTaskManager() {
+        return leafTaskManager;
     }
 }

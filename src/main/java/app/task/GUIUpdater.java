@@ -1,6 +1,7 @@
 package app.task;
 
 import app.controllers.BotWindowController;
+import app.leaftask.PlanetsLeafTask;
 import javafx.application.Platform;
 import ogame.utils.Waiter;
 
@@ -23,6 +24,7 @@ public class GUIUpdater extends Task {
                     internetStatus();
                     actualGameTime();
                     initializeTasksList();
+                    doneProgressBar();
                 };
                 Platform.runLater(updater);
             }
@@ -52,6 +54,13 @@ public class GUIUpdater extends Task {
         if(botWindowController != null){
             if(botWindowController.isFillTaskList())
                 botWindowController.fillTaskList();
+        }
+    }
+
+    private void doneProgressBar(){
+        if(botWindowController != null){
+            if(!((PlanetsLeafTask)botWindowController.getLeafTaskManager().getTasks()[0]).init)
+               botWindowController.getPlanetsLeafTaskController().doneProgressBar();
         }
     }
 }

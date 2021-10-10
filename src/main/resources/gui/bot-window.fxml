@@ -14,10 +14,12 @@
 
 <BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="1200.0" stylesheets="@../css/bot-window.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.controllers.BotWindowController">
    <center>
-      <AnchorPane fx:id="anchorPaneTaskContent" prefHeight="638.0" prefWidth="777.0" BorderPane.alignment="CENTER">
+      <AnchorPane fx:id="anchorPaneTaskContent" prefHeight="638.0" prefWidth="782.0" BorderPane.alignment="CENTER">
          <BorderPane.margin>
             <Insets bottom="2.5" left="2.5" right="2.5" top="2.5" />
-         </BorderPane.margin></AnchorPane>
+         </BorderPane.margin>
+         <fx:include fx:id="planetsLeafTask" source="planets-leaftask.fxml" />
+      </AnchorPane>
    </center>
    <bottom>
       <AnchorPane prefHeight="25.0" prefWidth="1189.0" BorderPane.alignment="CENTER">
@@ -29,7 +31,7 @@
                <children>
                   <HBox alignment="CENTER_LEFT" prefHeight="23.0" prefWidth="380.0" spacing="10.0">
                      <children>
-                        <Label fx:id="labelStartTime" prefWidth="150.0" text="2021-15-12 00:00:00" />
+                        <Label fx:id="labelStartTime" prefWidth="150.0" text="" />
                      </children>
                      <HBox.margin>
                         <Insets left="10.0" />
@@ -42,7 +44,7 @@
                   </HBox>
                   <HBox alignment="CENTER_RIGHT" layoutX="822.0" layoutY="10.0" prefHeight="23.0" prefWidth="380.0" spacing="10.0">
                      <children>
-                        <Label fx:id="labelCurrentTime" prefWidth="150.0" text="2021-01-01 00:00:00" />
+                        <Label fx:id="labelCurrentTime" prefWidth="150.0" text="" />
                         <Label fx:id="labelInternetStatus" alignment="CENTER" prefWidth="90.0" styleClass="label-connected" text="Connected" />
                      </children>
                      <HBox.margin>

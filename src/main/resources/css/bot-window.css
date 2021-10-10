@@ -62,6 +62,15 @@ Separator{
 .off{
     -fx-background-color: color-error;
 }
+.progress-bar {
+  -fx-accent: color-a; // Kolor zawartości progress bar pokauzjący poziom wczytania/załadowania progress bar.
+}
+
+.progress-bar > .track {
+  -fx-text-box-border: color-c;
+  -fx-control-inner-background: color-c;
+}
+
 
 .label-connected{
     -fx-background-color: color-selected;
