@@ -1,8 +1,72 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
 
-
-<AnchorPane prefHeight="638.0" prefWidth="782.0" style="-fx-background-color: orange;" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.controllers.ImperiumLeafTaskController">
-
+<AnchorPane prefHeight="638.0" prefWidth="782.0" stylesheets="@../css/bot-window.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.controllers.ImperiumLeafTaskController">
+   <children>
+      <ScrollPane prefHeight="638.0" prefWidth="782.0">
+         <content>
+            <HBox fx:id="hBoxPlanets" spacing="2.0">
+               <children>
+                  <VBox prefWidth="100.0" spacing="2.0" styleClass="vbox-imperium">
+                     <children>
+                        <Label prefHeight="18.0" prefWidth="95.0" styleClass="label-title" text="INFORMATION">
+                           <VBox.margin>
+                              <Insets />
+                           </VBox.margin>
+                        </Label>
+                        <Label prefHeight="18.0" prefWidth="95.0" text="Last update" />
+                        <Label prefHeight="18.0" prefWidth="95.0" text="Id" />
+                        <Label prefHeight="18.0" prefWidth="95.0" text="Coordinate">
+                           <VBox.margin>
+                              <Insets />
+                           </VBox.margin>
+                        </Label>
+                        <Label prefHeight="18.0" prefWidth="95.0" text="Name">
+                           <VBox.margin>
+                              <Insets />
+                           </VBox.margin>
+                        </Label>
+                        <Label prefHeight="18.0" prefWidth="95.0" text="Diameter" />
+                        <Label prefHeight="18.0" prefWidth="95.0" text="Fields" />
+                        <Label prefHeight="18.0" prefWidth="95.0" text="Temperature" />
+                        <Label prefHeight="18.0" prefWidth="95.0" styleClass="label-title" text="PRODUCTION" />
+                        <Label prefHeight="18.0" prefWidth="95.0" text="Metal" />
+                        <Label prefHeight="18.0" prefWidth="95.0" text="Crystal" />
+                        <Label prefHeight="18.0" prefWidth="95.0" text="Deuterium" />
+                        <Label prefHeight="18.0" prefWidth="95.0" styleClass="label-title" text="BUILDINGS" />
+                        <Label prefHeight="18.0" prefWidth="95.0" text="Metal mine" />
+                        <Label prefHeight="18.0" prefWidth="95.0" text="Crystal mine" />
+                        <Label prefHeight="18.0" prefWidth="95.0" text="Deuterium synth." />
+                        <Label prefHeight="18.0" prefWidth="95.0" text="Solar plant" />
+                        <Label prefHeight="18.0" prefWidth="95.0" text="Fusion plant" />
+                        <Label prefHeight="18.0" prefWidth="95.0" text="Solar satelite" />
+                        <Label prefHeight="18.0" prefWidth="95.0" text="Resbuggy" />
+                        <Label prefHeight="18.0" prefWidth="95.0" text="Metal storage" />
+                        <Label prefHeight="18.0" prefWidth="95.0" text="Crystal storage" />
+                        <Label prefHeight="18.0" prefWidth="95.0" text="Deuterium storage" />
+                        <Label prefHeight="18.0" prefWidth="95.0" text="2" />
+                        <Label prefHeight="18.0" prefWidth="95.0" text="3" />
+                        <Label prefHeight="18.0" prefWidth="95.0" text="4" />
+                        <Label prefHeight="18.0" prefWidth="95.0" text="5" />
+                        <Label prefHeight="18.0" prefWidth="95.0" text="6" />
+                        <Label prefHeight="18.0" prefWidth="95.0" text="7" />
+                        <Label prefHeight="18.0" prefWidth="95.0" text="8" />
+                        <Label prefHeight="18.0" prefWidth="95.0" text="9" />
+                        <Label prefHeight="18.0" prefWidth="95.0" text="1" />
+                     </children>
+                  </VBox>
+               </children>
+               <padding>
+                  <Insets bottom="2.5" left="2.5" right="2.5" top="2.5" />
+               </padding>
+            </HBox>
+         </content>
+      </ScrollPane>
+   </children>
 </AnchorPane>

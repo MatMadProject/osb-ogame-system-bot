@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.VBox?>
+
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefWidth="100.0" spacing="2.0" styleClass="vbox-imperium-data" stylesheets="@../css/bot-window.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.controllers.ImperiumPlanetDataController">
+   <children>
+      <Label prefHeight="18.0" prefWidth="95.0" styleClass="label-title" />
+      <Label fx:id="labelLastUpdate" prefHeight="18.0" prefWidth="95.0" />
+      <Label fx:id="labelId" prefHeight="18.0" prefWidth="95.0" />
+      <Label fx:id="labelCoordinate" prefHeight="18.0" prefWidth="95.0" />
+      <Label fx:id="labelName" prefHeight="18.0" prefWidth="95.0" />
+      <Label fx:id="labelDiameter" prefHeight="18.0" prefWidth="95.0" />
+      <Label fx:id="labelFields" prefHeight="18.0" prefWidth="95.0" />
+      <Label fx:id="labelTemperature" prefHeight="18.0" prefWidth="95.0" />
+      <Label prefHeight="18.0" prefWidth="95.0" styleClass="label-title" />
+      <Label fx:id="labelMetal" prefHeight="18.0" prefWidth="95.0" />
+      <Label fx:id="labelCrystal" prefHeight="18.0" prefWidth="95.0" />
+      <Label fx:id="labelDeuterium" prefHeight="18.0" prefWidth="95.0" />
+      <Label prefHeight="18.0" prefWidth="95.0" styleClass="label-title" />
+      <Label fx:id="labelMetalMine" prefHeight="18.0" prefWidth="95.0" />
+      <Label fx:id="labelCrystalMine" prefHeight="18.0" prefWidth="95.0" />
+      <Label fx:id="labelDeuteriumSynth" prefHeight="18.0" prefWidth="95.0" />
+      <Label fx:id="labelSolarPlant" prefHeight="18.0" prefWidth="95.0" />
+      <Label fx:id="labelFusionPlant" prefHeight="18.0" prefWidth="95.0" />
+      <Label fx:id="labelSolarSatelite" prefHeight="18.0" prefWidth="95.0" />
+      <Label fx:id="labelResbuggy" prefHeight="18.0" prefWidth="95.0" />
+      <Label fx:id="labelMetalStorage" prefHeight="18.0" prefWidth="95.0" />
+      <Label fx:id="labelCrystalStorage" prefHeight="18.0" prefWidth="95.0" />
+      <Label fx:id="labelDeuteriumStorage" prefHeight="18.0" prefWidth="95.0" />
+      <Label prefHeight="18.0" prefWidth="95.0" text="2" />
+      <Label prefHeight="18.0" prefWidth="95.0" text="3" />
+      <Label prefHeight="18.0" prefWidth="95.0" text="4" />
+      <Label prefHeight="18.0" prefWidth="95.0" text="5" />
+      <Label prefHeight="18.0" prefWidth="95.0" text="6" />
+      <Label prefHeight="18.0" prefWidth="95.0" text="7" />
+      <Label prefHeight="18.0" prefWidth="95.0" text="8" />
+      <Label prefHeight="18.0" prefWidth="95.0" text="9" />
+      <Label prefHeight="18.0" prefWidth="95.0" text="1" />
+   </children>
+</VBox>

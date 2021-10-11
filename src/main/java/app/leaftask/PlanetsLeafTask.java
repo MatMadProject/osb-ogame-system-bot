@@ -12,13 +12,12 @@ public class PlanetsLeafTask extends LeafTask{
     public PlanetsLeafTask(int index, long sleepms, String name, boolean run) {
         super(index, sleepms, name, run);
     }
-    public boolean init = true;
+    private boolean init = true;
 
     @Override
     public void execute() {
         if(isRun()){
             if(isSleepTimeOut(System.currentTimeMillis())){
-
                 if(init){
                     init();
                 }
@@ -49,5 +48,9 @@ public class PlanetsLeafTask extends LeafTask{
         }
         if(DataLoader.planets.getPlanetList().size() > 0)
             init = false;
+    }
+
+    public boolean isInited() {
+        return !init;
     }
 }

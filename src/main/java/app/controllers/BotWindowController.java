@@ -98,10 +98,7 @@ public class BotWindowController {
             TaskContainerConnector connector = new TaskContainerConnector(leafTaskManager.getTasks()[i], this);
             vBoxTaskList.getChildren().add(connector.getContainer());
         }
-//        for(int i = 1; i < 5; i++){
-//            TaskContainerConnector connector = new TaskContainerConnector(new LeafTask(1,1000,"Example task no "+i), this);
-//            vBoxTaskList.getChildren().add(connector.getContainer());
-//        }
+
         fillTaskList = false;
     }
 

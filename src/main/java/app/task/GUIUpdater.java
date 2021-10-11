@@ -59,7 +59,7 @@ public class GUIUpdater extends Task {
 
     private void doneProgressBar(){
         if(botWindowController != null){
-            if(!((PlanetsLeafTask)botWindowController.getLeafTaskManager().getTasks()[0]).init)
+            if(((PlanetsLeafTask)botWindowController.getLeafTaskManager().getTasks()[0]).isInited())
                botWindowController.getPlanetsLeafTaskController().doneProgressBar();
         }
     }

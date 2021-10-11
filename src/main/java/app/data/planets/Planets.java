@@ -41,6 +41,7 @@ public class Planets implements LSD {
                 return true;
             } catch (IOException | ClassNotFoundException e) {
                 e.printStackTrace();
+                AppLog.print(Planets.class.getName(),1,"When try data load.");
             }
         }
         return false;

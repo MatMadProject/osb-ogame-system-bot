@@ -11,7 +11,7 @@ public class LeafTaskManager {
         initLeafTask();
     }
 
-    private  void initLeafTask(){
+    private void initLeafTask(){
         leafTasks = new LeafTask[]{
             new PlanetsLeafTask(0,1000*30,"Planets",true),
             new AutoBuilderLeafTask(1,1500,"Auto builder"),

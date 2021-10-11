@@ -7,7 +7,7 @@ BorderPane{
     color-pane: #2754B4;
     color-pane-hoover: #0A369D;
     color-task-container-selected: #06256B;
-
+    color-label-title-background: #5E7CE2;
 
     -fx-background-color: color-a;
 }
@@ -70,6 +70,31 @@ Separator{
   -fx-text-box-border: color-c;
   -fx-control-inner-background: color-c;
 }
+.vbox-imperium > .label{
+    -fx-background-color: color-c;
+    -fx-background-radius: 2 2 2 2;
+    -fx-text-fill: black;
+    -fx-font-size: 10px;
+    -fx-padding: 0.0 2.5 0.0 2.5; //top right bottom left
+}
+
+.vbox-imperium > .label-title{
+    -fx-background-color: color-label-title-background;
+}
+
+.vbox-imperium-data > .label{
+    -fx-background-color: color-c;
+    -fx-background-radius: 2 2 2 2;
+    -fx-text-fill: black;
+    -fx-font-size: 10px;
+    -fx-padding: 0.0 2.5 0.0 2.5; //top right bottom left
+    -fx-text-alignment: center;
+}
+
+.vbox-imperium-data > .label-title{
+    -fx-background-color: color-label-title-background;
+}
+
 
 
 .label-connected{
@@ -105,6 +130,22 @@ Separator{
 .scroll-bar:vertical .thumb {
     -fx-background-color: color-a;
     -fx-background-radius: 1em;
+}
+/*Tło pasaka przeuswania*/
+.scroll-bar:horizontal .track{
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+    -fx-background-radius: 5em;
+}
+/*Przycisk przesuwania*/
+.scroll-bar:horizontal .thumb {
+    -fx-background-color: color-a;
+    -fx-background-radius: 1em;
+}
+/*Scroll-bar - tło*/
+.scroll-bar:horizontal{
+    -fx-background-color: transparent;
+    -fx-pref-width: 12;
 }
 /*Przyciski ikrementacji i dekrementacji bez znaku w środku nich*/
 .scroll-bar .increment-button,.scroll-bar .decrement-button {

@@ -1,5 +1,6 @@
 package app.leaftask;
 
+import ogame.utils.AntiLooping;
 import ogame.utils.Waiter;
 
 public class LeafTask implements Execute{
@@ -10,11 +11,13 @@ public class LeafTask implements Execute{
     private long sleep;
     private final int index;
     private final String name;
+    private final AntiLooping antiLooping;
 
     public LeafTask(int index, long sleepms, String name) {
         this.sleep = sleepms;
         this.name = name;
         this.index = index;
+        this.antiLooping = new AntiLooping(5);
     }
 
     public LeafTask(int index, long sleepms, String name, boolean run) {
@@ -22,6 +25,7 @@ public class LeafTask implements Execute{
         this.name = name;
         this.index = index;
         this.run = run;
+        this.antiLooping = new AntiLooping(5);
     }
   /*
     EXECUTING METHODS
@@ -111,5 +115,9 @@ public class LeafTask implements Execute{
      */
     public long getSleep() {
         return sleep;
+    }
+
+    public AntiLooping getAntiLooping() {
+        return antiLooping;
     }
 }
