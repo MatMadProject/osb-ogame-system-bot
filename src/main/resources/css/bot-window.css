@@ -88,14 +88,13 @@ Separator{
     -fx-text-fill: black;
     -fx-font-size: 10px;
     -fx-padding: 0.0 2.5 0.0 2.5; //top right bottom left
+    -fx-alignment: center;
     -fx-text-alignment: center;
 }
 
 .vbox-imperium-data > .label-title{
     -fx-background-color: color-label-title-background;
 }
-
-
 
 .label-connected{
     -fx-background-color: color-selected;
