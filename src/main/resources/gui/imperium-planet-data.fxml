@@ -28,14 +28,14 @@
       <Label fx:id="labelMetalStorage" prefHeight="18.0" prefWidth="95.0" />
       <Label fx:id="labelCrystalStorage" prefHeight="18.0" prefWidth="95.0" />
       <Label fx:id="labelDeuteriumStorage" prefHeight="18.0" prefWidth="95.0" />
-      <Label prefHeight="18.0" prefWidth="95.0" text="2" />
-      <Label prefHeight="18.0" prefWidth="95.0" text="3" />
-      <Label prefHeight="18.0" prefWidth="95.0" text="4" />
-      <Label prefHeight="18.0" prefWidth="95.0" text="5" />
-      <Label prefHeight="18.0" prefWidth="95.0" text="6" />
-      <Label prefHeight="18.0" prefWidth="95.0" text="7" />
-      <Label prefHeight="18.0" prefWidth="95.0" text="8" />
-      <Label prefHeight="18.0" prefWidth="95.0" text="9" />
+      <Label fx:id="labelRoboticsFactory" prefHeight="18.0" prefWidth="95.0" />
+      <Label fx:id="labelShipyard" prefHeight="18.0" prefWidth="95.0" />
+      <Label fx:id="labelResearchLaboratory" prefHeight="18.0" prefWidth="95.0" />
+      <Label fx:id="labelAllianceDepot" prefHeight="18.0" prefWidth="95.0" />
+      <Label fx:id="labelMissileSilo" prefHeight="18.0" prefWidth="95.0" />
+      <Label fx:id="labelNaniteFactory" prefHeight="18.0" prefWidth="95.0" />
+      <Label fx:id="labelTerraformer" prefHeight="18.0" prefWidth="95.0" />
+      <Label fx:id="labelRepairDock" prefHeight="18.0" prefWidth="95.0" />
       <Label prefHeight="18.0" prefWidth="95.0" text="1" />
    </children>
 </VBox>

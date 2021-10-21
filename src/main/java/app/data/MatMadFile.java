@@ -1,6 +1,5 @@
 package app.data;
 
-import app.data.planets.Planets;
 import ogame.utils.log.AppLog;
 
 import java.io.File;

@@ -11,9 +11,10 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Planets implements LSD {
+public class Planets implements LSD, Serializable {
 
-    private List<Planet> planetList = new ArrayList<>();
+    private static final long serialVersionUID = 1992L;
+    private ArrayList<Planet> planetList = new ArrayList<>();
 
     public Planets() {
         load();
@@ -75,7 +76,7 @@ public class Planets implements LSD {
         return false;
     }
 
-    public List<Planet> getPlanetList() {
+    public ArrayList<Planet> getPlanetList() {
         return planetList;
     }
 
@@ -127,5 +128,18 @@ public class Planets implements LSD {
             }
         }
         return null;
+    }
+
+    /**
+     * Returns list with planets coordinates. Coordinate format [x:xxx:xx].
+     * @return If error will exist return empty list.
+     */
+    public List<String> planetsCoordinate() {
+        List<String> list = new ArrayList<>();
+
+        for(Planet planet : planetList)
+            list.add(planet.getCoordinate().getText());
+
+        return list;
     }
 }

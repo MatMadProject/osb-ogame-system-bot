@@ -50,14 +50,14 @@
                         <Label prefHeight="18.0" prefWidth="95.0" text="Metal storage" />
                         <Label prefHeight="18.0" prefWidth="95.0" text="Crystal storage" />
                         <Label prefHeight="18.0" prefWidth="95.0" text="Deuterium storage" />
-                        <Label prefHeight="18.0" prefWidth="95.0" text="2" />
-                        <Label prefHeight="18.0" prefWidth="95.0" text="3" />
-                        <Label prefHeight="18.0" prefWidth="95.0" text="4" />
-                        <Label prefHeight="18.0" prefWidth="95.0" text="5" />
-                        <Label prefHeight="18.0" prefWidth="95.0" text="6" />
-                        <Label prefHeight="18.0" prefWidth="95.0" text="7" />
-                        <Label prefHeight="18.0" prefWidth="95.0" text="8" />
-                        <Label prefHeight="18.0" prefWidth="95.0" text="9" />
+                        <Label prefHeight="18.0" prefWidth="95.0" text="Robotics factory" />
+                        <Label prefHeight="18.0" prefWidth="95.0" text="Shipyard" />
+                        <Label prefHeight="18.0" prefWidth="95.0" text="Research laboratory" />
+                        <Label prefHeight="18.0" prefWidth="95.0" text="Alliance depot" />
+                        <Label prefHeight="18.0" prefWidth="95.0" text="Missile silo" />
+                        <Label prefHeight="18.0" prefWidth="95.0" text="Nanite factory" />
+                        <Label prefHeight="18.0" prefWidth="95.0" text="Terraformer" />
+                        <Label prefHeight="18.0" prefWidth="95.0" text="Repair dock" />
                         <Label prefHeight="18.0" prefWidth="95.0" text="1" />
                      </children>
                   </VBox>

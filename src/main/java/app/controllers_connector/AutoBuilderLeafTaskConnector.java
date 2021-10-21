@@ -29,6 +29,9 @@ public class AutoBuilderLeafTaskConnector implements LeafTaskConnector{
 
     @Override
     public Node content() {
+        if(controller != null) {
+            controller.update();
+        }
         return content;
     }
 }

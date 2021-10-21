@@ -24,6 +24,35 @@ Separator{
     -fx-background-color: color-b;
     -fx-border-width: 0;
 }
+.button-auto-builder{
+    -fx-font-size: 12px;
+    -fx-font-weight: 700;
+    -fx-background-radius: 2 2 2 2;
+    -fx-background-color: color-c;
+}
+.button-auto-builder:hover{
+    -fx-background-color: color-a;
+}
+
+.combo-box-autobuilder{
+    -fx-background-color: color-c;
+    -fx-font-size: 12px;
+    -fx-font-weight: 700;
+}
+
+.combo-box-autobuilder .list-cell{
+    -fx-background-color: color-c;
+}
+
+.combo-box-autobuilder .list-cell:hover{
+    -fx-background-color: color-a;
+    -fx-text-fill: white;
+}
+
+.combo-box-autobuilder .arrow{
+    -fx-background-color: color-a;
+}
+
 .footer{
     -fx-background-color: color-c;
     -fx-background-radius: 2 2 2 2;

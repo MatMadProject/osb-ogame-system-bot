@@ -6,10 +6,24 @@ import ogame.buildings.DataTechnology;
 import ogame.planets.Planet;
 import ogame.utils.watch.Calendar;
 
-import java.util.Locale;
-
 public class ImperiumPlanetDataController {
 
+    @FXML
+    public Label labelRoboticsFactory;
+    @FXML
+    public Label labelShipyard;
+    @FXML
+    public Label labelResearchLaboratory;
+    @FXML
+    public Label labelAllianceDepot;
+    @FXML
+    public Label labelMissileSilo;
+    @FXML
+    public Label labelNaniteFactory;
+    @FXML
+    public Label labelTerraformer;
+    @FXML
+    public Label labelRepairDock;
     @FXML
     private Label labelLastUpdate;
 
@@ -91,5 +105,13 @@ public class ImperiumPlanetDataController {
         labelMetalStorage.setText(planet.getBuilding(DataTechnology.METAL_STORAGE).getLevel()+"");
         labelCrystalStorage.setText(planet.getBuilding(DataTechnology.CRYSTAL_STORAGE).getLevel()+"");
         labelDeuteriumStorage.setText(planet.getBuilding(DataTechnology.DEUTERIUM_STORAGE).getLevel()+"");
+        labelRoboticsFactory.setText(planet.getBuilding(DataTechnology.ROBOTICS_FACTORY).getLevel()+"");
+        labelShipyard.setText(planet.getBuilding(DataTechnology.SHIPYARD).getLevel()+"");
+        labelResearchLaboratory.setText(planet.getBuilding(DataTechnology.RESEARCH_LABORATORY).getLevel()+"");
+        labelAllianceDepot.setText(planet.getBuilding(DataTechnology.ALLIANCE_DEPOT).getLevel()+"");
+        labelMissileSilo.setText(planet.getBuilding(DataTechnology.MISSILE_SILO).getLevel()+"");
+        labelNaniteFactory.setText(planet.getBuilding(DataTechnology.NANITE_FACTORY).getLevel()+"");
+        labelTerraformer.setText(planet.getBuilding(DataTechnology.TERRAFORMER).getLevel()+"");
+        labelRepairDock.setText(planet.getBuilding(DataTechnology.REPAIR_DOCK).getLevel()+"");
     }
 }

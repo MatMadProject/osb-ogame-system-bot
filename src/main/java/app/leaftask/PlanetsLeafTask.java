@@ -46,8 +46,10 @@ public class PlanetsLeafTask extends LeafTask{
             }
             DataLoader.planets.add(planet);
         }
-        if(DataLoader.planets.getPlanetList().size() > 0)
+        if(DataLoader.planets.getPlanetList().size() > 0) {
             init = false;
+            DataLoader.planets.save();
+        }
     }
 
     public boolean isInited() {

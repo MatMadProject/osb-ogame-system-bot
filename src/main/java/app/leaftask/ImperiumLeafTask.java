@@ -10,6 +10,7 @@ import ogame.planets.Fields;
 import ogame.planets.Planet;
 import ogame.planets.PlanetsList;
 import ogame.planets.Temperature;
+import ogame.tabs.Facilities;
 import ogame.tabs.Overview;
 import ogame.tabs.ResourceSettings;
 import ogame.tabs.Supplies;
@@ -50,10 +51,7 @@ public class ImperiumLeafTask extends LeafTask{
                     planetProductionBuilding(list);
                     break;
                 case 3:
-
-                    break;
-                case 4:
-
+                    planetTechnologyBuilding(list);
                     break;
             }
         }
@@ -91,8 +89,10 @@ public class ImperiumLeafTask extends LeafTask{
             int diameter = Overview.planetDiameter(OgameWeb.webDriver);
 
             planet.setFields(new Fields(builtUpFields,maxPlanetFields));
-            planet.setTemperature(new Temperature(minTemperature, maxTemperature));
-            planet.setDiameter(diameter);
+            if(planet.getTemperature() == null)
+                planet.setTemperature(new Temperature(minTemperature, maxTemperature));
+            if(planet.getDiameter() == 0)
+                planet.setDiameter(diameter);
             planet.setUpdateTime(System.currentTimeMillis());
         }
     }
@@ -177,6 +177,44 @@ public class ImperiumLeafTask extends LeafTask{
                 Status status = Supplies.statusOfBuilding(OgameWeb.webDriver,i);
                 String localName = Supplies.localNameOfBuilding(OgameWeb.webDriver,i);
                 int level = Supplies.levelOfBuilding(OgameWeb.webDriver, i);
+                building.setLevel(level);
+                building.setLocalName(localName);
+                building.setStatus(status);
+            }
+        }
+    }
+
+    public void planetTechnologyBuilding(List<Planet> list){
+        for(Planet planet : list) {
+            //Klikanie podgląd
+            do {
+                Facilities.click(OgameWeb.webDriver);
+                Waiter.sleep(200, 200);
+                if (getAntiLooping().check()) {
+                    getAntiLooping().reset();
+                    return;
+                }
+            } while (!Facilities.visible(OgameWeb.webDriver)); // Jest niewidoczne
+
+            //Klikanie w właściwą planetę
+            Planet tmpPlanet;
+            do {
+                if (PlanetsList.clickOnPlanet(OgameWeb.webDriver, planet.getPositionOnList()))
+                    break;
+                Waiter.sleep(200, 200);
+                if (getAntiLooping().check()) {
+                    getAntiLooping().reset();
+                    return;
+                }
+                tmpPlanet = PlanetsList.selectedPlanet(OgameWeb.webDriver);
+            } while (tmpPlanet == null || tmpPlanet.getId().equals(planet.getId()));
+
+            for(int i = 1; i <= 8; i++) {
+                String dataTechnology = Facilities.dataTechnologyOfBuilding(OgameWeb.webDriver,i);
+                Building building = planet.getBuilding(DataTechnology.getFromValue(dataTechnology));
+                Status status = Facilities.statusOfBuilding(OgameWeb.webDriver,i);
+                String localName = Facilities.localNameOfBuilding(OgameWeb.webDriver,i);
+                int level = Facilities.levelOfBuilding(OgameWeb.webDriver, i);
                 building.setLevel(level);
                 building.setLocalName(localName);
                 building.setStatus(status);
