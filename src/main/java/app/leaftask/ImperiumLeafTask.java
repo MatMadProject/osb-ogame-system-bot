@@ -54,6 +54,7 @@ public class ImperiumLeafTask extends LeafTask{
                     planetTechnologyBuilding(list);
                     break;
             }
+            DataLoader.planets.save();
         }
     }
 

@@ -18,10 +18,10 @@
                <children>
                   <ComboBox fx:id="comboBoxPlanet" prefWidth="150.0" styleClass="combo-box-autobuilder" />
                   <ComboBox fx:id="comboBoxBuilding" prefWidth="150.0" styleClass="combo-box-autobuilder" />
-                  <Label contentDisplay="CENTER" prefHeight="25.0" prefWidth="75.0" text="Current level" />
-                  <Label fx:id="labelCurrentLevel" contentDisplay="CENTER" prefHeight="25.0" prefWidth="75.0" styleClass="footer" textAlignment="CENTER" />
+                  <Label contentDisplay="CENTER" prefHeight="25.0" prefWidth="100.0" text="Upgrade to level" />
+                  <Label fx:id="labelUpgradeLevel" alignment="CENTER" prefHeight="25.0" prefWidth="50.0" styleClass="footer" textAlignment="CENTER" />
                   <Region prefHeight="25.0" prefWidth="230.0" />
-                  <Button fx:id="buttonAdd" mnemonicParsing="false" prefWidth="75.0" styleClass="button-auto-builder" text="Add" />
+                  <Button fx:id="buttonAdd" mnemonicParsing="false" onAction="#add" prefWidth="75.0" styleClass="button-auto-builder" text="Add" />
                </children>
                <padding>
                   <Insets bottom="2.5" left="2.5" right="2.5" top="2.5" />
@@ -34,7 +34,25 @@
             </Label>
             <ScrollPane prefHeight="282.0" prefWidth="782.0">
                <content>
-                  <VBox fx:id="vBoxQueue" prefWidth="777.0" />
+                  <VBox prefWidth="760.0" spacing="1.0" styleClass="vbox-imperium-data">
+                     <children>
+                        <HBox prefHeight="17.0" prefWidth="754.0" spacing="2.0" styleClass="vbox-imperium-data" stylesheets="@../css/bot-window.css">
+                           <children>
+                              <Label prefWidth="55.0" styleClass="label-title" text="PLANET" />
+                              <Label prefWidth="140.0" styleClass="label-title" text="BUILDING" />
+                              <Label prefWidth="25.0" styleClass="label-title" text="LVL" />
+                              <Label layoutX="160.0" layoutY="10.0" prefWidth="105.0" styleClass="label-title" text="START TIME" />
+                              <Label layoutX="224.0" layoutY="10.0" prefWidth="105.0" styleClass="label-title" text="FINISH TIME" />
+                              <Label layoutX="94.0" layoutY="10.0" prefWidth="140.0" styleClass="label-title" text="STATUS" />
+                              <Label layoutX="124.0" layoutY="10.0" prefWidth="105.0" styleClass="label-title" text="STATUS TIME" />
+                              <Label prefWidth="64.0" styleClass="label-title" />
+                           </children>
+                        </HBox>
+                        <VBox fx:id="vBoxQueue" prefWidth="754.0" spacing="1.0" />
+                     </children>
+                     <padding>
+                        <Insets left="2.5" right="2.5" />
+                     </padding></VBox>
                </content>
             </ScrollPane>
             <Label alignment="CENTER" layoutX="10.0" layoutY="43.0" prefWidth="782.0" styleClass="footer" text="History" textAlignment="CENTER">
@@ -44,7 +62,39 @@
             </Label>
             <ScrollPane prefHeight="282.0" prefWidth="782.0">
                <content>
-                  <VBox fx:id="vBoxHistory" prefWidth="777.0" />
+                  <VBox fx:id="vBoxHistory" prefWidth="760.0" styleClass="vbox-imperium-data">
+                     <children>
+                        <HBox prefHeight="17.0" prefWidth="760.0" spacing="2.0" styleClass="vbox-imperium-data" stylesheets="@../css/bot-window.css">
+                           <children>
+                              <Label prefWidth="55.0" styleClass="label-title" text="PLANET" />
+                              <Label prefWidth="140.0" styleClass="label-title" text="BUILDING" />
+                              <Label prefWidth="25.0" styleClass="label-title" text="LVL" />
+                              <Label layoutX="160.0" layoutY="10.0" prefWidth="105.0" styleClass="label-title" text="START TIME" />
+                              <Label layoutX="224.0" layoutY="10.0" prefWidth="105.0" styleClass="label-title" text="FINISH TIME" />
+                              <Label layoutX="94.0" layoutY="10.0" prefWidth="140.0" styleClass="label-title" text="STATUS" />
+                              <Label layoutX="124.0" layoutY="10.0" prefWidth="105.0" styleClass="label-title" text="STATUS TIME" />
+                              <Label prefWidth="64.0" styleClass="label-title" />
+                           </children>
+                        </HBox>
+                        <VBox fx:id="vBoxQueue1" prefWidth="760.0" spacing="1.0">
+                           <children>
+                              <HBox layoutX="10.0" layoutY="334.0" prefHeight="17.0" prefWidth="777.0" spacing="2.0" styleClass="vbox-imperium-data" stylesheets="@../css/bot-window.css">
+                                 <children>
+                                    <Label prefWidth="55.0" text="[1:499:15]" />
+                                    <Label prefWidth="140.0" text="DEUTERIUM_SYNTHESISER" />
+                                    <Label prefWidth="25.0" text="48" />
+                                    <Label layoutX="160.0" layoutY="10.0" prefWidth="105.0" text="23:39:59 31.03.2021" />
+                                    <Label layoutX="224.0" layoutY="10.0" prefWidth="105.0" text="23:39:59 31.03.2021" />
+                                    <Label layoutX="94.0" layoutY="10.0" prefWidth="140.0" text="NOT ENOUGH RESOURCES" />
+                                    <Label layoutX="124.0" layoutY="10.0" prefWidth="105.0" text="23:39:59 31.03.2021" />
+                                    <Label layoutX="592.0" layoutY="10.0" prefWidth="20.0" text="v" />
+                                    <Label layoutX="699.0" layoutY="10.0" prefWidth="20.0" text="^" />
+                                    <Label layoutX="721.0" layoutY="10.0" prefWidth="20.0" text="x" />
+                                 </children>
+                              </HBox>
+                           </children>
+                        </VBox>
+                     </children></VBox>
                </content>
             </ScrollPane>
          </children>

@@ -2,19 +2,26 @@ package app.data;
 
 import java.io.File;
 
-public class StaticStrings
-{
+public class StaticStrings {
     public static String DISK = ""; // Nazwa dysku przypisywana jest podczas uruchomienia.
     public static final String MAIN_FOLDER = "ogamebot";
     public static final String FILE_EXTEND = ".obt";
     public static final String FILE_EXTEND_TXT = ".txt";
-    public static final String PLAYER_FOLDER_PATH = StaticStrings.DISK + File.separator +
+    public static String PLAYER_FOLDER_PATH = StaticStrings.DISK + File.separator +
             StaticStrings.MAIN_FOLDER + File.separator +
+            StaticStrings.ACCOUNT_FOLDER + File.separator +
             StaticStrings.PLAYER_FOLDER + File.separator;
 
+    public static void setPlayerFolderPath() {
+        PLAYER_FOLDER_PATH = StaticStrings.DISK + File.separator +
+                StaticStrings.MAIN_FOLDER + File.separator +
+                StaticStrings.ACCOUNT_FOLDER + File.separator +
+                StaticStrings.PLAYER_FOLDER + File.separator;
+    }
+
     /*
-    FILES
-     */
+        FILES
+         */
     public static final String FIRST_TIME_LOGIN_FILE = "first-time";
     public static final String START_COUNTER_FILE = "start-counter";
     public static final String ACCOUNTS_LIST_FILE = "accounts-list";
@@ -32,6 +39,8 @@ public class StaticStrings
     public static final String BADANIA_FILE = "research";
     //Planety
     public static final String PLANETS_FILE = "planets-config";
+    //AutoBuilder
+    public static final String AUTO_BUILDER_FILE = "autobuilder";
     /*
     FOLDERS
      */

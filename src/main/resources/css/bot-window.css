@@ -32,6 +32,7 @@ Separator{
 }
 .button-auto-builder:hover{
     -fx-background-color: color-a;
+    -fx-text-fill: white;
 }
 
 .combo-box-autobuilder{
@@ -110,6 +111,13 @@ Separator{
 .vbox-imperium > .label-title{
     -fx-background-color: color-label-title-background;
 }
+.vbox-imperium-data > .image-view{
+    -fx-background-color: color-c;
+    -fx-background-radius: 2 2 2 2;
+    -fx-padding: 0.0 2.5 0.0 2.5; //top right bottom left
+    -fx-alignment: center;
+    -fx-text-alignment: center;
+}
 
 .vbox-imperium-data > .label{
     -fx-background-color: color-c;
@@ -123,6 +131,9 @@ Separator{
 
 .vbox-imperium-data > .label-title{
     -fx-background-color: color-label-title-background;
+}
+.vbox-imperium-data > .label-button:hover{
+    -fx-background-color: color-pane-hoover;
 }
 
 .label-connected{

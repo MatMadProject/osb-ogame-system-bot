@@ -83,6 +83,8 @@ public class Logger extends Task{
                     // Sprawdza czy gracz zalogował się do gry
                     else if(isTextContains(title,SERVER) && firtsTimeExecute) {
                         StaticStrings.APP_INFO_STRING = "BotClient is running.";
+                        StaticStrings.PLAYER_FOLDER = Accounts.getSelected().getSerwer() + "-"+Accounts.getSelected().getName();
+                        StaticStrings.setPlayerFolderPath();
                         //Uruchamianie bota.
                         botClient = new BotClient(botWindowController);
                         //Odznaczam, że było to pierwsze logowanie.

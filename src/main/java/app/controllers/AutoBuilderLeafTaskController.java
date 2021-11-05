@@ -1,8 +1,9 @@
 package app.controllers;
 
+import app.controllers_connector.AutoBuilderLeafTaskItemConnector;
 import app.data.DataLoader;
+import app.data.autobuilder.ItemAutoBuilder;
 import app.data.planets.ComboBoxPlanet;
-import app.data.planets.Planets;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -12,6 +13,7 @@ import javafx.scene.layout.VBox;
 import ogame.buildings.Building;
 import ogame.buildings.DataTechnology;
 import ogame.planets.Planet;
+import ogame.utils.log.AppLog;
 
 import java.util.ArrayList;
 
@@ -24,7 +26,7 @@ public class AutoBuilderLeafTaskController {
     private ComboBox<ComboBoxBuilding> comboBoxBuilding;
 
     @FXML
-    private Label labelCurrentLevel;
+    private Label labelUpgradeLevel;
 
     @FXML
     private Button buttonAdd;
@@ -37,24 +39,53 @@ public class AutoBuilderLeafTaskController {
 
     public void update(){
         ArrayList<ComboBoxPlanet> comboBoxPlanetArrayList = ComboBoxPlanet.list(DataLoader.planets.getPlanetList());
-        comboBoxPlanet.setItems(FXCollections.observableArrayList(comboBoxPlanetArrayList));
-        comboBoxPlanet.setValue(comboBoxPlanetArrayList.get(0));
+        if(!comboBoxPlanetArrayList.isEmpty()){
+            comboBoxPlanet.setItems(FXCollections.observableArrayList(comboBoxPlanetArrayList));
+            comboBoxPlanet.setValue(comboBoxPlanetArrayList.get(0));
 
-        comboBoxPlanet.valueProperty().addListener((observable, oldValue, newValue) -> {
+            comboBoxPlanet.valueProperty().addListener((observable, oldValue, newValue) -> {
 
-            if(newValue != null){
-                Planet planet = newValue.getPlanet();
-                ArrayList<ComboBoxBuilding> comboBoxBuildingArrayList = ComboBoxBuilding.list(planet);
-                comboBoxBuilding.setItems(FXCollections.observableArrayList(comboBoxBuildingArrayList));
-                comboBoxBuilding.setValue(comboBoxBuildingArrayList.get(0));
+                if(newValue != null){
+                    Planet planet = newValue.getPlanet();
+                    ArrayList<ComboBoxBuilding> comboBoxBuildingArrayList = ComboBoxBuilding.list(planet);
+                    comboBoxBuilding.setItems(FXCollections.observableArrayList(comboBoxBuildingArrayList));
+                    comboBoxBuilding.setValue(comboBoxBuildingArrayList.get(0));
+                }
+            });
+
+            comboBoxBuilding.valueProperty().addListener((observable, oldValue, newValue) -> {
+                if(newValue != null){
+                    Building building = newValue.getBuilding();
+                    int upgradeLevel = DataLoader.listItemAutoBuilder.getHighestLevelOfBuildingOnQueue(building)+1;
+                    labelUpgradeLevel.setText(upgradeLevel+"");
+                }
+                else{
+                    Building building = oldValue.getBuilding();
+                    int upgradeLevel = DataLoader.listItemAutoBuilder.getHighestLevelOfBuildingOnQueue(building)+1;
+                    labelUpgradeLevel.setText(upgradeLevel+"");
+                }
+            });
+        }
+    }
+
+    public void add() {
+        Planet planet = comboBoxPlanet.getValue().getPlanet();
+        Building building = comboBoxBuilding.getValue().getBuilding();
+        int upgradeLevel = Integer.parseInt(labelUpgradeLevel.getText());
+
+        if(building != null){
+            ItemAutoBuilder itemAutoBuilder = new ItemAutoBuilder(planet,building, upgradeLevel, System.currentTimeMillis());
+            if(DataLoader.listItemAutoBuilder.addToQueue(itemAutoBuilder)){
+                AutoBuilderLeafTaskItemConnector autoBuilderLeafTaskItemConnector = new AutoBuilderLeafTaskItemConnector(itemAutoBuilder);
+
+                vBoxQueue.getChildren().add(autoBuilderLeafTaskItemConnector.content());
+                AppLog.print(AutoBuilderLeafTaskController.class.getName(),0,"Add to built queue: Upgrade "+ building.getName() + " to "
+                        + upgradeLevel +" level on " + planet.getCoordinate().getText() + ".");
             }
-        });
-
-        comboBoxBuilding.valueProperty().addListener((observable, oldValue, newValue) -> {
-            if(newValue != null){
-                labelCurrentLevel.setText(newValue.getBuilding().getLevel()+"");
-            }
-        });
+        }
+        else {
+            AppLog.print(AutoBuilderLeafTaskController.class.getName(),1,"Add to built queue fails because building is "+ building.getName() + ".");
+        }
     }
 
     static class  ComboBoxBuilding{
@@ -70,8 +101,13 @@ public class AutoBuilderLeafTaskController {
             ArrayList<ComboBoxBuilding> list = new ArrayList<>();
 
             for(DataTechnology dataTechnology: DataTechnology.values()){
+                if(dataTechnology.equals(DataTechnology.RESBUGGY) || dataTechnology.equals(DataTechnology.SOLAR_SATELITE)
+                || dataTechnology.equals(DataTechnology.UNDEFINED))
+                    continue;
+
                 Building tmp = planet.getBuilding(dataTechnology);
                 list.add(new ComboBoxBuilding(tmp));
+
             }
             return list;
         }
