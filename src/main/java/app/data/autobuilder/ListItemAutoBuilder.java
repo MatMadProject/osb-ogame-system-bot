@@ -4,6 +4,7 @@ import app.data.LSD;
 import app.data.MatMadFile;
 import app.data.StaticStrings;
 import app.data.planets.Planets;
+import ogame.Status;
 import ogame.buildings.Building;
 import ogame.utils.log.AppLog;
 
@@ -54,7 +55,7 @@ public class ListItemAutoBuilder implements Serializable, LSD {
 
         try {
             if(MatMadFile.isFolderExists(folder)) {
-                FileOutputStream f = new FileOutputStream(new File(path));
+                FileOutputStream f = new FileOutputStream(path);
                 ObjectOutputStream o = new ObjectOutputStream(f);
 
                 o.writeObject(this);
@@ -109,5 +110,21 @@ public class ListItemAutoBuilder implements Serializable, LSD {
                     level = itemAutoBuilder.getUpgradeLevel();
         }
         return level;
+    }
+
+    public boolean isAnyBuildingUprading(){
+        for(ItemAutoBuilder itemAutoBuilder : queueList)
+            if(itemAutoBuilder.getBuilding().getStatus() == Status.ACTIVE)
+                return true;
+
+        return false;
+    }
+
+    public ItemAutoBuilder getUpgradingBuilding(){
+        for(ItemAutoBuilder itemAutoBuilder : queueList)
+            if(itemAutoBuilder.getBuilding().getStatus() == Status.ACTIVE)
+                return itemAutoBuilder;
+
+        return null;
     }
 }

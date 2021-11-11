@@ -1,6 +1,9 @@
 package app.task;
 
 import app.controllers.BotWindowController;
+import app.controllers_connector.AutoBuilderLeafTaskConnector;
+import app.controllers_connector.LeafTaskConnector;
+import app.leaftask.AutoBuilderLeafTask;
 import app.leaftask.PlanetsLeafTask;
 import javafx.application.Platform;
 import ogame.utils.Waiter;
@@ -25,6 +28,7 @@ public class GUIUpdater extends Task {
                     actualGameTime();
                     initializeTasksList();
                     doneProgressBar();
+                    updateAutoBuilderGUI();
                 };
                 Platform.runLater(updater);
             }
@@ -61,6 +65,18 @@ public class GUIUpdater extends Task {
         if(botWindowController != null){
             if(((PlanetsLeafTask)botWindowController.getLeafTaskManager().getTasks()[0]).isInited())
                botWindowController.getPlanetsLeafTaskController().doneProgressBar();
+        }
+    }
+
+    private void updateAutoBuilderGUI(){
+        if(botWindowController != null){
+            if(botWindowController.isSelectedLeafTask()){
+                LeafTaskConnector  leafTaskConnector = botWindowController.getSelectedLeafTask().getLeafTaskConnector();
+                if(leafTaskConnector instanceof AutoBuilderLeafTaskConnector){
+                    ((AutoBuilderLeafTaskConnector) leafTaskConnector).getController().updateHistoryList();
+                    ((AutoBuilderLeafTaskConnector) leafTaskConnector).getController().updateQueueList();
+                }
+            }
         }
     }
 }

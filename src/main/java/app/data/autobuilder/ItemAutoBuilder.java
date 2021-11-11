@@ -2,6 +2,7 @@ package app.data.autobuilder;
 
 import ogame.buildings.Building;
 import ogame.planets.Planet;
+import ogame.utils.watch.Timer;
 
 import java.io.Serializable;
 import java.util.Objects;
@@ -15,6 +16,8 @@ public class ItemAutoBuilder implements Serializable {
     private long finishTime;
     private Status status;
     private long statusTime;
+    private int energyConsumption;
+    private Timer timer;
 
     public ItemAutoBuilder(Planet planet, Building building, int upgradeLevel, long startTime) {
         this.planet = planet;
@@ -24,6 +27,13 @@ public class ItemAutoBuilder implements Serializable {
         this.status = Status.ADDED;
     }
 
+    public long timeToFinish(){
+        if(this.status == Status.UPGRADING){
+            long finishTime = this.building.getProductionTime().timeInSeconds() * 1000 + statusTime;
+            return finishTime - System.currentTimeMillis();
+        }
+        return 0;
+    }
     public Planet getPlanet() {
         return planet;
     }
@@ -64,6 +74,22 @@ public class ItemAutoBuilder implements Serializable {
         return upgradeLevel;
     }
 
+    public int getEnergyConsumption() {
+        return energyConsumption;
+    }
+
+    public void setEnergyConsumption(int energyConsumption) {
+        this.energyConsumption = energyConsumption;
+    }
+
+    public Timer getTimer() {
+        return timer;
+    }
+
+    public void setTimer(Timer timer) {
+        this.timer = timer;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -75,5 +101,9 @@ public class ItemAutoBuilder implements Serializable {
     @Override
     public int hashCode() {
         return Objects.hash(planet, building, upgradeLevel);
+    }
+
+    public void updateFinishTime(long currentTime) {
+        this.finishTime = currentTime + this.building.getProductionTime().timeInSeconds() * 1000;
     }
 }

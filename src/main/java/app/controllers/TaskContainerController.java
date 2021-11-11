@@ -82,4 +82,10 @@ public class TaskContainerController {
     public void unselect(){
         hBox.getStyleClass().removeAll("hbox-task-selected");
     }
+    public LeafTask getLeafTask() {
+        return leafTask;
+    }
+    public LeafTaskConnector getLeafTaskConnector() {
+        return leafTaskConnector;
+    }
 }

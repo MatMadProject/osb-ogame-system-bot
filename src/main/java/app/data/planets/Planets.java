@@ -15,6 +15,7 @@ public class Planets implements LSD, Serializable {
 
     private static final long serialVersionUID = 1992L;
     private ArrayList<Planet> planetList = new ArrayList<>();
+    private boolean updateData = true;
 
     public Planets() {
         load();
@@ -57,7 +58,7 @@ public class Planets implements LSD, Serializable {
 
         try {
             if(MatMadFile.isFolderExists(folder)) {
-                FileOutputStream f = new FileOutputStream(new File(path));
+                FileOutputStream f = new FileOutputStream(path);
                 ObjectOutputStream o = new ObjectOutputStream(f);
 
                 o.writeObject(this);
@@ -141,5 +142,13 @@ public class Planets implements LSD, Serializable {
             list.add(planet.getCoordinate().getText());
 
         return list;
+    }
+
+    public boolean isUpdateData() {
+        return updateData;
+    }
+
+    public void setUpdateData(boolean updateData) {
+        this.updateData = updateData;
     }
 }

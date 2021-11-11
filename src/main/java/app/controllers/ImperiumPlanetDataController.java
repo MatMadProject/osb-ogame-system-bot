@@ -97,7 +97,7 @@ public class ImperiumPlanetDataController {
         labelDeuterium.setText(String.format("%.0f",planet.getResourcesProduction().getDeuteriumPerHour()));
         labelMetalMine.setText(planet.getBuilding(DataTechnology.METAL_MINE).getLevel()+"");
         labelCrystalMine.setText(planet.getBuilding(DataTechnology.CRYSTAL_MINE).getLevel()+"");
-        labelDeuteriumSynth.setText(planet.getBuilding(DataTechnology.DEUTERIUM_STORAGE).getLevel()+"");
+        labelDeuteriumSynth.setText(planet.getBuilding(DataTechnology.DEUTERIUM_SYNTHESIZER).getLevel()+"");
         labelSolarPlant.setText(planet.getBuilding(DataTechnology.SOLAR_PLANT).getLevel()+"");
         labelFusionPlant.setText(planet.getBuilding(DataTechnology.FUSION_PLANT).getLevel()+"");
         labelSolarSatelite.setText(planet.getBuilding(DataTechnology.SOLAR_SATELITE).getLevel()+"");

@@ -34,4 +34,8 @@ public class AutoBuilderLeafTaskConnector implements LeafTaskConnector{
         }
         return content;
     }
+
+    public AutoBuilderLeafTaskController getController() {
+        return controller;
+    }
 }

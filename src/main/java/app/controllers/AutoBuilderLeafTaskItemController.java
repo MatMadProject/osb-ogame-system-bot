@@ -5,6 +5,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.input.MouseEvent;
 import ogame.utils.watch.Calendar;
+import ogame.utils.watch.Time;
 
 
 public class AutoBuilderLeafTaskItemController {
@@ -50,7 +51,10 @@ public class AutoBuilderLeafTaskItemController {
         labelBuilding.setText(itemAutoBuilder.getBuilding().getName());
         labelLevel.setText((itemAutoBuilder.getUpgradeLevel())+"");
         labelStartTime.setText(Calendar.getDateTime(itemAutoBuilder.getStartTime()));
-        labelFinishTime.setText(Calendar.getDateTime(itemAutoBuilder.getFinishTime()));
+        if(itemAutoBuilder.getTimer() != null)
+            labelFinishTime.setText(Time.get(itemAutoBuilder.getTimer().timeLeftInSeconds(System.currentTimeMillis())));
+        else
+            labelFinishTime.setText(Calendar.getDateTime(itemAutoBuilder.getFinishTime()));
         labelStatus.setText(itemAutoBuilder.getStatus()+"");
         labelStatusTime.setText(Calendar.getDateTime(itemAutoBuilder.getStatusTime()));
     }

@@ -29,8 +29,10 @@ public class ImperiumLeafTask extends LeafTask{
     public void execute() {
         if(isRun()){
             if(isSleepTimeOut(System.currentTimeMillis())){
-                updateData();
-                tickUpdate();
+                if(DataLoader.planets.isUpdateData()) {
+                    updateData();
+                    tickUpdate();
+                }
                 setLastTimeExecute(System.currentTimeMillis());
             }
         }
@@ -225,8 +227,9 @@ public class ImperiumLeafTask extends LeafTask{
 
     private void tickUpdate(){
         tick++;
-        if(tick > 3)
+        if(tick > 3){
+            DataLoader.planets.setUpdateData(false);
             tick = 0;
+        }
     }
-
 }

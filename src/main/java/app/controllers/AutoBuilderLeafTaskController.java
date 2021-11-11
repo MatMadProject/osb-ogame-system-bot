@@ -79,12 +79,29 @@ public class AutoBuilderLeafTaskController {
                 AutoBuilderLeafTaskItemConnector autoBuilderLeafTaskItemConnector = new AutoBuilderLeafTaskItemConnector(itemAutoBuilder);
 
                 vBoxQueue.getChildren().add(autoBuilderLeafTaskItemConnector.content());
-                AppLog.print(AutoBuilderLeafTaskController.class.getName(),0,"Add to built queue: Upgrade "+ building.getName() + " to "
+                AppLog.print(AutoBuilderLeafTaskController.class.getName(),2,"Add to built queue: Upgrade "+ building.getName() + " to "
                         + upgradeLevel +" level on " + planet.getCoordinate().getText() + ".");
             }
         }
-        else {
-            AppLog.print(AutoBuilderLeafTaskController.class.getName(),1,"Add to built queue fails because building is "+ building.getName() + ".");
+        else
+            AppLog.print(AutoBuilderLeafTaskController.class.getName(),2,"Add to built queue fails because building is "+ building.getName() + ".");
+    }
+
+    public void updateHistoryList(){
+       ArrayList<ItemAutoBuilder> historyList = DataLoader.listItemAutoBuilder.getHistoryList();
+       vBoxHistory.getChildren().clear();
+       for(ItemAutoBuilder itemAutoBuilder : historyList){
+           AutoBuilderLeafTaskItemConnector autoBuilderLeafTaskItemConnector = new AutoBuilderLeafTaskItemConnector(itemAutoBuilder);
+           vBoxHistory.getChildren().add(autoBuilderLeafTaskItemConnector.content());
+       }
+    }
+
+    public void updateQueueList(){
+        ArrayList<ItemAutoBuilder> queueList = DataLoader.listItemAutoBuilder.getQueueList();
+        vBoxQueue.getChildren().clear();
+        for(ItemAutoBuilder itemAutoBuilder : queueList){
+            AutoBuilderLeafTaskItemConnector autoBuilderLeafTaskItemConnector = new AutoBuilderLeafTaskItemConnector(itemAutoBuilder);
+            vBoxQueue.getChildren().add(autoBuilderLeafTaskItemConnector.content());
         }
     }
 
@@ -107,7 +124,6 @@ public class AutoBuilderLeafTaskController {
 
                 Building tmp = planet.getBuilding(dataTechnology);
                 list.add(new ComboBoxBuilding(tmp));
-
             }
             return list;
         }

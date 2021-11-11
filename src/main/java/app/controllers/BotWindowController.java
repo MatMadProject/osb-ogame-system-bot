@@ -98,7 +98,6 @@ public class BotWindowController {
             TaskContainerConnector connector = new TaskContainerConnector(leafTaskManager.getTasks()[i], this);
             vBoxTaskList.getChildren().add(connector.getContainer());
         }
-
         fillTaskList = false;
     }
 
@@ -144,6 +143,10 @@ public class BotWindowController {
 
     public void unselectLeafTask() {
         this.selectedLeafTask.unselect();
+    }
+
+    public TaskContainerController getSelectedLeafTask() {
+        return selectedLeafTask;
     }
 
     public void setLeafTaskManager(LeafTaskManager leafTaskManager) {
