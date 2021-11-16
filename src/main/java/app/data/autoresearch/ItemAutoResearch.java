@@ -1,27 +1,27 @@
-package app.data.autobuilder;
+package app.data.autoresearch;
 
-import ogame.buildings.Building;
 import ogame.planets.Planet;
+import ogame.researches.Research;
 import ogame.utils.watch.Timer;
 
 import java.io.Serializable;
 import java.util.Objects;
 
-public class ItemAutoBuilder implements Serializable {
+public class ItemAutoResearch implements Serializable {
+
     private static final long serialVersionUID = 1992L;
     private final Planet planet;
-    private final Building building;
+    private final Research research;
     private final int upgradeLevel;
     private final long startTime;
     private long finishTime;
     private Status status;
     private long statusTime;
-    private int energyConsumption;
     private Timer timer;
 
-    public ItemAutoBuilder(Planet planet, Building building, int upgradeLevel, long startTime) {
+    public ItemAutoResearch(Planet planet, Research research, int upgradeLevel, long startTime) {
         this.planet = planet;
-        this.building = building;
+        this.research = research;
         this.upgradeLevel = upgradeLevel;
         this.startTime = startTime;
         this.status = Status.ADDED;
@@ -29,7 +29,7 @@ public class ItemAutoBuilder implements Serializable {
 
     public long timeToFinish(){
         if(this.status == Status.UPGRADING){
-            long finishTime = this.building.getProductionTime().timeInSeconds() * 1000 + statusTime;
+            long finishTime = this.research.getProductionTime().timeInSeconds() * 1000 + statusTime;
             return finishTime - System.currentTimeMillis();
         }
         return 0;
@@ -38,8 +38,8 @@ public class ItemAutoBuilder implements Serializable {
         return planet;
     }
 
-    public Building getBuilding() {
-        return building;
+    public Research getResearch() {
+        return research;
     }
 
     public long getStartTime() {
@@ -69,17 +69,12 @@ public class ItemAutoBuilder implements Serializable {
     public void setStatusTime(long statusTime) {
         this.statusTime = statusTime;
     }
+    public void setStatusTime() {
+        this.statusTime = System.currentTimeMillis();
+    }
 
     public int getUpgradeLevel() {
         return upgradeLevel;
-    }
-
-    public int getEnergyConsumption() {
-        return energyConsumption;
-    }
-
-    public void setEnergyConsumption(int energyConsumption) {
-        this.energyConsumption = energyConsumption;
     }
 
     public Timer getTimer() {
@@ -94,20 +89,16 @@ public class ItemAutoBuilder implements Serializable {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        ItemAutoBuilder that = (ItemAutoBuilder) o;
-        return upgradeLevel == that.upgradeLevel && Objects.equals(planet, that.planet) && Objects.equals(building, that.building);
+        ItemAutoResearch that = (ItemAutoResearch) o;
+        return upgradeLevel == that.upgradeLevel && Objects.equals(research, that.research);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(planet, building, upgradeLevel);
+        return Objects.hash(research, upgradeLevel);
     }
 
     public void updateFinishTime(long currentTime) {
-        this.finishTime = currentTime + this.building.getProductionTime().timeInSeconds() * 1000;
-    }
-
-    public void setStatusTime() {
-        this.statusTime = System.currentTimeMillis();
+        this.finishTime = currentTime + this.research.getProductionTime().timeInSeconds() * 1000;
     }
 }

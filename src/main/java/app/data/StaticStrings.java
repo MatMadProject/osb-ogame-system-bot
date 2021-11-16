@@ -36,11 +36,12 @@ public class StaticStrings {
     //Fleetsave
     public static final String FLEETSAVE_CONFIG_FILE = "fleetsave-config";
     //Badania
-    public static final String BADANIA_FILE = "research";
+    public static final String RESEARCH_FILE = "research";
     //Planety
     public static final String PLANETS_FILE = "planets-config";
     //AutoBuilder
     public static final String AUTO_BUILDER_FILE = "autobuilder";
+    public static final String AUTO_RESEARCH_FILE = "autoresearch";
     /*
     FOLDERS
      */

@@ -2,10 +2,7 @@ package app.controllers_connector;
 
 import app.controllers.BotWindowController;
 import app.controllers.TaskContainerController;
-import app.leaftask.AutoBuilderLeafTask;
-import app.leaftask.ImperiumLeafTask;
-import app.leaftask.LeafTask;
-import app.leaftask.PlanetsLeafTask;
+import app.leaftask.*;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.layout.AnchorPane;
 
@@ -15,7 +12,7 @@ public class TaskContainerConnector {
 
     private TaskContainerController controller;
     private AnchorPane container;
-    private LeafTaskConnector leafTaskConnector;
+    private final LeafTaskConnector leafTaskConnector;
 
     public TaskContainerConnector(LeafTask task, BotWindowController botWindowController) {
         leafTaskConnector = setLeafTaskConnector(task);
@@ -43,6 +40,7 @@ public class TaskContainerConnector {
         return controller;
     }
 
+    //Update when added new leaftask to app.
     private LeafTaskConnector setLeafTaskConnector(LeafTask leafTask){
         if(leafTask instanceof PlanetsLeafTask)
             return new PlanetsLeafTaskConnector();
@@ -50,7 +48,8 @@ public class TaskContainerConnector {
             return new ImperiumLeafTaskConnector();
         if(leafTask instanceof AutoBuilderLeafTask)
             return new AutoBuilderLeafTaskConnector();
-
+        if(leafTask instanceof AutoResearchLeafTask)
+            return new AutoResearchLeafTaskConnector();
         return null;
     }
 }

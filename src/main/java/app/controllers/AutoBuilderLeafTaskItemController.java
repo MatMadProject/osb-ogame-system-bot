@@ -52,7 +52,7 @@ public class AutoBuilderLeafTaskItemController {
         labelLevel.setText((itemAutoBuilder.getUpgradeLevel())+"");
         labelStartTime.setText(Calendar.getDateTime(itemAutoBuilder.getStartTime()));
         if(itemAutoBuilder.getTimer() != null)
-            labelFinishTime.setText(Time.get(itemAutoBuilder.getTimer().timeLeftInSeconds(System.currentTimeMillis())));
+            labelFinishTime.setText(itemAutoBuilder.getTimer().leftTime());
         else
             labelFinishTime.setText(Calendar.getDateTime(itemAutoBuilder.getFinishTime()));
         labelStatus.setText(itemAutoBuilder.getStatus()+"");

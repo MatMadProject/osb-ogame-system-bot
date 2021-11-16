@@ -2,8 +2,11 @@ package app.task;
 
 import app.controllers.BotWindowController;
 import app.controllers_connector.AutoBuilderLeafTaskConnector;
+import app.controllers_connector.AutoResearchLeafTaskConnector;
 import app.controllers_connector.LeafTaskConnector;
+import app.data.DataLoader;
 import app.leaftask.AutoBuilderLeafTask;
+import app.leaftask.AutoResearchLeafTask;
 import app.leaftask.PlanetsLeafTask;
 import javafx.application.Platform;
 import ogame.utils.Waiter;
@@ -29,6 +32,7 @@ public class GUIUpdater extends Task {
                     initializeTasksList();
                     doneProgressBar();
                     updateAutoBuilderGUI();
+                    updateAutoResearchGUI();
                 };
                 Platform.runLater(updater);
             }
@@ -63,7 +67,8 @@ public class GUIUpdater extends Task {
 
     private void doneProgressBar(){
         if(botWindowController != null){
-            if(((PlanetsLeafTask)botWindowController.getLeafTaskManager().getTasks()[0]).isInited())
+//            if(((PlanetsLeafTask)botWindowController.getLeafTaskManager().getTasks()[0]).isInited())
+            if(DataLoader.planets.isInitPlanetList())
                botWindowController.getPlanetsLeafTaskController().doneProgressBar();
         }
     }
@@ -75,6 +80,18 @@ public class GUIUpdater extends Task {
                 if(leafTaskConnector instanceof AutoBuilderLeafTaskConnector){
                     ((AutoBuilderLeafTaskConnector) leafTaskConnector).getController().updateHistoryList();
                     ((AutoBuilderLeafTaskConnector) leafTaskConnector).getController().updateQueueList();
+                }
+            }
+        }
+    }
+
+    private void updateAutoResearchGUI(){
+        if(botWindowController != null){
+            if(botWindowController.isSelectedLeafTask()){
+                LeafTaskConnector  leafTaskConnector = botWindowController.getSelectedLeafTask().getLeafTaskConnector();
+                if(leafTaskConnector instanceof AutoResearchLeafTaskConnector){
+                    ((AutoResearchLeafTaskConnector) leafTaskConnector).getController().updateHistoryList();
+                    ((AutoResearchLeafTaskConnector) leafTaskConnector).getController().updateQueueList();
                 }
             }
         }

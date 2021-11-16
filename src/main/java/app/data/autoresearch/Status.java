@@ -1,4 +1,4 @@
-package app.data.autobuilder;
+package app.data.autoresearch;
 
 public enum Status {
     ADDED,

@@ -10,12 +10,15 @@ import ogame.planets.Fields;
 import ogame.planets.Planet;
 import ogame.planets.PlanetsList;
 import ogame.planets.Temperature;
+import ogame.researches.Research;
+import ogame.researches.Type;
 import ogame.tabs.Facilities;
 import ogame.tabs.Overview;
 import ogame.tabs.ResourceSettings;
 import ogame.tabs.Supplies;
 import ogame.utils.Waiter;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class ImperiumLeafTask extends LeafTask{
@@ -55,9 +58,38 @@ public class ImperiumLeafTask extends LeafTask{
                 case 3:
                     planetTechnologyBuilding(list);
                     break;
+                case 4:
+                    if(DataLoader.researches.isUpdateData())
+                        updateResearches(DataLoader.researches.getResearchList());
+                    break;
             }
             DataLoader.planets.save();
         }
+    }
+
+    private void updateResearches(ArrayList<Research> researchList) {
+        //Klikanie badania
+        do{
+            ogame.tabs.Research.click(OgameWeb.webDriver);
+            Waiter.sleep(200,300);
+            if(getAntiLooping().check()){
+                getAntiLooping().reset();
+                return;
+            }
+        }while(!ogame.tabs.Research.visible(OgameWeb.webDriver)); // Jest niewidoczne
+        // Data downloads
+        for(Research research : researchList){
+            int listIndex = research.getDataTechnology().getListIndex();
+            Type type = research.getDataTechnology().getType();
+            int level = ogame.tabs.Research.levelOfResearch(OgameWeb.webDriver,listIndex, type);
+            String localName = ogame.tabs.Research.localNameOfResearch(OgameWeb.webDriver,listIndex, type);
+            Status status = ogame.tabs.Research.statusOfResearch(OgameWeb.webDriver,listIndex, type);
+            research.setLevel(level);
+            research.setLocalName(localName);
+            research.setStatus(status);
+        }
+        DataLoader.researches.save();
+        DataLoader.researches.setUpdateData(false);
     }
 
     public void planetInformation(List<Planet> list){
@@ -227,7 +259,7 @@ public class ImperiumLeafTask extends LeafTask{
 
     private void tickUpdate(){
         tick++;
-        if(tick > 3){
+        if(tick > 4){
             DataLoader.planets.setUpdateData(false);
             tick = 0;
         }

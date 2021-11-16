@@ -16,6 +16,7 @@ public class Planets implements LSD, Serializable {
     private static final long serialVersionUID = 1992L;
     private ArrayList<Planet> planetList = new ArrayList<>();
     private boolean updateData = true;
+    private boolean initPlanetList = true;
 
     public Planets() {
         load();
@@ -150,5 +151,13 @@ public class Planets implements LSD, Serializable {
 
     public void setUpdateData(boolean updateData) {
         this.updateData = updateData;
+    }
+
+    public boolean isInitPlanetList() {
+        return initPlanetList;
+    }
+
+    public void setInitPlanetList(boolean initPlanetList) {
+        this.initPlanetList = initPlanetList;
     }
 }

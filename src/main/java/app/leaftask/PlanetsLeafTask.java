@@ -1,26 +1,28 @@
 package app.leaftask;
 
 import app.data.DataLoader;
+import app.data.planets.Planets;
 import ogame.OgameWeb;
 import ogame.planets.Coordinate;
 import ogame.planets.Moon;
 import ogame.planets.Planet;
 import ogame.planets.PlanetsList;
 
+import java.util.ArrayList;
+
 public class PlanetsLeafTask extends LeafTask{
 
     public PlanetsLeafTask(int index, long sleepms, String name, boolean run) {
         super(index, sleepms, name, run);
     }
-    private boolean init = true;
-
+    private ArrayList<Planet> currentPlanetList = new ArrayList<>();
     @Override
     public void execute() {
         if(isRun()){
             if(isSleepTimeOut(System.currentTimeMillis())){
-                if(init){
+                if(DataLoader.planets.isInitPlanetList())
                     init();
-                }
+
                 setLastTimeExecute(System.currentTimeMillis());
             }
         }
@@ -28,7 +30,7 @@ public class PlanetsLeafTask extends LeafTask{
 
     private void init(){
         int numberOfPlanets = PlanetsList.numberOfPlanet(OgameWeb.webDriver);
-
+        Planets planets = DataLoader.planets;
         for(int i = 1; i <= numberOfPlanets; i++){
             String id = PlanetsList.planetID(OgameWeb.webDriver,i);
 
@@ -44,15 +46,31 @@ public class PlanetsLeafTask extends LeafTask{
                 Moon moon = new Moon(i);
                 planet.setMoon(moon);
             }
-            DataLoader.planets.add(planet);
+            planets.add(planet);
+            currentPlanetList.add(planet);
         }
-        if(DataLoader.planets.getPlanetList().size() > 0) {
-            init = false;
-            DataLoader.planets.save();
+
+        //Removing deleted planet
+        if(!currentPlanetList.isEmpty()){
+            ArrayList<Planet> planetToDelete = getPlanetToDeleteFromFile(currentPlanetList,planets.getPlanetList());
+            for(Planet planet : planetToDelete)
+                planets.remove(planet);
+
+            if(planets.getPlanetList().size() > 0) {
+                planets.setInitPlanetList(false);
+                planets.save();
+            }
+            currentPlanetList.clear();
         }
     }
 
-    public boolean isInited() {
-        return !init;
+     private ArrayList<Planet> getPlanetToDeleteFromFile(ArrayList<Planet> currentPlanetList, ArrayList<Planet>listFromFile){
+        ArrayList<Planet> list = (ArrayList<Planet>) listFromFile.clone();
+
+        for(Planet planet : currentPlanetList)
+            if(listFromFile.contains(planet))
+                list.remove(planet);
+
+         return list;
     }
 }
