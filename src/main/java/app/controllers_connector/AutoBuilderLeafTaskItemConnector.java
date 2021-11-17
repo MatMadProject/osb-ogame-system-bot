@@ -1,5 +1,6 @@
 package app.controllers_connector;
 
+import app.controllers.AutoBuilderLeafTaskController;
 import app.controllers.AutoBuilderLeafTaskItemController;
 import app.data.autobuilder.ItemAutoBuilder;
 import javafx.fxml.FXMLLoader;
@@ -15,7 +16,7 @@ public class AutoBuilderLeafTaskItemConnector implements LeafTaskConnector{
     private HBox content;
     private ItemAutoBuilder itemAutoBuilder;
 
-    public AutoBuilderLeafTaskItemConnector(ItemAutoBuilder itemAutoBuilder){
+    public AutoBuilderLeafTaskItemConnector(ItemAutoBuilder itemAutoBuilder, AutoBuilderLeafTaskController autoBuilderLeafTaskController){
         this.itemAutoBuilder = itemAutoBuilder;
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/gui/auto-builder-leaftask-item.fxml"));
         try {
@@ -27,7 +28,8 @@ public class AutoBuilderLeafTaskItemConnector implements LeafTaskConnector{
         }
 
         if(controller != null) {
-
+            controller.setAutoBuilderLeafTaskController(autoBuilderLeafTaskController);
+            controller.setItemAutoBuilder(itemAutoBuilder);
         }
     }
 

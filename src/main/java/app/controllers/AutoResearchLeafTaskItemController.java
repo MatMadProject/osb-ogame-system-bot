@@ -1,5 +1,6 @@
 package app.controllers;
 
+import app.data.DataLoader;
 import app.data.autoresearch.ItemAutoResearch;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
@@ -28,9 +29,13 @@ public class AutoResearchLeafTaskItemController {
     @FXML
     private Label labelStatusTime;
 
+    private AutoResearchLeafTaskController autoResearchLeafTaskController;
+    private ItemAutoResearch itemAutoResearch;
+
     @FXML
     void delete(MouseEvent event) {
-
+        DataLoader.listItemAutoResearch.getQueueList().remove(itemAutoResearch);
+        autoResearchLeafTaskController.updateQueueList();
     }
 
     @FXML
@@ -54,5 +59,13 @@ public class AutoResearchLeafTaskItemController {
             labelFinishTime.setText(Calendar.getDateTime(itemAutoResearch.getFinishTime()));
         labelStatus.setText(itemAutoResearch.getStatus()+"");
         labelStatusTime.setText(Calendar.getDateTime(itemAutoResearch.getStatusTime()));
+    }
+
+    public void setAutoBuilderLeafTaskController(AutoResearchLeafTaskController autoResearchLeafTaskController) {
+        this.autoResearchLeafTaskController = autoResearchLeafTaskController;
+    }
+
+    public void setItemAutoResearch(ItemAutoResearch itemAutoResearch) {
+        this.itemAutoResearch = itemAutoResearch;
     }
 }

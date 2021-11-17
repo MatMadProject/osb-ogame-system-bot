@@ -1,5 +1,6 @@
 package app.controllers_connector;
 
+import app.controllers.AutoResearchLeafTaskController;
 import app.controllers.AutoResearchLeafTaskItemController;
 import app.data.autoresearch.ItemAutoResearch;
 import javafx.fxml.FXMLLoader;
@@ -14,7 +15,7 @@ public class AutoResearchLeafTaskItemConnector implements LeafTaskConnector{
     private HBox content;
     private final ItemAutoResearch itemAutoResearch;
 
-    public AutoResearchLeafTaskItemConnector(ItemAutoResearch itemAutoResearch){
+    public AutoResearchLeafTaskItemConnector(ItemAutoResearch itemAutoResearch, AutoResearchLeafTaskController autoResearchLeafTaskController){
         this.itemAutoResearch = itemAutoResearch;
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/gui/auto-research-leaftask-item.fxml"));
         try {
@@ -26,7 +27,8 @@ public class AutoResearchLeafTaskItemConnector implements LeafTaskConnector{
         }
 
         if(controller != null) {
-
+            controller.setItemAutoResearch(itemAutoResearch);
+            controller.setAutoBuilderLeafTaskController(autoResearchLeafTaskController);
         }
     }
 

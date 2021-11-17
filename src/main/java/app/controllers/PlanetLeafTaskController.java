@@ -15,7 +15,7 @@ public class PlanetLeafTaskController {
 
     @FXML
     void initialize(){
-        if(DataLoader.planets != null && DataLoader.planets.getPlanetList().size() > 0)
+        if(DataLoader.planets != null && !DataLoader.planets.isInitPlanetList())
             doneProgressBar();
     }
 
