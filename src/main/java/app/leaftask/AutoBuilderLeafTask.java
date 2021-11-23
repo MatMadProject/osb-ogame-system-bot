@@ -53,7 +53,7 @@ public class AutoBuilderLeafTask extends LeafTask{
                             if(STATUS == Status.UPGRADING)
                                 isFinished(itemAutoBuilder);
                             if(STATUS == Status.FINISHED)
-                                finish(itemAutoBuilder);
+                                finish(itemAutoBuilder, queueList);
                         }
                     }catch(Exception ex){
                         AppLog.print(AutoBuilderLeafTask.class.getName(),1,"When iterates queueList on" +
@@ -69,14 +69,23 @@ public class AutoBuilderLeafTask extends LeafTask{
         }
     }
 
-    private void finish(ItemAutoBuilder itemAutoBuilder) {
+    private void finish(ItemAutoBuilder itemAutoBuilder, ArrayList<ItemAutoBuilder> queueList) {
         Building building = itemAutoBuilder.getBuilding();
+        Planet planet = itemAutoBuilder.getPlanet();
         building.setProductionTime(null);
         building.setRequiredResources(null);
         itemAutoBuilderToRemove = itemAutoBuilder;
         DataLoader.listItemAutoBuilder.getHistoryList().add(itemAutoBuilder);
-        //todo Przenieść update na jednej planecie i konkretne dane - wydobycie lub budynki produkcyjne lub budynki technologiczne
         DataLoader.planets.setUpdateData(true);
+        if(building.getDataTechnology().getType() == Type.PRODUCTION){
+            planet.setUpdateResourceBuilding(true);
+            planet.setUpdateResourcesProduction(true);
+        }else
+            planet.setUpdateTechnologyBuilding(true);
+        //Starting buliding next object on queue list.
+        ItemAutoBuilder index1 = queueList.get(1);
+        index1.setStatus(Status.DATA_DOWNLOADING);
+        index1.setTimer(null);
     }
 
     private void isFinished(ItemAutoBuilder itemAutoBuilder) {
@@ -222,7 +231,7 @@ public class AutoBuilderLeafTask extends LeafTask{
             }
         }
         if(building.getStatus() == ogame.Status.DISABLED){
-            if(DataLoader.listItemAutoResearch.isAnyResearchUprading()){
+            if(DataLoader.listItemAutoBuilder.isAnyBuildingUprading()){
                 itemAutoBuilder.setStatus(Status.WAIT);
                 long currentTime = System.currentTimeMillis();
                 itemAutoBuilder.setStatusTime(currentTime);

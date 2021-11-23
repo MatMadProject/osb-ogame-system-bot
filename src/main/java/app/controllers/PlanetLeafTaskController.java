@@ -25,7 +25,7 @@ public class PlanetLeafTaskController {
     }
 
     public void update(){
-        if(DataLoader.planets != null && DataLoader.planets.getPlanetList().size() > 0)
+        if(DataLoader.planets != null && !DataLoader.planets.isInitPlanetList())
             doneProgressBar();
     }
 }

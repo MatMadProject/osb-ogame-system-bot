@@ -2,15 +2,17 @@ package app.controllers;
 
 import app.data.DataLoader;
 import app.data.autobuilder.ItemAutoBuilder;
+import app.data.autobuilder.Status;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.input.MouseEvent;
+import ogame.utils.log.AppLog;
 import ogame.utils.watch.Calendar;
-import ogame.utils.watch.Time;
-
 
 public class AutoBuilderLeafTaskItemController {
 
+    public Label labelDown;
+    public Label labelUp;
     @FXML
     private Label labelPlanet;
 
@@ -37,8 +39,17 @@ public class AutoBuilderLeafTaskItemController {
 
     @FXML
     void delete(MouseEvent event) {
-        DataLoader.listItemAutoBuilder.getQueueList().remove(itemAutoBuilder);
-        autoBuilderLeafTaskController.updateQueueList();
+        if(itemAutoBuilder.getStatus() == Status.FINISHED){
+            DataLoader.listItemAutoBuilder.getHistoryList().remove(itemAutoBuilder);
+            autoBuilderLeafTaskController.updateHistoryList();
+            AppLog.print(AutoResearchLeafTaskItemController.class.getName(),2,"Remove from built history: Upgrade "+ itemAutoBuilder.getBuilding().getName() + " to "
+                    + itemAutoBuilder.getUpgradeLevel() +" level on " + itemAutoBuilder.getPlanet().getCoordinate().getText() + ".");
+        }else{
+            DataLoader.listItemAutoBuilder.getQueueList().remove(itemAutoBuilder);
+            autoBuilderLeafTaskController.updateQueueList();
+            AppLog.print(AutoResearchLeafTaskItemController.class.getName(),2,"Remove from built queue: Upgrade "+ itemAutoBuilder.getBuilding().getName() + " to "
+                    + itemAutoBuilder.getUpgradeLevel() +" level on " + itemAutoBuilder.getPlanet().getCoordinate().getText() + ".");
+        }
     }
 
     @FXML
@@ -52,7 +63,7 @@ public class AutoBuilderLeafTaskItemController {
 
     }
 
-    public void update(ItemAutoBuilder itemAutoBuilder){
+    public void create(ItemAutoBuilder itemAutoBuilder){
         labelPlanet.setText(itemAutoBuilder.getPlanet().getCoordinate().getText());
         labelBuilding.setText(itemAutoBuilder.getBuilding().getName());
         labelLevel.setText((itemAutoBuilder.getUpgradeLevel())+"");
@@ -64,6 +75,29 @@ public class AutoBuilderLeafTaskItemController {
         labelStatus.setText(itemAutoBuilder.getStatus()+"");
         labelStatusTime.setText(Calendar.getDateTime(itemAutoBuilder.getStatusTime()));
     }
+
+    public void createHistoryItem(ItemAutoBuilder itemAutoBuilder){
+        labelPlanet.setText(itemAutoBuilder.getPlanet().getCoordinate().getText());
+        labelBuilding.setText(itemAutoBuilder.getBuilding().getName());
+        labelLevel.setText((itemAutoBuilder.getUpgradeLevel())+"");
+        labelStartTime.setText(Calendar.getDateTime(itemAutoBuilder.getStartTime()));
+        labelFinishTime.setText(Calendar.getDateTime(itemAutoBuilder.getFinishTime()));
+        labelStatus.setText(itemAutoBuilder.getStatus()+"");
+        labelStatusTime.setText(Calendar.getDateTime(itemAutoBuilder.getStatusTime()));
+        labelDown.setDisable(true);
+        labelUp.setDisable(true);
+    }
+
+    public void update(){
+        if(itemAutoBuilder.getTimer() != null)
+            labelFinishTime.setText(itemAutoBuilder.getTimer().leftTime());
+        else
+            labelFinishTime.setText(Calendar.getDateTime(itemAutoBuilder.getFinishTime()));
+        labelStatus.setText(itemAutoBuilder.getStatus()+"");
+        labelStatusTime.setText(Calendar.getDateTime(itemAutoBuilder.getStatusTime()));
+    }
+
+
 
     public void setAutoBuilderLeafTaskController(AutoBuilderLeafTaskController autoBuilderLeafTaskController) {
         this.autoBuilderLeafTaskController = autoBuilderLeafTaskController;

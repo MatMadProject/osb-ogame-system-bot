@@ -107,8 +107,10 @@ public class ImperiumLeafTask extends LeafTask{
             //Klikanie w właściwą planetę
             Planet tmpPlanet;
             do{
-                if(PlanetsList.clickOnPlanet(OgameWeb.webDriver,planet.getPositionOnList()))
+                if(PlanetsList.clickOnPlanet(OgameWeb.webDriver,planet.getPositionOnList())){
+                    tmpPlanet = PlanetsList.selectedPlanet(OgameWeb.webDriver);
                     break;
+                }
                 Waiter.sleep(200,200);
                 if(getAntiLooping().check()){
                     getAntiLooping().reset();
@@ -116,7 +118,10 @@ public class ImperiumLeafTask extends LeafTask{
                 }
                 tmpPlanet = PlanetsList.selectedPlanet(OgameWeb.webDriver);
             }while(tmpPlanet == null || tmpPlanet.getId().equals(planet.getId()));
-
+            //Planet doesn't exist on planet list, maybe was deleted.
+            if(tmpPlanet == null)
+                return;
+            Waiter.sleep(500,750);
             int builtUpFields = Overview.builtUpFields(OgameWeb.webDriver);
             int maxPlanetFields = Overview.maxPlanetFields(OgameWeb.webDriver);
             int minTemperature = Overview.minTemperature(OgameWeb.webDriver);
@@ -134,125 +139,151 @@ public class ImperiumLeafTask extends LeafTask{
 
     public void planetProduction(List<Planet> list){
         for(Planet planet : list) {
-            //Klikanie podgląd
-            do {
-                ResourceSettings.click(OgameWeb.webDriver);
-                Waiter.sleep(200, 200);
-                if (getAntiLooping().check()) {
-                    getAntiLooping().reset();
-                    return;
-                }
-            } while (!ResourceSettings.visible(OgameWeb.webDriver)); // Jest niewidoczne
+           if(planet.isUpdateResourcesProduction()){
+               //Klikanie podgląd
+               do {
+                   ResourceSettings.click(OgameWeb.webDriver);
+                   Waiter.sleep(200, 200);
+                   if (getAntiLooping().check()) {
+                       getAntiLooping().reset();
+                       return;
+                   }
+               } while (!ResourceSettings.visible(OgameWeb.webDriver)); // Jest niewidoczne
 
-            //Klikanie w właściwą planetę
-            Planet tmpPlanet;
-            do {
-                if (PlanetsList.clickOnPlanet(OgameWeb.webDriver, planet.getPositionOnList()))
-                    break;
-                Waiter.sleep(200, 200);
-                if (getAntiLooping().check()) {
-                    getAntiLooping().reset();
-                    return;
-                }
-                tmpPlanet = PlanetsList.selectedPlanet(OgameWeb.webDriver);
-            } while (tmpPlanet == null || tmpPlanet.getId().equals(planet.getId()));
+               //Klikanie w właściwą planetę
+               Planet tmpPlanet;
+               do {
+                   if (PlanetsList.clickOnPlanet(OgameWeb.webDriver, planet.getPositionOnList())){
+                       tmpPlanet = PlanetsList.selectedPlanet(OgameWeb.webDriver);
+                       break;
+                   }
+                   Waiter.sleep(200, 200);
+                   if (getAntiLooping().check()) {
+                       getAntiLooping().reset();
+                       return;
+                   }
+                   tmpPlanet = PlanetsList.selectedPlanet(OgameWeb.webDriver);
+               } while (tmpPlanet == null || tmpPlanet.getId().equals(planet.getId()));
+               //Planet doesn't exist on planet list, maybe was deleted.
+               if(tmpPlanet == null)
+                   return;
+               Waiter.sleep(500,750);
+               Building deutheriumSynthesizer = planet.getBuilding(DataTechnology.DEUTERIUM_SYNTHESIZER);
+               int metalPerHour = ResourceSettings.metalPerHour(OgameWeb.webDriver,deutheriumSynthesizer);
+               int metalPerDay = ResourceSettings.metalPerDay(OgameWeb.webDriver,deutheriumSynthesizer);
+               int metalPerWeek = ResourceSettings.metalPerWeek(OgameWeb.webDriver,deutheriumSynthesizer);
 
-            int metalPerHour = ResourceSettings.metalPerHour(OgameWeb.webDriver);
-            int metalPerDay = ResourceSettings.metalPerDay(OgameWeb.webDriver);
-            int metalPerWeek = ResourceSettings.metalPerWeek(OgameWeb.webDriver);
+               int crystalPerHour = ResourceSettings.crystalPerHour(OgameWeb.webDriver,deutheriumSynthesizer);
+               int crystalPerDay = ResourceSettings.crystalPerDay(OgameWeb.webDriver,deutheriumSynthesizer);
+               int crystalPerWeek = ResourceSettings.crystalPerWeek(OgameWeb.webDriver,deutheriumSynthesizer);
 
-            int crystalPerHour = ResourceSettings.crystalPerHour(OgameWeb.webDriver);
-            int crystalPerDay = ResourceSettings.crystalPerDay(OgameWeb.webDriver);
-            int crystalPerWeek = ResourceSettings.crystalPerWeek(OgameWeb.webDriver);
+               int deuteriumPerHour = ResourceSettings.deuteriumPerHour(OgameWeb.webDriver,deutheriumSynthesizer);
+               int deuteriumPerDay = ResourceSettings.deuteriumPerDay(OgameWeb.webDriver,deutheriumSynthesizer);
+               int deuteriumPerWeek = ResourceSettings.deuteriumPerWeek(OgameWeb.webDriver,deutheriumSynthesizer);
 
-            int deuteriumPerHour = ResourceSettings.deuteriumPerHour(OgameWeb.webDriver);
-            int deuteriumPerDay = ResourceSettings.deuteriumPerDay(OgameWeb.webDriver);
-            int deuteriumPerWeek = ResourceSettings.deuteriumPerWeek(OgameWeb.webDriver);
+               planet.getResourcesProduction().setMetalPerHour(metalPerHour);
+               planet.getResourcesProduction().setMetalPerDay(metalPerDay);
+               planet.getResourcesProduction().setMetalPerWeek(metalPerWeek);
+               planet.getResourcesProduction().setCrystalPerHour(crystalPerHour);
+               planet.getResourcesProduction().setCrystalPerDay(crystalPerDay);
+               planet.getResourcesProduction().setCrystalPerWeek(crystalPerWeek);
+               planet.getResourcesProduction().setDeuteriumPerHour(deuteriumPerHour);
+               planet.getResourcesProduction().setDeuteriumPerDay(deuteriumPerDay);
+               planet.getResourcesProduction().setDeuteriumPerWeek(deuteriumPerWeek);
 
-            planet.getResourcesProduction().setMetalPerHour(metalPerHour);
-            planet.getResourcesProduction().setMetalPerDay(metalPerDay);
-            planet.getResourcesProduction().setMetalPerWeek(metalPerWeek);
-            planet.getResourcesProduction().setCrystalPerHour(crystalPerHour);
-            planet.getResourcesProduction().setCrystalPerDay(crystalPerDay);
-            planet.getResourcesProduction().setCrystalPerWeek(crystalPerWeek);
-            planet.getResourcesProduction().setDeuteriumPerHour(deuteriumPerHour);
-            planet.getResourcesProduction().setDeuteriumPerDay(deuteriumPerDay);
-            planet.getResourcesProduction().setDeuteriumPerWeek(deuteriumPerWeek);
+               planet.setUpdateResourcesProduction(false);
+           }
         }
     }
 
     public void planetProductionBuilding(List<Planet> list){
         for(Planet planet : list) {
-            //Klikanie podgląd
-            do {
-                Supplies.click(OgameWeb.webDriver);
-                Waiter.sleep(200, 200);
-                if (getAntiLooping().check()) {
-                    getAntiLooping().reset();
-                    return;
-                }
-            } while (!Supplies.visible(OgameWeb.webDriver)); // Jest niewidoczne
+            if(planet.isUpdateResourceBuilding()){
+                //Klikanie podgląd
+                do {
+                    Supplies.click(OgameWeb.webDriver);
+                    Waiter.sleep(200, 200);
+                    if (getAntiLooping().check()) {
+                        getAntiLooping().reset();
+                        return;
+                    }
+                } while (!Supplies.visible(OgameWeb.webDriver)); // Jest niewidoczne
 
-            //Klikanie w właściwą planetę
-            Planet tmpPlanet;
-            do {
-                if (PlanetsList.clickOnPlanet(OgameWeb.webDriver, planet.getPositionOnList()))
-                    break;
-                Waiter.sleep(200, 200);
-                if (getAntiLooping().check()) {
-                    getAntiLooping().reset();
+                //Klikanie w właściwą planetę
+                Planet tmpPlanet;
+                do {
+                    if (PlanetsList.clickOnPlanet(OgameWeb.webDriver, planet.getPositionOnList())){
+                        tmpPlanet = PlanetsList.selectedPlanet(OgameWeb.webDriver);
+                        break;
+                    }
+                    Waiter.sleep(200, 200);
+                    if (getAntiLooping().check()) {
+                        getAntiLooping().reset();
+                        return;
+                    }
+                    tmpPlanet = PlanetsList.selectedPlanet(OgameWeb.webDriver);
+                } while (tmpPlanet == null || tmpPlanet.getId().equals(planet.getId()));
+                //Planet doesn't exist on planet list, maybe was deleted.
+                if(tmpPlanet == null)
                     return;
+                Waiter.sleep(500,750);
+                for(int i = 1; i <= 10; i++) {
+                    String dataTechnology = Supplies.dataTechnologyOfBuilding(OgameWeb.webDriver,i);
+                    Building building = planet.getBuilding(DataTechnology.getFromValue(dataTechnology));
+                    Status status = Supplies.statusOfBuilding(OgameWeb.webDriver,i);
+                    String localName = Supplies.localNameOfBuilding(OgameWeb.webDriver,i);
+                    int level = Supplies.levelOfBuilding(OgameWeb.webDriver, i);
+                    building.setLevel(level);
+                    building.setLocalName(localName);
+                    building.setStatus(status);
                 }
-                tmpPlanet = PlanetsList.selectedPlanet(OgameWeb.webDriver);
-            } while (tmpPlanet == null || tmpPlanet.getId().equals(planet.getId()));
-
-            for(int i = 1; i <= 10; i++) {
-                String dataTechnology = Supplies.dataTechnologyOfBuilding(OgameWeb.webDriver,i);
-                Building building = planet.getBuilding(DataTechnology.getFromValue(dataTechnology));
-                Status status = Supplies.statusOfBuilding(OgameWeb.webDriver,i);
-                String localName = Supplies.localNameOfBuilding(OgameWeb.webDriver,i);
-                int level = Supplies.levelOfBuilding(OgameWeb.webDriver, i);
-                building.setLevel(level);
-                building.setLocalName(localName);
-                building.setStatus(status);
+                planet.setUpdateResourceBuilding(false);
             }
         }
     }
 
     public void planetTechnologyBuilding(List<Planet> list){
         for(Planet planet : list) {
-            //Klikanie podgląd
-            do {
-                Facilities.click(OgameWeb.webDriver);
-                Waiter.sleep(200, 200);
-                if (getAntiLooping().check()) {
-                    getAntiLooping().reset();
-                    return;
-                }
-            } while (!Facilities.visible(OgameWeb.webDriver)); // Jest niewidoczne
+            if(planet.isUpdateTechnologyBuilding()){
+                //Klikanie podgląd
+                do {
+                    Facilities.click(OgameWeb.webDriver);
+                    Waiter.sleep(200, 200);
+                    if (getAntiLooping().check()) {
+                        getAntiLooping().reset();
+                        return;
+                    }
+                } while (!Facilities.visible(OgameWeb.webDriver)); // Jest niewidoczne
 
-            //Klikanie w właściwą planetę
-            Planet tmpPlanet;
-            do {
-                if (PlanetsList.clickOnPlanet(OgameWeb.webDriver, planet.getPositionOnList()))
-                    break;
-                Waiter.sleep(200, 200);
-                if (getAntiLooping().check()) {
-                    getAntiLooping().reset();
+                //Klikanie w właściwą planetę
+                Planet tmpPlanet;
+                do {
+                    if (PlanetsList.clickOnPlanet(OgameWeb.webDriver, planet.getPositionOnList())){
+                        tmpPlanet = PlanetsList.selectedPlanet(OgameWeb.webDriver);
+                        break;
+                    }
+                    Waiter.sleep(200, 200);
+                    if (getAntiLooping().check()) {
+                        getAntiLooping().reset();
+                        return;
+                    }
+                    tmpPlanet = PlanetsList.selectedPlanet(OgameWeb.webDriver);
+                } while (tmpPlanet == null || tmpPlanet.getId().equals(planet.getId()));
+                //Planet doesn't exist on planet list, maybe was deleted.
+                if(tmpPlanet == null)
                     return;
+                Waiter.sleep(500,750);
+                for(int i = 1; i <= 8; i++) {
+                    String dataTechnology = Facilities.dataTechnologyOfBuilding(OgameWeb.webDriver,i);
+                    Building building = planet.getBuilding(DataTechnology.getFromValue(dataTechnology));
+                    Status status = Facilities.statusOfBuilding(OgameWeb.webDriver,i);
+                    String localName = Facilities.localNameOfBuilding(OgameWeb.webDriver,i);
+                    int level = Facilities.levelOfBuilding(OgameWeb.webDriver, i);
+                    building.setLevel(level);
+                    building.setLocalName(localName);
+                    building.setStatus(status);
                 }
-                tmpPlanet = PlanetsList.selectedPlanet(OgameWeb.webDriver);
-            } while (tmpPlanet == null || tmpPlanet.getId().equals(planet.getId()));
-
-            for(int i = 1; i <= 8; i++) {
-                String dataTechnology = Facilities.dataTechnologyOfBuilding(OgameWeb.webDriver,i);
-                Building building = planet.getBuilding(DataTechnology.getFromValue(dataTechnology));
-                Status status = Facilities.statusOfBuilding(OgameWeb.webDriver,i);
-                String localName = Facilities.localNameOfBuilding(OgameWeb.webDriver,i);
-                int level = Facilities.levelOfBuilding(OgameWeb.webDriver, i);
-                building.setLevel(level);
-                building.setLocalName(localName);
-                building.setStatus(status);
+                planet.setUpdateTechnologyBuilding(false);
             }
         }
     }

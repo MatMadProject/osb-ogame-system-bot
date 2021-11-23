@@ -36,8 +36,19 @@ public class AutoBuilderLeafTaskItemConnector implements LeafTaskConnector{
     @Override
     public Node content() {
         if(controller != null) {
-            controller.update(itemAutoBuilder);
+            controller.create(itemAutoBuilder);
         }
         return content;
+    }
+
+
+    public Node contentHistoryItem() {
+        if(controller != null)
+            controller.createHistoryItem(itemAutoBuilder);
+        return content;
+    }
+
+    public AutoBuilderLeafTaskItemController getController() {
+        return controller;
     }
 }
