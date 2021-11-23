@@ -1,5 +1,6 @@
 package app.controllers;
 
+import app.controllers_connector.AutoBuilderLeafTaskItemConnector;
 import app.controllers_connector.AutoResearchLeafTaskItemConnector;
 import app.data.DataLoader;
 import app.data.autoresearch.ItemAutoResearch;
@@ -47,6 +48,7 @@ public class AutoResearchLeafTaskController {
             if(DataLoader.listItemAutoResearch.addToQueue(itemAutoResearch)){
                 AutoResearchLeafTaskItemConnector autoResearchLeafTaskItemConnector = new AutoResearchLeafTaskItemConnector(itemAutoResearch,this);
                 vBoxQueue.getChildren().add(autoResearchLeafTaskItemConnector.content());
+                connectorArrayList.add(autoResearchLeafTaskItemConnector);
                 AppLog.print(AutoResearchLeafTaskController.class.getName(),2,"Add to research queue: Upgrade "+ research.getName() + " to "
                         + upgradeLevel +" level on " + planet.getCoordinate().getText() + ".");
             }
@@ -73,6 +75,8 @@ public class AutoResearchLeafTaskController {
                     labelUpgradeLevel.setText(upgradeLevel+"");
                 }
             });
+        updateQueueList();
+        updateHistoryList();
     }
 
     public void updateHistoryList() {
@@ -80,19 +84,24 @@ public class AutoResearchLeafTaskController {
         vBoxHistory.getChildren().clear();
         for(ItemAutoResearch itemAutoResearch : historyList){
             AutoResearchLeafTaskItemConnector autoResearchLeafTaskItemConnector = new AutoResearchLeafTaskItemConnector(itemAutoResearch, this);
-            vBoxHistory.getChildren().add(autoResearchLeafTaskItemConnector.content());
+            vBoxHistory.getChildren().add(autoResearchLeafTaskItemConnector.historyListItem());
         }
     }
 
+    private final ArrayList<AutoResearchLeafTaskItemConnector> connectorArrayList = new ArrayList<>();
     public void updateQueueList() {
         ArrayList<ItemAutoResearch> queueList = DataLoader.listItemAutoResearch.getQueueList();
-//        if(queueList.size() != vBoxQueue.getChildren().size()) {
+        if(queueList.size() != vBoxQueue.getChildren().size()) {
             vBoxQueue.getChildren().clear();
+            connectorArrayList.clear();
             for (ItemAutoResearch itemAutoResearch : queueList) {
                 AutoResearchLeafTaskItemConnector autoResearchLeafTaskItemConnector = new AutoResearchLeafTaskItemConnector(itemAutoResearch, this);
                 vBoxQueue.getChildren().add(autoResearchLeafTaskItemConnector.content());
+                connectorArrayList.add(autoResearchLeafTaskItemConnector);
             }
-//        }
+        }else
+            for(AutoResearchLeafTaskItemConnector connector : connectorArrayList)
+                connector.getController().update();
     }
 
     static class ComboBoxResearch {

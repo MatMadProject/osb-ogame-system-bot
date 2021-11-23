@@ -1,6 +1,7 @@
 package app.leaftask;
 
 import app.data.DataLoader;
+import app.data.autobuilder.ItemAutoBuilder;
 import app.data.autoresearch.ItemAutoResearch;
 import app.data.autoresearch.Status;
 import ogame.OgameWeb;
@@ -48,7 +49,7 @@ public class AutoResearchLeafTask extends LeafTask{
                             if(STATUS == Status.UPGRADING)
                                 isFinished(itemAutoResearch);
                             if(STATUS == Status.FINISHED)
-                                finish(itemAutoResearch);
+                                finish(itemAutoResearch, queueList);
                         }
                     }catch (Exception e){
                         AppLog.print(AutoResearchLeafTask.class.getName(),1,"When iterates queueList on" +
@@ -64,13 +65,18 @@ public class AutoResearchLeafTask extends LeafTask{
         }
     }
 
-    private void finish(ItemAutoResearch itemAutoResearch) {
+    private void finish(ItemAutoResearch itemAutoResearch, ArrayList<ItemAutoResearch> queueList) {
         Research research = itemAutoResearch.getResearch();
         research.setProductionTime(null);
         research.setRequiredResources(null);
         itemAutoResearchToRemove = itemAutoResearch;
         DataLoader.listItemAutoResearch.getHistoryList().add(itemAutoResearch);
         DataLoader.researches.setUpdateData(true);
+
+        //Starting buliding next object on queue list.
+        ItemAutoResearch index1 = queueList.get(1);
+        index1.setStatus(Status.DATA_DOWNLOADING);
+        index1.setTimer(null);
     }
 
     private void isFinished(ItemAutoResearch itemAutoResearch) {

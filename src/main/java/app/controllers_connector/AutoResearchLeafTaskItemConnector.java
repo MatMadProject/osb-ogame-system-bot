@@ -34,9 +34,21 @@ public class AutoResearchLeafTaskItemConnector implements LeafTaskConnector{
 
     @Override
     public Node content() {
-        if(controller != null) {
-            controller.update(itemAutoResearch);
-        }
+        if(controller != null)
+            controller.create(itemAutoResearch);
+
         return content;
+    }
+
+    public Node historyListItem() {
+        if(controller != null)
+            controller.createHistoryItem(itemAutoResearch);
+
+        return content;
+    }
+
+
+    public AutoResearchLeafTaskItemController getController() {
+        return controller;
     }
 }

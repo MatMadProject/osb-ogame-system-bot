@@ -16,8 +16,6 @@ import ogame.planets.Planet;
 import ogame.utils.log.AppLog;
 
 import java.util.ArrayList;
-import java.util.List;
-
 
 public class AutoBuilderLeafTaskController {
     @FXML
@@ -67,6 +65,8 @@ public class AutoBuilderLeafTaskController {
                 }
             });
         }
+        updateQueueList();
+        updateHistoryList();
     }
 
     public void add() {
@@ -80,6 +80,7 @@ public class AutoBuilderLeafTaskController {
                 AutoBuilderLeafTaskItemConnector autoBuilderLeafTaskItemConnector = new AutoBuilderLeafTaskItemConnector(itemAutoBuilder, this);
 
                 vBoxQueue.getChildren().add(autoBuilderLeafTaskItemConnector.content());
+                connectorArrayList.add(autoBuilderLeafTaskItemConnector);
                 AppLog.print(AutoBuilderLeafTaskController.class.getName(),2,"Add to built queue: Upgrade "+ building.getName() + " to "
                         + upgradeLevel +" level on " + planet.getCoordinate().getText() + ".");
             }
@@ -93,19 +94,24 @@ public class AutoBuilderLeafTaskController {
        vBoxHistory.getChildren().clear();
        for(ItemAutoBuilder itemAutoBuilder : historyList){
            AutoBuilderLeafTaskItemConnector autoBuilderLeafTaskItemConnector = new AutoBuilderLeafTaskItemConnector(itemAutoBuilder, this);
-           vBoxHistory.getChildren().add(autoBuilderLeafTaskItemConnector.content());
+           vBoxHistory.getChildren().add(autoBuilderLeafTaskItemConnector.contentHistoryItem());
        }
     }
 
+    private final ArrayList<AutoBuilderLeafTaskItemConnector> connectorArrayList = new ArrayList<>();
     public void updateQueueList(){
         ArrayList<ItemAutoBuilder> queueList = DataLoader.listItemAutoBuilder.getQueueList();
-//        if(queueList.size() != vBoxQueue.getChildren().size()) {
+        if(queueList.size() != vBoxQueue.getChildren().size()) {
             vBoxQueue.getChildren().clear();
+            connectorArrayList.clear();
             for(ItemAutoBuilder itemAutoBuilder : queueList){
                 AutoBuilderLeafTaskItemConnector autoBuilderLeafTaskItemConnector = new AutoBuilderLeafTaskItemConnector(itemAutoBuilder, this);
                 vBoxQueue.getChildren().add(autoBuilderLeafTaskItemConnector.content());
+                connectorArrayList.add(autoBuilderLeafTaskItemConnector);
             }
-//        }
+        }else
+            for(AutoBuilderLeafTaskItemConnector connector : connectorArrayList)
+                connector.getController().update();
     }
 
     static class  ComboBoxBuilding{

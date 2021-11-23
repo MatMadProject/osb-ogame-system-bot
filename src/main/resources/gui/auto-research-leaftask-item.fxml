@@ -14,9 +14,9 @@
             <Label fx:id="labelFinishTime" layoutX="224.0" layoutY="10.0" prefWidth="105.0" text="" />
             <Label fx:id="labelStatus" layoutX="94.0" layoutY="10.0" prefWidth="140.0" text="" />
             <Label fx:id="labelStatusTime" layoutX="124.0" layoutY="10.0" prefWidth="105.0" text="" />
-            <Label disable="true" layoutX="592.0" layoutY="10.0" onMouseClicked="#up" prefWidth="20.0" styleClass="label-button" text="v" />
-            <Label disable="true" layoutX="699.0" layoutY="10.0" onMouseClicked="#down" prefWidth="20.0" styleClass="label-button" text="^" />
-            <Label disable="true" layoutX="721.0" layoutY="10.0" onMouseClicked="#delete" prefWidth="20.0" styleClass="label-button" text="x" />
+            <Label fx:id="labelDown" layoutX="592.0" layoutY="10.0" onMouseClicked="#up" prefWidth="20.0" styleClass="label-button" text="v" />
+            <Label fx:id="labelUp" layoutX="699.0" layoutY="10.0" onMouseClicked="#down" prefWidth="20.0" styleClass="label-button" text="^" />
+            <Label layoutX="721.0" layoutY="10.0" onMouseClicked="#delete" prefWidth="20.0" styleClass="label-button" text="x" />
          </children>
       </HBox>
    </children>

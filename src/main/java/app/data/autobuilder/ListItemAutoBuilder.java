@@ -6,6 +6,7 @@ import app.data.StaticStrings;
 import app.data.planets.Planets;
 import ogame.Status;
 import ogame.buildings.Building;
+import ogame.planets.Planet;
 import ogame.utils.log.AppLog;
 
 import java.io.*;
@@ -112,7 +113,31 @@ public class ListItemAutoBuilder implements Serializable, LSD {
         return level;
     }
 
+    /**
+     * Download highest level of building on parametr from queue.
+     * @param building ***
+     * @return Highest level of building on queue list.
+     */
+    public int getHighestLevelOfBuildingOnQueue(Building building, ArrayList<ItemAutoBuilder> queueList){
+        int level = building.getLevel();
+        for(ItemAutoBuilder itemAutoBuilder : queueList){
+            Building tmpBuilding = itemAutoBuilder.getBuilding();
+            if(tmpBuilding.equals(building))
+                if(level < itemAutoBuilder.getUpgradeLevel())
+                    level = itemAutoBuilder.getUpgradeLevel();
+        }
+        return level;
+    }
+
     public boolean isAnyBuildingUprading(){
+        for(ItemAutoBuilder itemAutoBuilder : queueList)
+            if(itemAutoBuilder.getBuilding().getStatus() == Status.ACTIVE)
+                return true;
+
+        return false;
+    }
+
+    public boolean isAnyBuildingUprading(ArrayList<ItemAutoBuilder> queueList){
         for(ItemAutoBuilder itemAutoBuilder : queueList)
             if(itemAutoBuilder.getBuilding().getStatus() == Status.ACTIVE)
                 return true;
@@ -126,5 +151,27 @@ public class ListItemAutoBuilder implements Serializable, LSD {
                 return itemAutoBuilder;
 
         return null;
+    }
+
+    public ItemAutoBuilder getUpgradingBuilding(ArrayList<ItemAutoBuilder> queueList){
+        for(ItemAutoBuilder itemAutoBuilder : queueList)
+            if(itemAutoBuilder.getBuilding().getStatus() == Status.ACTIVE)
+                return itemAutoBuilder;
+
+        return null;
+    }
+
+    /**
+     * Downloads building queue for planet.
+     * @param planet ***
+     * @return If queue is empty return empty list.
+     */
+    public ArrayList<ItemAutoBuilder> getQueueListFromPlanet(Planet planet) {
+        ArrayList<ItemAutoBuilder> queueList = new ArrayList<>();
+        for(ItemAutoBuilder itemAutoBuilder : this.queueList){
+            if(itemAutoBuilder.getPlanet().equals(planet))
+                queueList.add(itemAutoBuilder);
+        }
+        return queueList;
     }
 }
