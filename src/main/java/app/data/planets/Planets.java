@@ -133,6 +133,20 @@ public class Planets implements LSD, Serializable {
     }
 
     /**
+     * Downloads planet from list.
+     * @param planet ***
+     */
+    public Planet getPlanet(Planet planet) {
+        if(planetList.size() > 0) {
+            for(Planet p : planetList) {
+                if(p.getId().equals(planet.getId()))
+                    return p;
+            }
+        }
+        return null;
+    }
+
+    /**
      * Returns list with planets coordinates. Coordinate format [x:xxx:xx].
      * @return If error will exist return empty list.
      */

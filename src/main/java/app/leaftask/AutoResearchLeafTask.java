@@ -1,7 +1,6 @@
 package app.leaftask;
 
 import app.data.DataLoader;
-import app.data.autobuilder.ItemAutoBuilder;
 import app.data.autoresearch.ItemAutoResearch;
 import app.data.autoresearch.Status;
 import ogame.OgameWeb;
@@ -235,13 +234,6 @@ public class AutoResearchLeafTask extends LeafTask{
                 itemAutoResearch.setStatusTime(currentTime);
                 itemAutoResearch.setTimer(new Timer(currentTime,currentTime+TIME_WAIT_WHEN_OFF_STATUS));
             }
-//            if(timeToResourceProduction == 0){
-//                itemAutoResearch.setTimer(new Timer(currentTime,currentTime+TIME_WAIT_WHEN_OFF_STATUS));
-//                itemAutoResearch.setStatus(Status.WAIT);
-//                itemAutoResearch.setStatusTime(currentTime);
-//                return;
-//            }
-
             itemAutoResearch.setTimer(new Timer(currentTime,currentTime+timeToResourceProduction));
             itemAutoResearch.setStatus(Status.NOT_ENOUGH_RESOURCES);
             itemAutoResearch.setStatusTime(currentTime);

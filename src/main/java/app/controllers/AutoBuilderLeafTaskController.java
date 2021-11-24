@@ -36,6 +36,7 @@ public class AutoBuilderLeafTaskController {
     @FXML
     private VBox vBoxHistory;
 
+    Planet comboBoxPlanetValue;
     public void update(){
         ArrayList<ComboBoxPlanet> comboBoxPlanetArrayList = ComboBoxPlanet.list(DataLoader.planets.getPlanetList());
         if(!comboBoxPlanetArrayList.isEmpty()){
@@ -45,22 +46,24 @@ public class AutoBuilderLeafTaskController {
             comboBoxPlanet.valueProperty().addListener((observable, oldValue, newValue) -> {
 
                 if(newValue != null){
-                    Planet planet = newValue.getPlanet();
-                    ArrayList<ComboBoxBuilding> comboBoxBuildingArrayList = ComboBoxBuilding.list(planet);
+//                    Planet planet = newValue.getPlanet();
+                    comboBoxPlanetValue = newValue.getPlanet();
+                    ArrayList<ComboBoxBuilding> comboBoxBuildingArrayList = ComboBoxBuilding.list(comboBoxPlanetValue);
                     comboBoxBuilding.setItems(FXCollections.observableArrayList(comboBoxBuildingArrayList));
                     comboBoxBuilding.setValue(comboBoxBuildingArrayList.get(0));
                 }
             });
 
             comboBoxBuilding.valueProperty().addListener((observable, oldValue, newValue) -> {
+                ArrayList<ItemAutoBuilder> planetQueue = DataLoader.listItemAutoBuilder.getQueueListFromPlanet(comboBoxPlanetValue);
                 if(newValue != null){
                     Building building = newValue.getBuilding();
-                    int upgradeLevel = DataLoader.listItemAutoBuilder.getHighestLevelOfBuildingOnQueue(building)+1;
+                    int upgradeLevel = DataLoader.listItemAutoBuilder.getHighestLevelOfBuildingOnQueue(building,planetQueue)+1;
                     labelUpgradeLevel.setText(upgradeLevel+"");
                 }
                 else{
                     Building building = oldValue.getBuilding();
-                    int upgradeLevel = DataLoader.listItemAutoBuilder.getHighestLevelOfBuildingOnQueue(building)+1;
+                    int upgradeLevel = DataLoader.listItemAutoBuilder.getHighestLevelOfBuildingOnQueue(building,planetQueue)+1;
                     labelUpgradeLevel.setText(upgradeLevel+"");
                 }
             });
@@ -90,12 +93,14 @@ public class AutoBuilderLeafTaskController {
     }
 
     public void updateHistoryList(){
-       ArrayList<ItemAutoBuilder> historyList = DataLoader.listItemAutoBuilder.getHistoryList();
-       vBoxHistory.getChildren().clear();
-       for(ItemAutoBuilder itemAutoBuilder : historyList){
-           AutoBuilderLeafTaskItemConnector autoBuilderLeafTaskItemConnector = new AutoBuilderLeafTaskItemConnector(itemAutoBuilder, this);
-           vBoxHistory.getChildren().add(autoBuilderLeafTaskItemConnector.contentHistoryItem());
-       }
+        ArrayList<ItemAutoBuilder> historyList = DataLoader.listItemAutoBuilder.getHistoryList();
+        if(historyList.size() != vBoxHistory.getChildren().size()){
+            vBoxHistory.getChildren().clear();
+            for(ItemAutoBuilder itemAutoBuilder : historyList){
+                AutoBuilderLeafTaskItemConnector autoBuilderLeafTaskItemConnector = new AutoBuilderLeafTaskItemConnector(itemAutoBuilder, this);
+                vBoxHistory.getChildren().add(autoBuilderLeafTaskItemConnector.contentHistoryItem());
+            }
+        }
     }
 
     private final ArrayList<AutoBuilderLeafTaskItemConnector> connectorArrayList = new ArrayList<>();

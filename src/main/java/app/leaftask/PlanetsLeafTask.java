@@ -22,7 +22,6 @@ public class PlanetsLeafTask extends LeafTask{
             if(isSleepTimeOut(System.currentTimeMillis())){
                 if(DataLoader.planets.isInitPlanetList())
                     init();
-
                 setLastTimeExecute(System.currentTimeMillis());
             }
         }
@@ -41,10 +40,16 @@ public class PlanetsLeafTask extends LeafTask{
 
             String coordinate = PlanetsList.coordinateOfPlanet(OgameWeb.webDriver, i);
             planet.setCoordinate(new Coordinate(coordinate));
-
+            Moon moon;
             if(PlanetsList.planetHasMoon(OgameWeb.webDriver,i)){
-                Moon moon = new Moon(i);
+                moon = new Moon(i);
                 planet.setMoon(moon);
+            }
+            //Update data planet: name and position on list
+            Planet tmpPlanet = planets.getPlanet(planet);
+            if(tmpPlanet != null) {
+                tmpPlanet.setName(name);
+                tmpPlanet.setPositionOnList(i);
             }
             planets.add(planet);
             currentPlanetList.add(planet);

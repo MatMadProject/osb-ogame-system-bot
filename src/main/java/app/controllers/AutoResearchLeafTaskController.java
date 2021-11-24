@@ -81,10 +81,12 @@ public class AutoResearchLeafTaskController {
 
     public void updateHistoryList() {
         ArrayList<ItemAutoResearch> historyList = DataLoader.listItemAutoResearch.getHistoryList();
-        vBoxHistory.getChildren().clear();
-        for(ItemAutoResearch itemAutoResearch : historyList){
-            AutoResearchLeafTaskItemConnector autoResearchLeafTaskItemConnector = new AutoResearchLeafTaskItemConnector(itemAutoResearch, this);
-            vBoxHistory.getChildren().add(autoResearchLeafTaskItemConnector.historyListItem());
+        if(historyList.size() != vBoxHistory.getChildren().size()){
+            vBoxHistory.getChildren().clear();
+            for(ItemAutoResearch itemAutoResearch : historyList){
+                AutoResearchLeafTaskItemConnector autoResearchLeafTaskItemConnector = new AutoResearchLeafTaskItemConnector(itemAutoResearch, this);
+                vBoxHistory.getChildren().add(autoResearchLeafTaskItemConnector.historyListItem());
+            }
         }
     }
 

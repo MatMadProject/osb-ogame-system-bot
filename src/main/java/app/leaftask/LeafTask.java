@@ -1,5 +1,8 @@
 package app.leaftask;
 
+import ogame.OgameWeb;
+import ogame.planets.Planet;
+import ogame.planets.PlanetsList;
 import ogame.utils.AntiLooping;
 import ogame.utils.Waiter;
 
@@ -119,5 +122,21 @@ public class LeafTask implements Execute{
 
     public AntiLooping getAntiLooping() {
         return antiLooping;
+    }
+
+    public boolean clickPlanet(Planet planet){
+        boolean planetSelected;
+        do {
+            if (PlanetsList.clickOnPlanet(OgameWeb.webDriver, planet.getPositionOnList()))
+                break;
+            Waiter.sleep(200, 200);
+            if (getAntiLooping().check()) {
+                getAntiLooping().reset();
+                return true;
+            }
+            Planet tmpPlanet = PlanetsList.selectedPlanet(OgameWeb.webDriver);
+            planetSelected = tmpPlanet.getId().equals(planet.getId());
+        } while (planetSelected);
+        return false;
     }
 }
