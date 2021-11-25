@@ -105,20 +105,8 @@ public class AutoBuilderLeafTask extends LeafTask{
             Planet planet = itemAutoBuilder.getPlanet();
             int listIndex = building.getDataTechnology().getListIndex();
             //Clicking on planet
-            if(clickPlanet(planet))
+            if(!clickPlanet(planet))
                 return;
-//            Planet tmpPlanet;
-//            do {
-//                if (PlanetsList.clickOnPlanet(OgameWeb.webDriver, planet.getPositionOnList()))
-//                    break;
-//                Waiter.sleep(200, 200);
-//                if (getAntiLooping().check()) {
-//                    getAntiLooping().reset();
-//                    return;
-//                }
-//                tmpPlanet = PlanetsList.selectedPlanet(OgameWeb.webDriver);
-//            } while (tmpPlanet == null || tmpPlanet.getId().equals(planet.getId()));
-
             if(type == Type.PRODUCTION){
                 //Suppliec clicking
                 do{
@@ -217,24 +205,6 @@ public class AutoBuilderLeafTask extends LeafTask{
                 }
             }
             return;
-//            if(DataLoader.listItemAutoBuilder.getQueueList().indexOf(itemAutoBuilder) == 0){
-//                itemAutoBuilder.setStatus(Status.STARTING);
-//                itemAutoBuilder.setStatusTime();
-//                return;
-//            }
-//            else {
-//                itemAutoBuilder.setStatus(Status.WAIT);
-//                long currentTime = System.currentTimeMillis();
-//                itemAutoBuilder.setStatusTime(currentTime);
-//                long TIME_WAIT_WHEN_ON_STATUS = 60 * 1000L;
-//                if(DataLoader.listItemAutoBuilder.isAnyBuildingUprading()) {
-//                    ItemAutoBuilder itemAutoBuilderUpgrading = DataLoader.listItemAutoBuilder.getUpgradingBuilding();
-//                    itemAutoBuilder.setTimer(new Timer(currentTime, itemAutoBuilderUpgrading.getFinishTime()));
-//                }
-//                else
-//                    itemAutoBuilder.setTimer(new Timer(currentTime,currentTime + TIME_WAIT_WHEN_ON_STATUS));
-//                return;
-//            }
         }
         if(building.getStatus() == ogame.Status.ACTIVE){
             if(DataLoader.listItemAutoBuilder.isAnyBuildingUprading(planetQueue)){
@@ -245,14 +215,6 @@ public class AutoBuilderLeafTask extends LeafTask{
                 itemAutoBuilder.setTimer(new Timer(currentTime, itemAutoBuilderUpgrading.getFinishTime()));
                 return;
             }
-//            if(DataLoader.listItemAutoBuilder.isAnyBuildingUprading()){
-//                itemAutoBuilder.setStatus(Status.WAIT);
-//                long currentTime = System.currentTimeMillis();
-//                itemAutoBuilder.setStatusTime(currentTime);
-//                ItemAutoBuilder itemAutoBuilderUpgrading = DataLoader.listItemAutoBuilder.getUpgradingBuilding();
-//                itemAutoBuilder.setTimer(new Timer(currentTime, itemAutoBuilderUpgrading.getFinishTime()));
-//                return;
-//            }
         }
         if(building.getStatus() == ogame.Status.DISABLED){
             if(DataLoader.listItemAutoBuilder.isAnyBuildingUprading(planetQueue)){
@@ -297,48 +259,6 @@ public class AutoBuilderLeafTask extends LeafTask{
             itemAutoBuilder.setTimer(new Timer(currentTime,currentTime+timeToResourceProduction));
             itemAutoBuilder.setStatus(Status.NOT_ENOUGH_RESOURCES);
             itemAutoBuilder.setStatusTime(currentTime);
-//            if(DataLoader.listItemAutoBuilder.isAnyBuildingUprading()){
-//                itemAutoBuilder.setStatus(Status.WAIT);
-//                long currentTime = System.currentTimeMillis();
-//                itemAutoBuilder.setStatusTime(currentTime);
-//                ItemAutoBuilder itemAutoBuilderUpgrading = DataLoader.listItemAutoBuilder.getUpgradingBuilding();
-//                itemAutoBuilder.setTimer(new Timer(currentTime, itemAutoBuilderUpgrading.getFinishTime()));
-//                return;
-//            }
-//            RequiredResources requiredResources = itemAutoBuilder.getBuilding().getRequiredResources();
-//            ResourcesProduction resourcesProduction = itemAutoBuilder.getPlanet().getResourcesProduction();
-//            int metal = ResourcesBar.metal(OgameWeb.webDriver);
-//            int crystal = ResourcesBar.crystal(OgameWeb.webDriver);
-//            int deuterium = ResourcesBar.deuterium(OgameWeb.webDriver);
-//            int energy = ResourcesBar.energyBalanace(OgameWeb.webDriver);
-//
-//            int metalBalance = requiredResources.getMetal() - metal;
-//            int crystalBalance = requiredResources.getCrystal() - crystal;
-//            int deuteriumBalance = requiredResources.getDeuterium() - deuterium;
-//            int energyBalance = requiredResources.getEnergy() - energy;
-//
-//            long timeToResourceProduction = 0;
-//            long currentTime = System.currentTimeMillis();
-//            if(metalBalance > 0)
-//                timeToResourceProduction = resourcesProduction.timeMilisecondsToMetalProduction(metalBalance);
-//            if(crystalBalance > 0){
-//                long tmp = resourcesProduction.timeMilisecondsToCrystalProduction(crystalBalance);
-//                if(tmp > timeToResourceProduction)
-//                    timeToResourceProduction = tmp;
-//            }
-//            if(deuteriumBalance > 0){
-//                long tmp = resourcesProduction.timeMilisecondsToDeuteriumProduction(deuteriumBalance);
-//                if(tmp > timeToResourceProduction)
-//                    timeToResourceProduction = tmp;
-//            }
-//            if(energyBalance > 0){
-//                itemAutoBuilder.setStatus(Status.NOT_ENOUGH_ENERGY);
-//                itemAutoBuilder.setStatusTime(currentTime);
-//                itemAutoBuilder.setTimer(new Timer(currentTime,currentTime+ TIME_WAIT_WHEN_OFF_STATUS));
-//            }
-//            itemAutoBuilder.setTimer(new Timer(currentTime,currentTime+timeToResourceProduction));
-//            itemAutoBuilder.setStatus(Status.NOT_ENOUGH_RESOURCES);
-//            itemAutoBuilder.setStatusTime(currentTime);
         }
 
         if(building.getStatus() == ogame.Status.UNDEFINED){
@@ -358,20 +278,9 @@ public class AutoBuilderLeafTask extends LeafTask{
         Planet planet = itemAutoBuilder.getPlanet();
         int listIndex = building.getDataTechnology().getListIndex();
         //Clicking on planet
-        if(clickPlanet(planet))
+        if(!clickPlanet(planet))
             return;
-//        boolean planetSelected;
-//        do {
-//            if (PlanetsList.clickOnPlanet(OgameWeb.webDriver, planet.getPositionOnList()))
-//                break;
-//            Waiter.sleep(200, 200);
-//            if (getAntiLooping().check()) {
-//                getAntiLooping().reset();
-//                return;
-//            }
-//            Planet tmpPlanet = PlanetsList.selectedPlanet(OgameWeb.webDriver);
-//            planetSelected = tmpPlanet.getId().equals(planet.getId());
-//        } while (planetSelected);
+
         if(type == Type.PRODUCTION){
             //Suppliec clicking
             do{
@@ -430,7 +339,7 @@ public class AutoBuilderLeafTask extends LeafTask{
             }while(!Facilities.visible(OgameWeb.webDriver)); // Jest niewidoczne
             //Data was download on first time execute.
             if(building.getProductionTime() != null && building.getRequiredResources() != null) {
-                ogame.Status status = Supplies.statusOfBuilding(OgameWeb.webDriver,listIndex);
+                ogame.Status status = Facilities.statusOfBuilding(OgameWeb.webDriver,listIndex);
                 building.setStatus(status);
                 itemAutoBuilder.setStatus(Status.DATA_DOWNLOADED);
                 itemAutoBuilder.setStatusTime(System.currentTimeMillis());

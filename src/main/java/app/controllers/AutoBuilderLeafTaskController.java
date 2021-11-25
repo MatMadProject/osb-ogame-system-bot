@@ -6,7 +6,6 @@ import app.data.autobuilder.ItemAutoBuilder;
 import app.data.planets.ComboBoxPlanet;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
@@ -28,9 +27,6 @@ public class AutoBuilderLeafTaskController {
     private Label labelUpgradeLevel;
 
     @FXML
-    private Button buttonAdd;
-
-    @FXML
     private VBox vBoxQueue;
 
     @FXML
@@ -46,7 +42,6 @@ public class AutoBuilderLeafTaskController {
             comboBoxPlanet.valueProperty().addListener((observable, oldValue, newValue) -> {
 
                 if(newValue != null){
-//                    Planet planet = newValue.getPlanet();
                     comboBoxPlanetValue = newValue.getPlanet();
                     ArrayList<ComboBoxBuilding> comboBoxBuildingArrayList = ComboBoxBuilding.list(comboBoxPlanetValue);
                     comboBoxBuilding.setItems(FXCollections.observableArrayList(comboBoxBuildingArrayList));

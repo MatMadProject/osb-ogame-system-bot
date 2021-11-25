@@ -7,7 +7,6 @@ import ogame.OgameWeb;
 import ogame.ResourcesBar;
 import ogame.buildings.RequiredResources;
 import ogame.planets.Planet;
-import ogame.planets.PlanetsList;
 import ogame.planets.ResourcesProduction;
 import ogame.researches.Research;
 import ogame.researches.Type;
@@ -23,8 +22,7 @@ public class AutoResearchLeafTask extends LeafTask{
         super(index, sleepms, name);
     }
     private ItemAutoResearch itemAutoResearchToRemove;
-    private final long TIME_WAIT_WHEN_OFF_STATUS = 3600*1000L;
-    private final long TIME_WAIT_WHEN_ON_STATUS = 60*1000L;
+
     @Override
     public void execute() {
         if (isRun()) {
@@ -98,17 +96,19 @@ public class AutoResearchLeafTask extends LeafTask{
             Planet planet = itemAutoResearch.getPlanet();
             int listIndex = itemAutoResearch.getResearch().getDataTechnology().getListIndex();
             //Clicking on planet
-            Planet tmpPlanet;
-            do {
-                if (PlanetsList.clickOnPlanet(OgameWeb.webDriver, planet.getPositionOnList()))
-                    break;
-                Waiter.sleep(200, 200);
-                if (getAntiLooping().check()) {
-                    getAntiLooping().reset();
-                    return;
-                }
-                tmpPlanet = PlanetsList.selectedPlanet(OgameWeb.webDriver);
-            } while (tmpPlanet == null || tmpPlanet.getId().equals(planet.getId()));
+            if(!clickPlanet(planet))
+                return;
+//            Planet tmpPlanet;
+//            do {
+//                if (PlanetsList.clickOnPlanet(OgameWeb.webDriver, planet.getPositionOnList()))
+//                    break;
+//                Waiter.sleep(200, 200);
+//                if (getAntiLooping().check()) {
+//                    getAntiLooping().reset();
+//                    return;
+//                }
+//                tmpPlanet = PlanetsList.selectedPlanet(OgameWeb.webDriver);
+//            } while (tmpPlanet == null || tmpPlanet.getId().equals(planet.getId()));
             //Clicking on research tabs
             do{
                 ogame.tabs.Research.click(OgameWeb.webDriver);
@@ -158,11 +158,12 @@ public class AutoResearchLeafTask extends LeafTask{
 
     private void checksData(ItemAutoResearch itemAutoResearch) {
         Research research = itemAutoResearch.getResearch();
+        long TIME_WAIT_WHEN_OFF_STATUS = 3600 * 1000L;
         if(research.getStatus() == ogame.Status.OFF){
             itemAutoResearch.setStatus(Status.OFF);
             long currentTime = System.currentTimeMillis();
             itemAutoResearch.setStatusTime(currentTime);
-            itemAutoResearch.setTimer(new Timer(currentTime,currentTime+TIME_WAIT_WHEN_OFF_STATUS));
+            itemAutoResearch.setTimer(new Timer(currentTime,currentTime+ TIME_WAIT_WHEN_OFF_STATUS));
             return;
         }
         if(research.getStatus() == ogame.Status.ON){
@@ -175,6 +176,7 @@ public class AutoResearchLeafTask extends LeafTask{
                 itemAutoResearch.setStatus(Status.WAIT);
                 long currentTime = System.currentTimeMillis();
                 itemAutoResearch.setStatusTime(currentTime);
+                long TIME_WAIT_WHEN_ON_STATUS = 60 * 1000L;
                 if(DataLoader.listItemAutoResearch.isAnyResearchUprading()) {
                     ItemAutoResearch itemAutoResearchUpgrading = DataLoader.listItemAutoResearch.getUpgradingResearch();
                     itemAutoResearch.setTimer(new Timer(currentTime, itemAutoResearchUpgrading.getFinishTime()));
@@ -232,7 +234,7 @@ public class AutoResearchLeafTask extends LeafTask{
             if(energyBalance > 0){
                 itemAutoResearch.setStatus(Status.NOT_ENOUGH_ENERGY);
                 itemAutoResearch.setStatusTime(currentTime);
-                itemAutoResearch.setTimer(new Timer(currentTime,currentTime+TIME_WAIT_WHEN_OFF_STATUS));
+                itemAutoResearch.setTimer(new Timer(currentTime,currentTime+ TIME_WAIT_WHEN_OFF_STATUS));
             }
             itemAutoResearch.setTimer(new Timer(currentTime,currentTime+timeToResourceProduction));
             itemAutoResearch.setStatus(Status.NOT_ENOUGH_RESOURCES);
@@ -248,17 +250,19 @@ public class AutoResearchLeafTask extends LeafTask{
         Planet planet = itemAutoResearch.getPlanet();
         int listIndex = research.getDataTechnology().getListIndex();
         //Clicking on planet
-        Planet tmpPlanet;
-        do {
-            if (PlanetsList.clickOnPlanet(OgameWeb.webDriver, planet.getPositionOnList()))
-                break;
-            Waiter.sleep(200, 200);
-            if (getAntiLooping().check()) {
-                getAntiLooping().reset();
-                return;
-            }
-            tmpPlanet = PlanetsList.selectedPlanet(OgameWeb.webDriver);
-        } while (tmpPlanet == null || tmpPlanet.getId().equals(planet.getId()));
+        if(!clickPlanet(planet))
+            return;
+//        Planet tmpPlanet;
+//        do {
+//            if (PlanetsList.clickOnPlanet(OgameWeb.webDriver, planet.getPositionOnList()))
+//                break;
+//            Waiter.sleep(200, 200);
+//            if (getAntiLooping().check()) {
+//                getAntiLooping().reset();
+//                return;
+//            }
+//            tmpPlanet = PlanetsList.selectedPlanet(OgameWeb.webDriver);
+//        } while (tmpPlanet == null || tmpPlanet.getId().equals(planet.getId()));
         //Clickinh on research tabs
         do{
             ogame.tabs.Research.click(OgameWeb.webDriver);

@@ -124,6 +124,11 @@ public class LeafTask implements Execute{
         return antiLooping;
     }
 
+    /**
+     * Clicks on planet
+     * @param planet ***
+     * @return If fail, return false.
+     */
     public boolean clickPlanet(Planet planet){
         boolean planetSelected;
         do {
@@ -132,11 +137,11 @@ public class LeafTask implements Execute{
             Waiter.sleep(200, 200);
             if (getAntiLooping().check()) {
                 getAntiLooping().reset();
-                return true;
+                return false;
             }
             Planet tmpPlanet = PlanetsList.selectedPlanet(OgameWeb.webDriver);
             planetSelected = tmpPlanet.getId().equals(planet.getId());
         } while (planetSelected);
-        return false;
+        return true;
     }
 }
