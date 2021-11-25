@@ -1,6 +1,8 @@
 package app.leaftask;
 
 import app.data.DataLoader;
+import app.data.planets.ColonyData;
+import app.data.planets.ColonyDataItem;
 import app.data.planets.Planets;
 import ogame.OgameWeb;
 import ogame.Status;
@@ -134,6 +136,14 @@ public class ImperiumLeafTask extends LeafTask{
             if(planet.getDiameter() == 0)
                 planet.setDiameter(diameter);
             planet.setUpdateTime(System.currentTimeMillis());
+            if(!planet.isColonyDataAdded()){
+                ColonyDataItem colonyDataItem = new ColonyDataItem(planet);
+                ColonyData colonyData = DataLoader.colonyData;
+                if(colonyData.add(colonyDataItem))
+                    colonyData.save(colonyDataItem);
+
+                planet.setColonyDataAdded();
+            }
         }
     }
 

@@ -39,6 +39,7 @@ public class StaticStrings {
     public static final String RESEARCH_FILE = "research";
     //Planety
     public static final String PLANETS_FILE = "planets-config";
+    public static final String COLONIES_DATA_FILE = "colonies-data";
     //AutoBuilder
     public static final String AUTO_BUILDER_FILE = "autobuilder";
     public static final String AUTO_RESEARCH_FILE = "autoresearch";
