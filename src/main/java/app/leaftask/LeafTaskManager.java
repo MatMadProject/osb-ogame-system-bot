@@ -15,7 +15,7 @@ public class LeafTaskManager {
         leafTasks = new LeafTask[]{
             new PlanetsLeafTask(0,1000*30,"Planets",true),
             new AutoBuilderLeafTask(1,1500,"Auto builder"),
-            new ImperiumLeafTask(2,10*1000,"Imperium"),
+            new ImperiumLeafTask(2,5*1000,"Imperium"),
             new AutoResearchLeafTask(3,1000,"Auto research")
         };
         listSize = leafTasks.length;

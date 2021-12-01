@@ -8,8 +8,8 @@ import ogame.utils.log.AppLog;
 import java.io.*;
 import java.util.ArrayList;
 
-public class ColonyData implements LSD, Serializable {
-    private ArrayList<ColonyDataItem> colonyDataItemList = new ArrayList<>();
+public class ColonyData implements LSD {
+    private final ArrayList<ColonyDataItem> colonyDataItemList = new ArrayList<>();
 
     public ColonyData(){
         load();
@@ -58,11 +58,11 @@ public class ColonyData implements LSD, Serializable {
                     bufferedWriter.newLine();
                 }
                 bufferedWriter.close();
-                AppLog.print(Planets.class.getName(),0,"Data saved.");
+                AppLog.print(ColonyData.class.getName(),0,"Data saved.");
                 return true;
             } catch (IOException e) {
                 e.printStackTrace();
-                AppLog.print(Planets.class.getName(),1,"When try data save.");
+                AppLog.print(ColonyData.class.getName(),1,"When try data save.");
             }
         }
         return false;
@@ -80,6 +80,7 @@ public class ColonyData implements LSD, Serializable {
 
                 bufferedWriter.write(colonyDataItem.toString());
                 bufferedWriter.newLine();
+                colonyDataItemList.add(colonyDataItem);
 
                 bufferedWriter.close();
                 AppLog.print(Planets.class.getName(),0,"Data saved.");

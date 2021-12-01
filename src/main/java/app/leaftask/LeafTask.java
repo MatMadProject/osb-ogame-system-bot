@@ -3,6 +3,7 @@ package app.leaftask;
 import ogame.OgameWeb;
 import ogame.planets.Planet;
 import ogame.planets.PlanetsList;
+import ogame.tabs.Overview;
 import ogame.utils.AntiLooping;
 import ogame.utils.Waiter;
 
@@ -142,6 +143,19 @@ public class LeafTask implements Execute{
             Planet tmpPlanet = PlanetsList.selectedPlanet(OgameWeb.webDriver);
             planetSelected = tmpPlanet.getId().equals(planet.getId());
         } while (planetSelected);
+        return true;
+    }
+
+    public boolean clickOverview(){
+        //Klikanie podgląd
+        do{
+            Overview.click(OgameWeb.webDriver);
+            Waiter.sleep(200,300);
+            if(getAntiLooping().check()){
+                getAntiLooping().reset();
+                return false;
+            }
+        }while(!Overview.visible(OgameWeb.webDriver)); // Jest niewidoczne
         return true;
     }
 }

@@ -17,6 +17,7 @@
       <Label fx:id="labelMetal" prefHeight="18.0" prefWidth="95.0" />
       <Label fx:id="labelCrystal" prefHeight="18.0" prefWidth="95.0" />
       <Label fx:id="labelDeuterium" prefHeight="18.0" prefWidth="95.0" />
+      <Label fx:id="labelEnergy" prefHeight="18.0" prefWidth="95.0" />
       <Label prefHeight="18.0" prefWidth="95.0" styleClass="label-title" />
       <Label fx:id="labelMetalMine" prefHeight="18.0" prefWidth="95.0" />
       <Label fx:id="labelCrystalMine" prefHeight="18.0" prefWidth="95.0" />
@@ -36,6 +37,5 @@
       <Label fx:id="labelNaniteFactory" prefHeight="18.0" prefWidth="95.0" />
       <Label fx:id="labelTerraformer" prefHeight="18.0" prefWidth="95.0" />
       <Label fx:id="labelRepairDock" prefHeight="18.0" prefWidth="95.0" />
-      <Label prefHeight="18.0" prefWidth="95.0" text="1" />
    </children>
 </VBox>

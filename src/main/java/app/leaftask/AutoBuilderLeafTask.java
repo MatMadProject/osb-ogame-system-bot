@@ -11,6 +11,7 @@ import ogame.planets.Planet;
 import ogame.planets.ResourcesProduction;
 import ogame.planets.Type;
 import ogame.tabs.Facilities;
+import ogame.tabs.Overview;
 import ogame.tabs.Supplies;
 import ogame.utils.Waiter;
 import ogame.utils.log.AppLog;
@@ -173,6 +174,7 @@ public class AutoBuilderLeafTask extends LeafTask{
             itemAutoBuilder.setStatus(Status.DATA_DOWNLOADING);
             itemAutoBuilder.setStatusTime(System.currentTimeMillis());
             itemAutoBuilder.setTimer(null);
+            Overview.click(OgameWeb.webDriver);
         }
     }
 
@@ -251,10 +253,11 @@ public class AutoBuilderLeafTask extends LeafTask{
                 if(tmp > timeToResourceProduction)
                     timeToResourceProduction = tmp;
             }
-            if(energyBalance > 0){
+            if(energyBalance > 0 && building.getRequiredResources().getEnergy() > 0){
                 itemAutoBuilder.setStatus(Status.NOT_ENOUGH_ENERGY);
                 itemAutoBuilder.setStatusTime(currentTime);
                 itemAutoBuilder.setTimer(new Timer(currentTime,currentTime+ TIME_WAIT_WHEN_OFF_STATUS));
+                return;
             }
             itemAutoBuilder.setTimer(new Timer(currentTime,currentTime+timeToResourceProduction));
             itemAutoBuilder.setStatus(Status.NOT_ENOUGH_RESOURCES);

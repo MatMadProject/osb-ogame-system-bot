@@ -43,6 +43,8 @@ public class StaticStrings {
     //AutoBuilder
     public static final String AUTO_BUILDER_FILE = "autobuilder";
     public static final String AUTO_RESEARCH_FILE = "autoresearch";
+    //Player data
+    public static final String PLAYER_DATA_FILE = "player-data";
     /*
     FOLDERS
      */

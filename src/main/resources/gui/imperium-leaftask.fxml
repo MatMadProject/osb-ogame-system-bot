@@ -39,6 +39,7 @@
                         <Label prefHeight="18.0" prefWidth="95.0" text="Metal" />
                         <Label prefHeight="18.0" prefWidth="95.0" text="Crystal" />
                         <Label prefHeight="18.0" prefWidth="95.0" text="Deuterium" />
+                        <Label prefHeight="18.0" prefWidth="95.0" text="Energy" />
                         <Label prefHeight="18.0" prefWidth="95.0" styleClass="label-title" text="BUILDINGS" />
                         <Label prefHeight="18.0" prefWidth="95.0" text="Metal mine" />
                         <Label prefHeight="18.0" prefWidth="95.0" text="Crystal mine" />
@@ -58,7 +59,6 @@
                         <Label prefHeight="18.0" prefWidth="95.0" text="Nanite factory" />
                         <Label prefHeight="18.0" prefWidth="95.0" text="Terraformer" />
                         <Label prefHeight="18.0" prefWidth="95.0" text="Repair dock" />
-                        <Label prefHeight="18.0" prefWidth="95.0" text="1" />
                      </children>
                   </VBox>
                </children>

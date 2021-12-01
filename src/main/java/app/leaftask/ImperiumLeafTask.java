@@ -4,14 +4,14 @@ import app.data.DataLoader;
 import app.data.planets.ColonyData;
 import app.data.planets.ColonyDataItem;
 import app.data.planets.Planets;
+import app.data.player.PlayerData;
+import app.data.player.PlayerDataItem;
 import ogame.OgameWeb;
+import ogame.ResourcesBar;
 import ogame.Status;
 import ogame.buildings.Building;
 import ogame.buildings.DataTechnology;
-import ogame.planets.Fields;
-import ogame.planets.Planet;
-import ogame.planets.PlanetsList;
-import ogame.planets.Temperature;
+import ogame.planets.*;
 import ogame.researches.Research;
 import ogame.researches.Type;
 import ogame.tabs.Facilities;
@@ -19,6 +19,8 @@ import ogame.tabs.Overview;
 import ogame.tabs.ResourceSettings;
 import ogame.tabs.Supplies;
 import ogame.utils.Waiter;
+import ogame.utils.watch.Date;
+import ogame.utils.watch.Time;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -64,9 +66,29 @@ public class ImperiumLeafTask extends LeafTask{
                     if(DataLoader.researches.isUpdateData())
                         updateResearches(DataLoader.researches.getResearchList());
                     break;
+                case 5:
+                    if(DataLoader.playerData.timeLeftToNextExecute().isTimeLeft(System.currentTimeMillis()))
+                        updatePlayerData();
+                    break;
             }
             DataLoader.planets.save();
         }
+    }
+
+    private void updatePlayerData() {
+        //Klikanie podgląd
+        if(!clickOverview())
+            return;
+        Waiter.sleep(250,250);
+        int position = Overview.position(OgameWeb.webDriver);
+        int points = Overview.points(OgameWeb.webDriver);
+        int honorPoints = Overview.honorPoints(OgameWeb.webDriver);
+        long currentTime = System.currentTimeMillis();
+        PlayerData playerData = DataLoader.playerData;
+        PlayerDataItem playerDataItem = new PlayerDataItem(currentTime, Time.get(currentTime), Date.get(currentTime),
+                points,position,honorPoints);
+        if(position != -1)
+            playerData.save(playerDataItem);
     }
 
     private void updateResearches(ArrayList<Research> researchList) {
@@ -107,30 +129,17 @@ public class ImperiumLeafTask extends LeafTask{
             }while(!Overview.visible(OgameWeb.webDriver)); // Jest niewidoczne
 
             //Klikanie w właściwą planetę
-            Planet tmpPlanet;
-            do{
-                if(PlanetsList.clickOnPlanet(OgameWeb.webDriver,planet.getPositionOnList())){
-                    tmpPlanet = PlanetsList.selectedPlanet(OgameWeb.webDriver);
-                    break;
-                }
-                Waiter.sleep(200,200);
-                if(getAntiLooping().check()){
-                    getAntiLooping().reset();
-                    return;
-                }
-                tmpPlanet = PlanetsList.selectedPlanet(OgameWeb.webDriver);
-            }while(tmpPlanet == null || tmpPlanet.getId().equals(planet.getId()));
-            //Planet doesn't exist on planet list, maybe was deleted.
-            if(tmpPlanet == null)
-                return;
+            clickPlanet(planet);
             Waiter.sleep(500,750);
             int builtUpFields = Overview.builtUpFields(OgameWeb.webDriver);
             int maxPlanetFields = Overview.maxPlanetFields(OgameWeb.webDriver);
             int minTemperature = Overview.minTemperature(OgameWeb.webDriver);
             int maxTemperature = Overview.maxTemperature(OgameWeb.webDriver);
             int diameter = Overview.planetDiameter(OgameWeb.webDriver);
+            int energy = ResourcesBar.energyBalanace(OgameWeb.webDriver);
 
             planet.setFields(new Fields(builtUpFields,maxPlanetFields));
+            planet.getResources().setEnergy(energy);
             if(planet.getTemperature() == null)
                 planet.setTemperature(new Temperature(minTemperature, maxTemperature));
             if(planet.getDiameter() == 0)
@@ -161,22 +170,7 @@ public class ImperiumLeafTask extends LeafTask{
                } while (!ResourceSettings.visible(OgameWeb.webDriver)); // Jest niewidoczne
 
                //Klikanie w właściwą planetę
-               Planet tmpPlanet;
-               do {
-                   if (PlanetsList.clickOnPlanet(OgameWeb.webDriver, planet.getPositionOnList())){
-                       tmpPlanet = PlanetsList.selectedPlanet(OgameWeb.webDriver);
-                       break;
-                   }
-                   Waiter.sleep(200, 200);
-                   if (getAntiLooping().check()) {
-                       getAntiLooping().reset();
-                       return;
-                   }
-                   tmpPlanet = PlanetsList.selectedPlanet(OgameWeb.webDriver);
-               } while (tmpPlanet == null || tmpPlanet.getId().equals(planet.getId()));
-               //Planet doesn't exist on planet list, maybe was deleted.
-               if(tmpPlanet == null)
-                   return;
+               clickPlanet(planet);
                Waiter.sleep(500,750);
                Building deutheriumSynthesizer = planet.getBuilding(DataTechnology.DEUTERIUM_SYNTHESIZER);
                int metalPerHour = ResourceSettings.metalPerHour(OgameWeb.webDriver,deutheriumSynthesizer);
@@ -220,22 +214,7 @@ public class ImperiumLeafTask extends LeafTask{
                 } while (!Supplies.visible(OgameWeb.webDriver)); // Jest niewidoczne
 
                 //Klikanie w właściwą planetę
-                Planet tmpPlanet;
-                do {
-                    if (PlanetsList.clickOnPlanet(OgameWeb.webDriver, planet.getPositionOnList())){
-                        tmpPlanet = PlanetsList.selectedPlanet(OgameWeb.webDriver);
-                        break;
-                    }
-                    Waiter.sleep(200, 200);
-                    if (getAntiLooping().check()) {
-                        getAntiLooping().reset();
-                        return;
-                    }
-                    tmpPlanet = PlanetsList.selectedPlanet(OgameWeb.webDriver);
-                } while (tmpPlanet == null || tmpPlanet.getId().equals(planet.getId()));
-                //Planet doesn't exist on planet list, maybe was deleted.
-                if(tmpPlanet == null)
-                    return;
+                clickPlanet(planet);
                 Waiter.sleep(500,750);
                 for(int i = 1; i <= 10; i++) {
                     String dataTechnology = Supplies.dataTechnologyOfBuilding(OgameWeb.webDriver,i);
@@ -266,22 +245,7 @@ public class ImperiumLeafTask extends LeafTask{
                 } while (!Facilities.visible(OgameWeb.webDriver)); // Jest niewidoczne
 
                 //Klikanie w właściwą planetę
-                Planet tmpPlanet;
-                do {
-                    if (PlanetsList.clickOnPlanet(OgameWeb.webDriver, planet.getPositionOnList())){
-                        tmpPlanet = PlanetsList.selectedPlanet(OgameWeb.webDriver);
-                        break;
-                    }
-                    Waiter.sleep(200, 200);
-                    if (getAntiLooping().check()) {
-                        getAntiLooping().reset();
-                        return;
-                    }
-                    tmpPlanet = PlanetsList.selectedPlanet(OgameWeb.webDriver);
-                } while (tmpPlanet == null || tmpPlanet.getId().equals(planet.getId()));
-                //Planet doesn't exist on planet list, maybe was deleted.
-                if(tmpPlanet == null)
-                    return;
+                clickPlanet(planet);
                 Waiter.sleep(500,750);
                 for(int i = 1; i <= 8; i++) {
                     String dataTechnology = Facilities.dataTechnologyOfBuilding(OgameWeb.webDriver,i);
@@ -300,7 +264,7 @@ public class ImperiumLeafTask extends LeafTask{
 
     private void tickUpdate(){
         tick++;
-        if(tick > 4){
+        if(tick > 5){
             DataLoader.planets.setUpdateData(false);
             tick = 0;
         }
