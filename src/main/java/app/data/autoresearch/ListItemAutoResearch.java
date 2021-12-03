@@ -18,6 +18,9 @@ public class ListItemAutoResearch implements Serializable, LSD {
     private ArrayList<ItemAutoResearch> queueList = new ArrayList<>();
     private ArrayList<ItemAutoResearch> historyList = new ArrayList<>();
 
+    public ListItemAutoResearch(){
+        load();
+    }
     @Override
     public boolean load() {
         String path = StaticStrings.PLAYER_FOLDER_PATH +
@@ -93,6 +96,7 @@ public class ListItemAutoResearch implements Serializable, LSD {
             return false;
         else{
             queueList.add(itemAutoResearch);
+            save();
             return true;
         }
     }

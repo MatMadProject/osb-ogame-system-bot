@@ -57,6 +57,7 @@ public class AutoResearchLeafTask extends LeafTask{
                         itemAutoResearchToRemove = null;
                     }
                 }
+                DataLoader.listItemAutoResearch.save();
                 setLastTimeExecute(System.currentTimeMillis());
             }
         }

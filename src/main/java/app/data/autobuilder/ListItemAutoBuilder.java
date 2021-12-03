@@ -18,6 +18,10 @@ public class ListItemAutoBuilder implements Serializable, LSD {
     private ArrayList<ItemAutoBuilder> queueList = new ArrayList<>();
     private ArrayList<ItemAutoBuilder> historyList = new ArrayList<>();
 
+    public ListItemAutoBuilder(){
+        load();
+    }
+
     @Override
     public boolean load() {
         String path = StaticStrings.PLAYER_FOLDER_PATH +
@@ -93,6 +97,7 @@ public class ListItemAutoBuilder implements Serializable, LSD {
             return false;
         else{
             queueList.add(itemAutoBuilder);
+            save();
             return true;
         }
     }

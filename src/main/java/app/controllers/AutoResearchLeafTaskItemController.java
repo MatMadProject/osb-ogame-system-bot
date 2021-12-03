@@ -50,6 +50,7 @@ public class AutoResearchLeafTaskItemController {
             AppLog.print(AutoResearchLeafTaskItemController.class.getName(),2,"Remove research from queue: Upgrade "+ itemAutoResearch.getResearch().getName() + " to "
                     + itemAutoResearch.getUpgradeLevel() +" level on " + itemAutoResearch.getPlanet().getCoordinate().getText() + ".");
         }
+        DataLoader.listItemAutoResearch.save();
     }
 
     @FXML

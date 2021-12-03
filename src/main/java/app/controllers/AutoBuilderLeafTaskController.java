@@ -70,21 +70,19 @@ public class AutoBuilderLeafTaskController {
     public void add() {
         Planet planet = comboBoxPlanet.getValue().getPlanet();
         Building building = comboBoxBuilding.getValue().getBuilding();
+        building.setRequiredResources(null);
+        building.setProductionTime(null);
         int upgradeLevel = Integer.parseInt(labelUpgradeLevel.getText());
 
-        if(building != null){
-            ItemAutoBuilder itemAutoBuilder = new ItemAutoBuilder(planet,building, upgradeLevel, System.currentTimeMillis());
-            if(DataLoader.listItemAutoBuilder.addToQueue(itemAutoBuilder)){
-                AutoBuilderLeafTaskItemConnector autoBuilderLeafTaskItemConnector = new AutoBuilderLeafTaskItemConnector(itemAutoBuilder, this);
+        ItemAutoBuilder itemAutoBuilder = new ItemAutoBuilder(planet,building, upgradeLevel, System.currentTimeMillis());
+        if(DataLoader.listItemAutoBuilder.addToQueue(itemAutoBuilder)){
+            AutoBuilderLeafTaskItemConnector autoBuilderLeafTaskItemConnector = new AutoBuilderLeafTaskItemConnector(itemAutoBuilder, this);
 
-                vBoxQueue.getChildren().add(autoBuilderLeafTaskItemConnector.content());
-                connectorArrayList.add(autoBuilderLeafTaskItemConnector);
-                AppLog.print(AutoBuilderLeafTaskController.class.getName(),2,"Add to built queue: Upgrade "+ building.getName() + " to "
-                        + upgradeLevel +" level on " + planet.getCoordinate().getText() + ".");
-            }
+            vBoxQueue.getChildren().add(autoBuilderLeafTaskItemConnector.content());
+            connectorArrayList.add(autoBuilderLeafTaskItemConnector);
+            AppLog.print(AutoBuilderLeafTaskController.class.getName(),2,"Add to built queue: Upgrade "+ building.getName() + " to "
+                    + upgradeLevel +" level on " + planet.getCoordinate().getText() + ".");
         }
-        else
-            AppLog.print(AutoBuilderLeafTaskController.class.getName(),2,"Add to built queue fails because building is "+ building.getName() + ".");
     }
 
     public void updateHistoryList(){

@@ -50,6 +50,7 @@ public class AutoBuilderLeafTaskItemController {
             AppLog.print(AutoResearchLeafTaskItemController.class.getName(),2,"Remove from built queue: Upgrade "+ itemAutoBuilder.getBuilding().getName() + " to "
                     + itemAutoBuilder.getUpgradeLevel() +" level on " + itemAutoBuilder.getPlanet().getCoordinate().getText() + ".");
         }
+        DataLoader.listItemAutoBuilder.save();
     }
 
     @FXML

@@ -1,6 +1,9 @@
 package app.data.autobuilder;
 
-public enum Status {
+import java.io.Serializable;
+
+public enum Status implements Serializable {
+
     ADDED,
     DATA_DOWNLOADING,
     DATA_DOWNLOADED,
@@ -11,5 +14,7 @@ public enum Status {
     STARTING,
     UPGRADING,
     FINISHED,
-    OFF
+    OFF;
+
+    private static final long serialVersionUID = 1992L;
 }

@@ -41,20 +41,18 @@ public class AutoResearchLeafTaskController {
     public void add() {
         Planet planet = comboBoxPlanet.getValue().getPlanet();
         Research research = comboBoxResearch.getValue().getResearch();
+        research.setRequiredResources(null);
+        research.setProductionTime(null);
         int upgradeLevel = Integer.parseInt(labelUpgradeLevel.getText());
 
-        if(research != null){
-            ItemAutoResearch itemAutoResearch = new ItemAutoResearch(planet,research, upgradeLevel, System.currentTimeMillis());
-            if(DataLoader.listItemAutoResearch.addToQueue(itemAutoResearch)){
-                AutoResearchLeafTaskItemConnector autoResearchLeafTaskItemConnector = new AutoResearchLeafTaskItemConnector(itemAutoResearch,this);
-                vBoxQueue.getChildren().add(autoResearchLeafTaskItemConnector.content());
-                connectorArrayList.add(autoResearchLeafTaskItemConnector);
-                AppLog.print(AutoResearchLeafTaskController.class.getName(),2,"Add to research queue: Upgrade "+ research.getName() + " to "
-                        + upgradeLevel +" level on " + planet.getCoordinate().getText() + ".");
-            }
+        ItemAutoResearch itemAutoResearch = new ItemAutoResearch(planet,research, upgradeLevel, System.currentTimeMillis());
+        if(DataLoader.listItemAutoResearch.addToQueue(itemAutoResearch)){
+            AutoResearchLeafTaskItemConnector autoResearchLeafTaskItemConnector = new AutoResearchLeafTaskItemConnector(itemAutoResearch,this);
+            vBoxQueue.getChildren().add(autoResearchLeafTaskItemConnector.content());
+            connectorArrayList.add(autoResearchLeafTaskItemConnector);
+            AppLog.print(AutoResearchLeafTaskController.class.getName(),2,"Add to research queue: Upgrade "+ research.getName() + " to "
+                    + upgradeLevel +" level on " + planet.getCoordinate().getText() + ".");
         }
-        else
-            AppLog.print(AutoResearchLeafTaskController.class.getName(),2,"Add to built queue fails because research is "+ research.getName() + ".");
     }
 
     public void update() {

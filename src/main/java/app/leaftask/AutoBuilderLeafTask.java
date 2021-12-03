@@ -61,6 +61,7 @@ public class AutoBuilderLeafTask extends LeafTask{
                         itemAutoBuilderToRemove = null;
                     }
                 }
+                DataLoader.listItemAutoBuilder.save();
                 setLastTimeExecute(System.currentTimeMillis());
             }
         }
@@ -258,6 +259,12 @@ public class AutoBuilderLeafTask extends LeafTask{
                 itemAutoBuilder.setStatusTime(currentTime);
                 itemAutoBuilder.setTimer(new Timer(currentTime,currentTime+ TIME_WAIT_WHEN_OFF_STATUS));
                 return;
+            }
+            //Jeżeli pierwszy item w kolejce ma status NOT_ENOUGH_RESOURCES
+            if(planetQueue.get(0).getStatus() == Status.NOT_ENOUGH_RESOURCES){
+                itemAutoBuilder.setTimer(planetQueue.get(0).getTimer());
+                itemAutoBuilder.setStatus(Status.WAIT);
+                itemAutoBuilder.setStatusTime(currentTime);
             }
             itemAutoBuilder.setTimer(new Timer(currentTime,currentTime+timeToResourceProduction));
             itemAutoBuilder.setStatus(Status.NOT_ENOUGH_RESOURCES);

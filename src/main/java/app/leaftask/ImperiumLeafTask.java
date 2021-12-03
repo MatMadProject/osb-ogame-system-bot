@@ -40,6 +40,9 @@ public class ImperiumLeafTask extends LeafTask{
                     updateData();
                     tickUpdate();
                 }
+                if(DataLoader.playerData.timeLeftToNextExecute().isTimeLeft(System.currentTimeMillis()))
+                    updatePlayerData();
+
                 setLastTimeExecute(System.currentTimeMillis());
             }
         }
@@ -65,10 +68,6 @@ public class ImperiumLeafTask extends LeafTask{
                 case 4:
                     if(DataLoader.researches.isUpdateData())
                         updateResearches(DataLoader.researches.getResearchList());
-                    break;
-                case 5:
-                    if(DataLoader.playerData.timeLeftToNextExecute().isTimeLeft(System.currentTimeMillis()))
-                        updatePlayerData();
                     break;
             }
             DataLoader.planets.save();
@@ -264,7 +263,7 @@ public class ImperiumLeafTask extends LeafTask{
 
     private void tickUpdate(){
         tick++;
-        if(tick > 5){
+        if(tick > 4){
             DataLoader.planets.setUpdateData(false);
             tick = 0;
         }
