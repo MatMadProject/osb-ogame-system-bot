@@ -3,7 +3,8 @@ package app.data.autoresearch;
 import app.data.LSD;
 import app.data.MatMadFile;
 import app.data.StaticStrings;
-import ogame.researches.DataTechnology;
+import ogame.DataTechnology;
+import ogame.Type;
 import ogame.researches.Research;
 import ogame.utils.log.AppLog;
 
@@ -18,8 +19,12 @@ public class Researches implements LSD, Serializable {
 
     public Researches (){
         if(!load()){
-            for(DataTechnology dataTechnology : DataTechnology.values()){
-                if(dataTechnology == ogame.researches.DataTechnology.UNDEFINED)
+            ArrayList<DataTechnology> dataTechnologyArrayList = new ArrayList<>(DataTechnology.dataTechnologyList(Type.BASIC));
+            dataTechnologyArrayList.addAll(DataTechnology.dataTechnologyList(Type.DRIVE));
+            dataTechnologyArrayList.addAll(DataTechnology.dataTechnologyList(Type.ADVANCED));
+            dataTechnologyArrayList.addAll(DataTechnology.dataTechnologyList(Type.COMBAT));
+            for(DataTechnology dataTechnology : dataTechnologyArrayList){
+                if(dataTechnology == DataTechnology.UNDEFINED)
                     continue;
                 Research tmp = new Research(dataTechnology.name(),dataTechnology.getValue());
                 researchList.add(tmp);

@@ -9,7 +9,7 @@ import ogame.buildings.RequiredResources;
 import ogame.planets.Planet;
 import ogame.planets.ResourcesProduction;
 import ogame.researches.Research;
-import ogame.researches.Type;
+import ogame.Type;
 import ogame.utils.Waiter;
 import ogame.utils.log.AppLog;
 import ogame.utils.watch.Timer;
@@ -99,17 +99,6 @@ public class AutoResearchLeafTask extends LeafTask{
             //Clicking on planet
             if(!clickPlanet(planet))
                 return;
-//            Planet tmpPlanet;
-//            do {
-//                if (PlanetsList.clickOnPlanet(OgameWeb.webDriver, planet.getPositionOnList()))
-//                    break;
-//                Waiter.sleep(200, 200);
-//                if (getAntiLooping().check()) {
-//                    getAntiLooping().reset();
-//                    return;
-//                }
-//                tmpPlanet = PlanetsList.selectedPlanet(OgameWeb.webDriver);
-//            } while (tmpPlanet == null || tmpPlanet.getId().equals(planet.getId()));
             //Clicking on research tabs
             do{
                 ogame.tabs.Research.click(OgameWeb.webDriver);
@@ -253,17 +242,6 @@ public class AutoResearchLeafTask extends LeafTask{
         //Clicking on planet
         if(!clickPlanet(planet))
             return;
-//        Planet tmpPlanet;
-//        do {
-//            if (PlanetsList.clickOnPlanet(OgameWeb.webDriver, planet.getPositionOnList()))
-//                break;
-//            Waiter.sleep(200, 200);
-//            if (getAntiLooping().check()) {
-//                getAntiLooping().reset();
-//                return;
-//            }
-//            tmpPlanet = PlanetsList.selectedPlanet(OgameWeb.webDriver);
-//        } while (tmpPlanet == null || tmpPlanet.getId().equals(planet.getId()));
         //Clickinh on research tabs
         do{
             ogame.tabs.Research.click(OgameWeb.webDriver);

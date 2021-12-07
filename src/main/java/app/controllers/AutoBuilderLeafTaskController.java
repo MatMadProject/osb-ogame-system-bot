@@ -9,8 +9,9 @@ import javafx.fxml.FXML;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
+import ogame.Type;
 import ogame.buildings.Building;
-import ogame.buildings.DataTechnology;
+import ogame.DataTechnology;
 import ogame.planets.Planet;
 import ogame.utils.log.AppLog;
 
@@ -124,7 +125,10 @@ public class AutoBuilderLeafTaskController {
         static ArrayList<ComboBoxBuilding> list (Planet planet){
             ArrayList<ComboBoxBuilding> list = new ArrayList<>();
 
-            for(DataTechnology dataTechnology: DataTechnology.values()){
+            ArrayList<DataTechnology> dataTechnologyArrayList = new ArrayList<>(DataTechnology.dataTechnologyList(Type.PRODUCTION));
+            dataTechnologyArrayList.addAll(DataTechnology.dataTechnologyList(Type.TECHNOLOGIES));
+
+            for(DataTechnology dataTechnology : dataTechnologyArrayList){
                 if(dataTechnology.equals(DataTechnology.RESBUGGY) || dataTechnology.equals(DataTechnology.SOLAR_SATELITE)
                 || dataTechnology.equals(DataTechnology.UNDEFINED))
                     continue;

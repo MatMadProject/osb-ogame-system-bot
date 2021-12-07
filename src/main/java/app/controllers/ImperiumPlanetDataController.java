@@ -2,7 +2,7 @@ package app.controllers;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
-import ogame.buildings.DataTechnology;
+import ogame.DataTechnology;
 import ogame.planets.Planet;
 import ogame.utils.watch.Calendar;
 

@@ -9,7 +9,7 @@ import ogame.buildings.Building;
 import ogame.buildings.RequiredResources;
 import ogame.planets.Planet;
 import ogame.planets.ResourcesProduction;
-import ogame.planets.Type;
+import ogame.Type;
 import ogame.tabs.Facilities;
 import ogame.tabs.Overview;
 import ogame.tabs.Supplies;
