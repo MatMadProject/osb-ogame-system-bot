@@ -87,6 +87,30 @@ public class ListItemAutoBuilder implements Serializable, LSD {
         return historyList;
     }
 
+    public ArrayList<ItemAutoBuilder> get50LatestItemOfHistoryList() {
+        ArrayList<ItemAutoBuilder> list = new ArrayList<>();
+        int size = historyList.size();
+        if(size > 50){
+            for(int i = size - 1 ; i > size - 50; i--)
+                list.add(historyList.get(i));
+
+            return list;
+        }
+        return historyList;
+    }
+
+    public ArrayList<ItemAutoBuilder> getLatestItemOfHistoryList(int listSize) {
+        ArrayList<ItemAutoBuilder> list = new ArrayList<>();
+        int size = historyList.size();
+        if(size > listSize){
+            for(int i = size - 1 ; i > size - listSize; i--)
+                list.add(historyList.get(i));
+
+            return list;
+        }
+        return historyList;
+    }
+
     /**
      * Adds to queue new item if the queue not contains it.
      * @param itemAutoBuilder ***

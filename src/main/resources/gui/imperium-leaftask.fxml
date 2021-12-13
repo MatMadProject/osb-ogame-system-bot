@@ -39,6 +39,10 @@
                         <Label prefHeight="18.0" prefWidth="95.0" text="Metal" />
                         <Label prefHeight="18.0" prefWidth="95.0" text="Crystal" />
                         <Label prefHeight="18.0" prefWidth="95.0" text="Deuterium" />
+                        <Label prefHeight="18.0" prefWidth="95.0" styleClass="label-title" text="RESOURCES" />
+                        <Label prefHeight="18.0" prefWidth="95.0" text="Metal" />
+                        <Label prefHeight="18.0" prefWidth="95.0" text="Crystal" />
+                        <Label prefHeight="18.0" prefWidth="95.0" text="Deuterium" />
                         <Label prefHeight="18.0" prefWidth="95.0" text="Energy" />
                         <Label prefHeight="18.0" prefWidth="95.0" styleClass="label-title" text="BUILDINGS" />
                         <Label prefHeight="18.0" prefWidth="95.0" text="Metal mine" />

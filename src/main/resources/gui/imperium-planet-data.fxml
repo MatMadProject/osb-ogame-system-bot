@@ -17,6 +17,10 @@
       <Label fx:id="labelMetal" prefHeight="18.0" prefWidth="95.0" />
       <Label fx:id="labelCrystal" prefHeight="18.0" prefWidth="95.0" />
       <Label fx:id="labelDeuterium" prefHeight="18.0" prefWidth="95.0" />
+      <Label prefHeight="18.0" prefWidth="95.0" styleClass="label-title" />
+      <Label fx:id="labelMetalResource" prefHeight="18.0" prefWidth="95.0" />
+      <Label fx:id="labelCrystalResource" prefHeight="18.0" prefWidth="95.0" />
+      <Label fx:id="labelDeuteriumResource" prefHeight="18.0" prefWidth="95.0" />
       <Label fx:id="labelEnergy" prefHeight="18.0" prefWidth="95.0" />
       <Label prefHeight="18.0" prefWidth="95.0" styleClass="label-title" />
       <Label fx:id="labelMetalMine" prefHeight="18.0" prefWidth="95.0" />

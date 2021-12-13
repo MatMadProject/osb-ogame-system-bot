@@ -3,6 +3,7 @@ package app.data.autoresearch;
 import app.data.LSD;
 import app.data.MatMadFile;
 import app.data.StaticStrings;
+import app.data.autobuilder.ItemAutoBuilder;
 import app.data.planets.Planets;
 import ogame.Status;
 import ogame.researches.Research;
@@ -83,6 +84,30 @@ public class ListItemAutoResearch implements Serializable, LSD {
     }
 
     public ArrayList<ItemAutoResearch> getHistoryList() {
+        return historyList;
+    }
+
+    public ArrayList<ItemAutoResearch> get50LatestItemOfHistoryList() {
+        ArrayList<ItemAutoResearch> list = new ArrayList<>();
+        int size = historyList.size();
+        if(size > 50){
+            for(int i = size - 1; i > size - 50; i--)
+                list.add(historyList.get(i));
+
+            return list;
+        }
+        return historyList;
+    }
+
+    public ArrayList<ItemAutoResearch> getLatestItemOfHistoryList(int listSize) {
+        ArrayList<ItemAutoResearch> list = new ArrayList<>();
+        int size = historyList.size();
+        if(size > listSize){
+            for(int i = size - 1; i > size - listSize; i--)
+                list.add(historyList.get(i));
+
+            return list;
+        }
         return historyList;
     }
 

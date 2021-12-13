@@ -148,6 +148,7 @@ public class AutoResearchLeafTask extends LeafTask{
 
     private void checksData(ItemAutoResearch itemAutoResearch) {
         Research research = itemAutoResearch.getResearch();
+        Planet planet = itemAutoResearch.getPlanet();
         long TIME_WAIT_WHEN_OFF_STATUS = 3600 * 1000L;
         if(research.getStatus() == ogame.Status.OFF){
             itemAutoResearch.setStatus(Status.OFF);
@@ -201,6 +202,10 @@ public class AutoResearchLeafTask extends LeafTask{
             int crystal = ResourcesBar.crystal(OgameWeb.webDriver);
             int deuterium = ResourcesBar.deuterium(OgameWeb.webDriver);
             int energy = ResourcesBar.energyBalanace(OgameWeb.webDriver);
+
+            planet.getResources().setMetal(metal);
+            planet.getResources().setCrystal(crystal);
+            planet.getResources().setDeuterium(deuterium);
 
             int metalBalance = requiredResources.getMetal() - metal;
             int crystalBalance = requiredResources.getCrystal() - crystal;

@@ -181,6 +181,7 @@ public class AutoBuilderLeafTask extends LeafTask{
 
     private void checksData(ItemAutoBuilder itemAutoBuilder) {
         Building building = itemAutoBuilder.getBuilding();
+        Planet planet = itemAutoBuilder.getPlanet();
         long TIME_WAIT_WHEN_OFF_STATUS = 3600 * 1000L;
         long TIME_WAIT_WHEN_ON_STATUS = 60 * 1000L;
         ArrayList<ItemAutoBuilder> planetQueue = DataLoader.listItemAutoBuilder.getQueueListFromPlanet(itemAutoBuilder.getPlanet());
@@ -239,6 +240,10 @@ public class AutoBuilderLeafTask extends LeafTask{
             int crystalBalance = requiredResources.getCrystal() - crystal;
             int deuteriumBalance = requiredResources.getDeuterium() - deuterium;
             int energyBalance = requiredResources.getEnergy() - energy;
+
+            planet.getResources().setMetal(metal);
+            planet.getResources().setCrystal(crystal);
+            planet.getResources().setDeuterium(deuterium);
 
             long timeToResourceProduction = 0;
             long currentTime = System.currentTimeMillis();

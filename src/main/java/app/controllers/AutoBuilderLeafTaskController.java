@@ -87,7 +87,7 @@ public class AutoBuilderLeafTaskController {
     }
 
     public void updateHistoryList(){
-        ArrayList<ItemAutoBuilder> historyList = DataLoader.listItemAutoBuilder.getHistoryList();
+        ArrayList<ItemAutoBuilder> historyList = DataLoader.listItemAutoBuilder.get50LatestItemOfHistoryList();
         if(historyList.size() != vBoxHistory.getChildren().size()){
             vBoxHistory.getChildren().clear();
             for(ItemAutoBuilder itemAutoBuilder : historyList){

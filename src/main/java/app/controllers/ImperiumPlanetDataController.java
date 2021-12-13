@@ -27,6 +27,12 @@ public class ImperiumPlanetDataController {
     @FXML
     public Label labelEnergy;
     @FXML
+    public Label labelMetalResource;
+    @FXML
+    public Label labelCrystalResource;
+    @FXML
+    public Label labelDeuteriumResource;
+    @FXML
     private Label labelLastUpdate;
 
     @FXML
@@ -97,6 +103,9 @@ public class ImperiumPlanetDataController {
         labelMetal.setText(String.format("%.0f",planet.getResourcesProduction().getMetalPerHour()));
         labelCrystal.setText(String.format("%.0f",planet.getResourcesProduction().getCrystalPerHour()));
         labelDeuterium.setText(String.format("%.0f",planet.getResourcesProduction().getDeuteriumPerHour()));
+        labelMetalResource.setText(planet.getResources().getMetal()+"");
+        labelCrystalResource.setText(planet.getResources().getCrystal()+"");
+        labelDeuteriumResource.setText(planet.getResources().getDeuterium()+"");
         labelEnergy.setText(planet.getResources().getEnergy()+"");
         labelMetalMine.setText(planet.getBuilding(DataTechnology.METAL_MINE).getLevel()+"");
         labelCrystalMine.setText(planet.getBuilding(DataTechnology.CRYSTAL_MINE).getLevel()+"");

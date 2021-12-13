@@ -136,9 +136,16 @@ public class ImperiumLeafTask extends LeafTask{
             int maxTemperature = Overview.maxTemperature(OgameWeb.webDriver);
             int diameter = Overview.planetDiameter(OgameWeb.webDriver);
             int energy = ResourcesBar.energyBalanace(OgameWeb.webDriver);
+            int metal = ResourcesBar.metal(OgameWeb.webDriver);
+            int crystal = ResourcesBar.crystal(OgameWeb.webDriver);
+            int deuterium = ResourcesBar.deuterium(OgameWeb.webDriver);
 
             planet.setFields(new Fields(builtUpFields,maxPlanetFields));
             planet.getResources().setEnergy(energy);
+            planet.getResources().setMetal(metal);
+            planet.getResources().setCrystal(crystal);
+            planet.getResources().setDeuterium(deuterium);
+
             if(planet.getTemperature() == null)
                 planet.setTemperature(new Temperature(minTemperature, maxTemperature));
             if(planet.getDiameter() == 0)

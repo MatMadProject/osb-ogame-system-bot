@@ -78,7 +78,7 @@ public class AutoResearchLeafTaskController {
     }
 
     public void updateHistoryList() {
-        ArrayList<ItemAutoResearch> historyList = DataLoader.listItemAutoResearch.getHistoryList();
+        ArrayList<ItemAutoResearch> historyList = DataLoader.listItemAutoResearch.get50LatestItemOfHistoryList();
         if(historyList.size() != vBoxHistory.getChildren().size()){
             vBoxHistory.getChildren().clear();
             for(ItemAutoResearch itemAutoResearch : historyList){
