@@ -118,14 +118,15 @@ public class ImperiumLeafTask extends LeafTask{
     public void planetInformation(List<Planet> list){
         for(Planet planet : list){
             //Klikanie podgląd
-            do{
-                Overview.click(OgameWeb.webDriver);
-                Waiter.sleep(200,300);
-                if(getAntiLooping().check()){
-                    getAntiLooping().reset();
-                    return;
-                }
-            }while(!Overview.visible(OgameWeb.webDriver)); // Jest niewidoczne
+            clickOverview();
+//            do{
+//                Overview.click(OgameWeb.webDriver);
+//                Waiter.sleep(200,300);
+//                if(getAntiLooping().check()){
+//                    getAntiLooping().reset();
+//                    return;
+//                }
+//            }while(!Overview.visible(OgameWeb.webDriver)); // Jest niewidoczne
 
             //Klikanie w właściwą planetę
             clickPlanet(planet);
