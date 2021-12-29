@@ -67,6 +67,7 @@ public class PlanetsLeafTask extends LeafTask{
             }
             currentPlanetList.clear();
         }
+        planets.activeAllUpdateFlag();
     }
 
      private ArrayList<Planet> getPlanetToDeleteFromFile(ArrayList<Planet> currentPlanetList, ArrayList<Planet>listFromFile){

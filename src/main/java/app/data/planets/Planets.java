@@ -159,6 +159,15 @@ public class Planets implements LSD, Serializable {
         return list;
     }
 
+    public void activeAllUpdateFlag(){
+        for(Planet planet : planetList){
+            planet.setUpdateTechnologyBuilding(true);
+            planet.setUpdateResourcesProduction(true);
+            planet.setUpdateResourceBuilding(true);
+        }
+    }
+
+
     public boolean isUpdateData() {
         return updateData;
     }
