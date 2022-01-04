@@ -1,6 +1,7 @@
 package app.controllers_connector;
 
 import app.controllers.AutoBuilderLeafTaskController;
+import app.controllers.BotWindowController;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.layout.AnchorPane;
@@ -12,7 +13,7 @@ public class AutoBuilderLeafTaskConnector implements LeafTaskConnector{
     private AutoBuilderLeafTaskController controller;
     private AnchorPane content;
 
-    public AutoBuilderLeafTaskConnector(){
+    public AutoBuilderLeafTaskConnector(BotWindowController botWindowController){
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/gui/auto-builder-leaftask.fxml"));
         try {
             content = fxmlLoader.load();
@@ -23,7 +24,7 @@ public class AutoBuilderLeafTaskConnector implements LeafTaskConnector{
         }
 
         if(controller != null) {
-
+            controller.setBotWindowController(botWindowController);
         }
     }
 

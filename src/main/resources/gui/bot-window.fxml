@@ -39,7 +39,7 @@
                   </HBox>
                   <HBox alignment="CENTER" layoutX="487.0" layoutY="10.0" prefHeight="23.0" prefWidth="390.0" styleClass="footer">
                      <children>
-                        <Label styleClass="footer" text="©Copyright 2021 MatMadProject" />
+                        <Label styleClass="footer" text="©Copyright 2021-2022 MatMadProject" />
                      </children>
                   </HBox>
                   <HBox alignment="CENTER_RIGHT" layoutX="822.0" layoutY="10.0" prefHeight="23.0" prefWidth="380.0" spacing="10.0">
@@ -125,6 +125,60 @@
                         <Insets bottom="2.5" left="2.5" right="2.5" top="2.5" />
                      </padding>
                   </HBox>
+                  <Label alignment="CENTER" prefWidth="200.0" styleClass="label-title" text="REQUIREMENTS" />
+<!--                  <VBox fx:id="vBoxRequirements" prefHeight="200.0" prefWidth="200.0" spacing="2.0">-->
+<!--                     <children>-->
+<!--                        <Label alignment="CENTER" prefWidth="200.0" styleClass="label-title" text="REQUIREMENTS" />-->
+<!--                        <HBox alignment="CENTER" prefHeight="23.0" prefWidth="200.0" styleClass="footer">-->
+<!--                           <children>-->
+<!--                              <Label fx:id="labelNameRequirements" prefWidth="140.0" styleClass="footer" />-->
+<!--                              <Separator orientation="VERTICAL" prefHeight="200.0" />-->
+<!--                              <Label fx:id="labelLevelRequirements" alignment="CENTER_RIGHT" contentDisplay="CENTER" prefWidth="44.0" styleClass="label-task-info" />-->
+<!--                           </children>-->
+<!--                           <padding>-->
+<!--                              <Insets bottom="2.5" left="2.5" right="2.5" top="2.5" />-->
+<!--                           </padding>-->
+<!--                        </HBox>-->
+<!--                        <HBox alignment="CENTER" prefHeight="23.0" prefWidth="200.0" styleClass="footer">-->
+<!--                           <children>-->
+<!--                              <Label fx:id="labelNameRequirements2" prefWidth="140.0" styleClass="footer" />-->
+<!--                              <Separator orientation="VERTICAL" prefHeight="200.0" />-->
+<!--                              <Label fx:id="labelLevelRequirements2" alignment="CENTER_RIGHT" contentDisplay="CENTER" prefWidth="44.0" styleClass="label-task-info" />-->
+<!--                           </children>-->
+<!--                           <padding>-->
+<!--                              <Insets bottom="2.5" left="2.5" right="2.5" top="2.5" />-->
+<!--                           </padding>-->
+<!--                        </HBox>-->
+<!--                        <HBox alignment="CENTER" prefHeight="23.0" prefWidth="200.0" styleClass="footer">-->
+<!--                           <children>-->
+<!--                              <Label fx:id="labelNameRequirements3" prefWidth="140.0" styleClass="footer" />-->
+<!--                              <Separator orientation="VERTICAL" prefHeight="200.0" />-->
+<!--                              <Label fx:id="labelLevelRequirements3" alignment="CENTER_RIGHT" contentDisplay="CENTER" prefWidth="44.0" styleClass="label-task-info" />-->
+<!--                           </children>-->
+<!--                           <padding>-->
+<!--                              <Insets bottom="2.5" left="2.5" right="2.5" top="2.5" />-->
+<!--                           </padding>-->
+<!--                        </HBox>-->
+<!--                        <HBox alignment="CENTER" prefHeight="23.0" prefWidth="200.0" styleClass="footer">-->
+<!--                           <children>-->
+<!--                              <Label fx:id="labelNameRequirements4" prefWidth="140.0" styleClass="footer" />-->
+<!--                              <Separator orientation="VERTICAL" prefHeight="200.0" />-->
+<!--                              <Label fx:id="labelLevelRequirements4" alignment="CENTER_RIGHT" contentDisplay="CENTER" prefWidth="44.0" styleClass="label-task-info" />-->
+<!--                           </children>-->
+<!--                           <padding>-->
+<!--                              <Insets bottom="2.5" left="2.5" right="2.5" top="2.5" />-->
+<!--                           </padding>-->
+<!--                        </HBox>-->
+<!--                     </children>-->
+<!--                     <VBox.margin>-->
+<!--                        <Insets />-->
+<!--                     </VBox.margin>-->
+<!--                  </VBox>-->
+                  <VBox fx:id="vBoxRequirements" prefHeight="200.0" prefWidth="200.0" spacing="2.0">
+                     <VBox.margin>
+                        <Insets />
+                     </VBox.margin>
+                  </VBox>
                </children>
             </VBox>
          </children>

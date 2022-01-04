@@ -92,6 +92,11 @@ Separator{
 .off{
     -fx-background-color: color-error;
 }
+
+.disable-requirements{
+    -fx-background-color: color-error;
+    -fx-text-fill: white;
+}
 .progress-bar {
   -fx-accent: color-a; // Kolor zawartości progress bar pokauzjący poziom wczytania/załadowania progress bar.
 }

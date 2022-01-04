@@ -1,5 +1,6 @@
 package app.controllers;
 
+import app.controllers_connector.RequirementsContainerConnector;
 import app.controllers_connector.TaskContainerConnector;
 import app.leaftask.LeafTask;
 import app.leaftask.LeafTaskManager;
@@ -11,8 +12,12 @@ import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
+import ogame.RequiredTechnology;
+import ogame.planets.Planet;
 import ogame.utils.log.AppLog;
 import ogame.utils.watch.Calendar;
+
+import java.util.ArrayList;
 
 public class BotWindowController {
 
@@ -20,7 +25,8 @@ public class BotWindowController {
     public VBox vBoxTaskList;
     @FXML
     public AnchorPane anchorPaneTaskContent;
-
+    @FXML
+    public VBox vBoxRequirements;
     @FXML
     private Label labelInternetStatus;
     @FXML
@@ -126,7 +132,16 @@ public class BotWindowController {
             labelNextExecute.setText("");
         }
     }
-
+    //Display reuirements for object.
+    public void setRequirementsTechnology(ArrayList<RequiredTechnology> requiredTechnologyArrayList, Planet planet){
+        vBoxRequirements.getChildren().clear();
+        //When object has required technolgies
+        if(requiredTechnologyArrayList != null)
+            for(RequiredTechnology requiredTechnology : requiredTechnologyArrayList){
+                RequirementsContainerConnector requirementsContainerConnector = new RequirementsContainerConnector(requiredTechnology, planet);
+                vBoxRequirements.getChildren().add(requirementsContainerConnector.content());
+            }
+    }
 
     public void setAnchorPaneTaskContent(Node content){
         anchorPaneTaskContent.getChildren().clear();

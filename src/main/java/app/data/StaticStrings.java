@@ -63,7 +63,7 @@ public class StaticStrings {
     /*
     VERSION
      */
-    public static final String VERSION = "Version 0.1.0 - beta";
+    public static final String VERSION = "Version 1.0.0 - beta";
 
     /*
     STRINGS

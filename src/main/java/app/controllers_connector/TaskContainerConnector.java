@@ -12,10 +12,9 @@ public class TaskContainerConnector {
 
     private TaskContainerController controller;
     private AnchorPane container;
-    private final LeafTaskConnector leafTaskConnector;
 
     public TaskContainerConnector(LeafTask task, BotWindowController botWindowController) {
-        leafTaskConnector = setLeafTaskConnector(task);
+        LeafTaskConnector leafTaskConnector = setLeafTaskConnector(task, botWindowController);
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/gui/task-container.fxml"));
         try {
             container = fxmlLoader.load();
@@ -41,15 +40,15 @@ public class TaskContainerConnector {
     }
 
     //Update when added new leaftask to app.
-    private LeafTaskConnector setLeafTaskConnector(LeafTask leafTask){
+    private LeafTaskConnector setLeafTaskConnector(LeafTask leafTask, BotWindowController botWindowController){
         if(leafTask instanceof PlanetsLeafTask)
             return new PlanetsLeafTaskConnector();
         if(leafTask instanceof ImperiumLeafTask)
             return new ImperiumLeafTaskConnector();
         if(leafTask instanceof AutoBuilderLeafTask)
-            return new AutoBuilderLeafTaskConnector();
+            return new AutoBuilderLeafTaskConnector(botWindowController);
         if(leafTask instanceof AutoResearchLeafTask)
-            return new AutoResearchLeafTaskConnector();
+            return new AutoResearchLeafTaskConnector(botWindowController);
         return null;
     }
 }

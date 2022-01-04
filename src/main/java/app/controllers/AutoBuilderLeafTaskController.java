@@ -34,6 +34,7 @@ public class AutoBuilderLeafTaskController {
     private VBox vBoxHistory;
 
     Planet comboBoxPlanetValue;
+    private BotWindowController botWindowController;
     public void update(){
         ArrayList<ComboBoxPlanet> comboBoxPlanetArrayList = ComboBoxPlanet.list(DataLoader.planets.getPlanetList());
         if(!comboBoxPlanetArrayList.isEmpty()){
@@ -52,16 +53,18 @@ public class AutoBuilderLeafTaskController {
 
             comboBoxBuilding.valueProperty().addListener((observable, oldValue, newValue) -> {
                 ArrayList<ItemAutoBuilder> planetQueue = DataLoader.listItemAutoBuilder.getQueueListFromPlanet(comboBoxPlanetValue);
+                Building building;
                 if(newValue != null){
-                    Building building = newValue.getBuilding();
+                    building = newValue.getBuilding();
                     int upgradeLevel = DataLoader.listItemAutoBuilder.getHighestLevelOfBuildingOnQueue(building,planetQueue)+1;
                     labelUpgradeLevel.setText(upgradeLevel+"");
                 }
                 else{
-                    Building building = oldValue.getBuilding();
+                    building = oldValue.getBuilding();
                     int upgradeLevel = DataLoader.listItemAutoBuilder.getHighestLevelOfBuildingOnQueue(building,planetQueue)+1;
                     labelUpgradeLevel.setText(upgradeLevel+"");
                 }
+                botWindowController.setRequirementsTechnology(building.getDataTechnology().getRequiredTechnologies(),comboBoxPlanetValue);
             });
         }
         updateQueueList();
@@ -111,6 +114,10 @@ public class AutoBuilderLeafTaskController {
         }else
             for(AutoBuilderLeafTaskItemConnector connector : connectorArrayList)
                 connector.getController().update();
+    }
+
+    public void setBotWindowController(BotWindowController botWindowController) {
+        this.botWindowController = botWindowController;
     }
 
     static class  ComboBoxBuilding{

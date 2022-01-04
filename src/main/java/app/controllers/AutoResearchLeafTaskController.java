@@ -1,13 +1,11 @@
 package app.controllers;
 
-import app.controllers_connector.AutoBuilderLeafTaskItemConnector;
 import app.controllers_connector.AutoResearchLeafTaskItemConnector;
 import app.data.DataLoader;
 import app.data.autoresearch.ItemAutoResearch;
 import app.data.planets.ComboBoxPlanet;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
@@ -30,13 +28,11 @@ public class AutoResearchLeafTaskController {
     private Label labelUpgradeLevel;
 
     @FXML
-    private Button buttonAdd;
-
-    @FXML
     private VBox vBoxQueue;
 
     @FXML
     private VBox vBoxHistory;
+    private BotWindowController botWindowController;
 
     public void add() {
         Planet planet = comboBoxPlanet.getValue().getPlanet();
@@ -67,10 +63,13 @@ public class AutoResearchLeafTaskController {
             comboBoxResearch.setValue(comboBoxResearchArrayList.get(0));
         }
         comboBoxResearch.valueProperty().addListener((observable, oldValue, newValue) -> {
-                if(newValue != null){
+            Planet planet = comboBoxPlanet.getValue().getPlanet();
+            if(newValue != null){
                     Research research = newValue.getResearch();
                     int upgradeLevel = DataLoader.listItemAutoResearch.getHighestLevelOfResearchOnQueue(research)+1;
                     labelUpgradeLevel.setText(upgradeLevel+"");
+
+                    botWindowController.setRequirementsTechnology(research.getDataTechnology().getRequiredTechnologies(),planet);
                 }
             });
         updateQueueList();
@@ -102,6 +101,10 @@ public class AutoResearchLeafTaskController {
         }else
             for(AutoResearchLeafTaskItemConnector connector : connectorArrayList)
                 connector.getController().update();
+    }
+
+    public void setBotWindowController(BotWindowController botWindowController) {
+        this.botWindowController = botWindowController;
     }
 
     static class ComboBoxResearch {
