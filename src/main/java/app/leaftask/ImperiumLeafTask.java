@@ -220,9 +220,11 @@ public class ImperiumLeafTask extends LeafTask{
                     Status status = Supplies.statusOfBuilding(OgameWeb.webDriver,i);
                     String localName = Supplies.localNameOfBuilding(OgameWeb.webDriver,i);
                     int level = Supplies.levelOfBuilding(OgameWeb.webDriver, i);
-                    building.setLevel(level);
-                    building.setLocalName(localName);
-                    building.setStatus(status);
+                    if(building != null){
+                        building.setLevel(level);
+                        building.setLocalName(localName);
+                        building.setStatus(status);
+                    }
                 }
                 planet.setUpdateResourceBuilding(false);
             }

@@ -136,7 +136,7 @@ public class AutoBuilderLeafTaskController {
             dataTechnologyArrayList.addAll(DataTechnology.dataTechnologyList(Type.TECHNOLOGIES));
 
             for(DataTechnology dataTechnology : dataTechnologyArrayList){
-                if(dataTechnology.equals(DataTechnology.RESBUGGY) || dataTechnology.equals(DataTechnology.SOLAR_SATELITE)
+                if(dataTechnology.equals(DataTechnology.RESBUGGY_B) || dataTechnology.equals(DataTechnology.SOLAR_SATELITE_B)
                 || dataTechnology.equals(DataTechnology.UNDEFINED))
                     continue;
 

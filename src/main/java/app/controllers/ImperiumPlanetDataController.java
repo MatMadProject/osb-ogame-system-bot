@@ -112,8 +112,8 @@ public class ImperiumPlanetDataController {
         labelDeuteriumSynth.setText(planet.getBuilding(DataTechnology.DEUTERIUM_SYNTHESIZER).getLevel()+"");
         labelSolarPlant.setText(planet.getBuilding(DataTechnology.SOLAR_PLANT).getLevel()+"");
         labelFusionPlant.setText(planet.getBuilding(DataTechnology.FUSION_PLANT).getLevel()+"");
-        labelSolarSatelite.setText(planet.getBuilding(DataTechnology.SOLAR_SATELITE).getLevel()+"");
-        labelResbuggy.setText(planet.getBuilding(DataTechnology.RESBUGGY).getLevel()+"");
+        labelSolarSatelite.setText(planet.getBuilding(DataTechnology.SOLAR_SATELITE_B) == null ? "-1": planet.getBuilding(DataTechnology.SOLAR_SATELITE_B).getLevel()+"");
+        labelResbuggy.setText(planet.getBuilding(DataTechnology.RESBUGGY_B) == null ? "-1": planet.getBuilding(DataTechnology.RESBUGGY_B).getLevel()+"");
         labelMetalStorage.setText(planet.getBuilding(DataTechnology.METAL_STORAGE).getLevel()+"");
         labelCrystalStorage.setText(planet.getBuilding(DataTechnology.CRYSTAL_STORAGE).getLevel()+"");
         labelDeuteriumStorage.setText(planet.getBuilding(DataTechnology.DEUTERIUM_STORAGE).getLevel()+"");
