@@ -1,8 +1,12 @@
 package app.leaftask;
 
 import ogame.OgameWeb;
+import ogame.eventbox.Event;
+import ogame.planets.Coordinate;
 import ogame.planets.Planet;
 import ogame.planets.PlanetsList;
+import ogame.tabs.EventBoxContent;
+import ogame.tabs.FleetDispatch;
 import ogame.tabs.Overview;
 import ogame.utils.AntiLooping;
 import ogame.utils.Waiter;
@@ -47,7 +51,7 @@ public class LeafTask implements Execute{
      * Body of executing task.
      */
     @Override
-    public void execute() {
+    public void execute() throws Exception {
         Waiter.sleep(15,15);
     }
     /*
@@ -61,7 +65,7 @@ public class LeafTask implements Execute{
     }
     /**
      * Set time of last execute task.
-     * @param lastTimeExecute Time in miliseconds.
+     * @param lastTimeExecute Time in milliseconds.
      */
     protected void setLastTimeExecute(long lastTimeExecute) {
         this.lastTimeExecute = lastTimeExecute;
@@ -75,7 +79,7 @@ public class LeafTask implements Execute{
     }
     /**
      * Set task sleep time.
-     * @param ms Time in miliseconds.
+     * @param ms Time in milliseconds.
      */
     public void setSleep(long ms) {
         this.sleep = ms;
@@ -109,7 +113,7 @@ public class LeafTask implements Execute{
         return lastTimeExecute;
     }
     /**
-     * Time of nextxecute task.
+     * Time of next execute task.
      */
     public long getNextTimeExecute() {
         return nextTimeExecute;
@@ -143,6 +147,7 @@ public class LeafTask implements Execute{
             Planet tmpPlanet = PlanetsList.selectedPlanet(OgameWeb.webDriver);
             planetSelected = tmpPlanet.getId().equals(planet.getId());
         } while (planetSelected);
+        getAntiLooping().reset();
         return true;
     }
 
@@ -156,6 +161,95 @@ public class LeafTask implements Execute{
                 return false;
             }
         }while(!Overview.visible(OgameWeb.webDriver)); // Jest niewidoczne
+        getAntiLooping().reset();
         return true;
+    }
+
+    public boolean clickFleetDispatch(){
+        //Klikanie podgląd
+        do{
+            FleetDispatch.click(OgameWeb.webDriver);
+            Waiter.sleep(200,300);
+            if(getAntiLooping().check()){
+                getAntiLooping().reset();
+                return false;
+            }
+        }while(!FleetDispatch.visible(OgameWeb.webDriver)); // Jest niewidoczne
+        getAntiLooping().reset();
+        return true;
+    }
+
+    public boolean inputCoordinate(Coordinate coordinate){
+        boolean flag;
+        do{
+            if(!FleetDispatch.setGalaxy(OgameWeb.webDriver,coordinate.getGalaxy())){
+                flag = false;
+                continue;
+            }
+            if(!FleetDispatch.setSystem(OgameWeb.webDriver,coordinate.getSystem())){
+                flag = false;
+                continue;
+            }
+            flag =  FleetDispatch.setPosition(OgameWeb.webDriver, coordinate.getPlanet());
+
+            Waiter.sleep(200,300);
+            if(getAntiLooping().check()){
+                getAntiLooping().reset();
+                return false;
+            }
+        }while(!flag);
+        getAntiLooping().reset();
+        return true;
+    }
+
+    public boolean inputCoordinateExpedition(Coordinate coordinate){
+        boolean flag;
+        do{
+            if(!FleetDispatch.setGalaxy(OgameWeb.webDriver,coordinate.getGalaxy())){
+                flag = false;
+                continue;
+            }
+            if(!FleetDispatch.setSystem(OgameWeb.webDriver,coordinate.getSystem())){
+                flag = false;
+                continue;
+            }
+            flag =  FleetDispatch.setPosition(OgameWeb.webDriver, 16);
+
+            Waiter.sleep(200,300);
+            if(getAntiLooping().check()){
+                getAntiLooping().reset();
+                return false;
+            }
+        }while(!flag);
+        getAntiLooping().reset();
+        return true;
+    }
+
+    public boolean openEventBox(){
+        //Otwieranie openEventBox
+        do{
+            EventBoxContent.open(OgameWeb.webDriver);
+            Waiter.sleep(200,300);
+            if(getAntiLooping().check()){
+                getAntiLooping().reset();
+                return false;
+            }
+        }while(!EventBoxContent.visible(OgameWeb.webDriver)); // Jest niewidoczne
+        getAntiLooping().reset();
+        return true;
+    }
+
+    public Event getEvent(String idEvent){
+        Event event;
+        do{
+            event = EventBoxContent.eventFromId(OgameWeb.webDriver,idEvent);
+            Waiter.sleep(100,100);
+            if(getAntiLooping().check()){
+                getAntiLooping().reset();
+                return null;
+            }
+        }while(event == null); // Nie przypisano eventu
+        getAntiLooping().reset();
+        return event;
     }
 }

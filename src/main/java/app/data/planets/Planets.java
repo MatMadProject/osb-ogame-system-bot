@@ -65,7 +65,7 @@ public class Planets implements LSD, Serializable {
                 o.writeObject(this);
                 o.close();
                 f.close();
-                AppLog.print(Planets.class.getName(),0,"Data saved.");
+//                AppLog.print(Planets.class.getName(),0,"Data saved.");
                 return true;
             }
             else {
@@ -97,7 +97,7 @@ public class Planets implements LSD, Serializable {
 
     /**
      * Checks the planet exist on list.
-     * @param planet Serachinf planet.
+     * @param planet Searching planet.
      * @return If exist returns true.
      */
     private boolean exists(Planet planet) {
@@ -148,7 +148,7 @@ public class Planets implements LSD, Serializable {
 
     /**
      * Returns list with planets coordinates. Coordinate format [x:xxx:xx].
-     * @return If error will exist return empty list.
+     * @return If error return empty list.
      */
     public List<String> planetsCoordinate() {
         List<String> list = new ArrayList<>();

@@ -45,7 +45,7 @@ public class ListItemAutoResearch implements Serializable, LSD {
                 return true;
             } catch (IOException | ClassNotFoundException e) {
                 e.printStackTrace();
-                AppLog.print(Planets.class.getName(),1,"When try data load.");
+                AppLog.print(ListItemAutoResearch.class.getName(),1,"When try data load.");
             }
         }
         return false;
@@ -66,11 +66,11 @@ public class ListItemAutoResearch implements Serializable, LSD {
                 o.writeObject(this);
                 o.close();
                 f.close();
-                AppLog.print(Planets.class.getName(),0,"Data saved.");
+//                AppLog.print(ListItemAutoResearch.class.getName(),0,"Data saved.");
                 return true;
             }
             else {
-                AppLog.print(Planets.class.getName(),1,"When try data save.");
+                AppLog.print(ListItemAutoResearch.class.getName(),1,"When try data save.");
             }
         }
         catch (IOException e) {

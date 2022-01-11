@@ -3,6 +3,7 @@ package app.data;
 import app.data.autobuilder.ListItemAutoBuilder;
 import app.data.autoresearch.ListItemAutoResearch;
 import app.data.autoresearch.Researches;
+import app.data.expedition.Expeditions;
 import app.data.planets.ColonyData;
 import app.data.planets.Planets;
 import app.data.player.PlayerData;
@@ -15,10 +16,12 @@ public class DataLoader {
     public static ListItemAutoResearch listItemAutoResearch;
     public static ColonyData colonyData;
     public static PlayerData playerData;
+    public static Expeditions expeditions;
 
     public DataLoader(){
         planets = new Planets();
         researches = new Researches();
+        expeditions = new Expeditions();
         listItemAutoBuilder = new ListItemAutoBuilder();
         listItemAutoResearch = new ListItemAutoResearch();
         colonyData = new ColonyData();

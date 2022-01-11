@@ -49,6 +49,8 @@ public class TaskContainerConnector {
             return new AutoBuilderLeafTaskConnector(botWindowController);
         if(leafTask instanceof AutoResearchLeafTask)
             return new AutoResearchLeafTaskConnector(botWindowController);
+        if(leafTask instanceof ExpeditionLeafTask)
+            return new ExpeditionLeafTaskConnector(botWindowController);
         return null;
     }
 }

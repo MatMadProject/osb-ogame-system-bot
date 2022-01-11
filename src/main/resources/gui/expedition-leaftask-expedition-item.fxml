@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.HBox?>
+
+<HBox prefHeight="17.0" prefWidth="777.0" spacing="2.0" styleClass="vbox-imperium-data" stylesheets="@../css/bot-window.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.controllers.ExpeditionLeafTaskExpeditionItemController">
+   <children>
+      <Label fx:id="labelId" prefWidth="25.0" />
+      <Label fx:id="labelPlanet" prefWidth="70.0" />
+      <Label fx:id="labelTarget" prefWidth="70.0" />
+      <Label fx:id="labelStorage" prefWidth="125.0" />
+      <Label fx:id="labelFleet" layoutX="190.0" layoutY="10.0" prefWidth="120.0" />
+      <Label fx:id="labelStatus" prefWidth="140.0" />
+      <Label fx:id="labelStatusTime" prefWidth="120.0" />
+      <Label fx:id="labelTimer" prefWidth="65.0" text="--:--:--" />
+      <Label onMouseClicked="#delete" prefWidth="25.0" styleClass="label-button" text="x" />
+   </children>
+</HBox>

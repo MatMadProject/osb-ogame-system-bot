@@ -27,7 +27,8 @@ public class StaticStrings {
     public static final String ACCOUNTS_LIST_FILE = "accounts-list";
     public static final String LAST_LOGIN_FILE = "last-login";
     //Ekspedycje
-    public static final String EKSPEDYCJE_CONFIG_FILE = "ekspedycje-config";
+    public static final String EXPEDITION_FILE = "expedition";
+    public static final String EXPEDITION_LOG_FILE = "expedition-log";
     //Autotransport
     public static final String AUTOTRANSPOSRT_CONFIG_FILE = "autotransport-config";
     public static final String AUTOTRANSPORT_FILE = "autotransport"; //v2
@@ -45,6 +46,8 @@ public class StaticStrings {
     public static final String AUTO_RESEARCH_FILE = "autoresearch";
     //Player data
     public static final String PLAYER_DATA_FILE = "player-data";
+    //Error
+    public static final String ERRORS_FILE = "error";
     /*
     FOLDERS
      */

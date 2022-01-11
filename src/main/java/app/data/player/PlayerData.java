@@ -106,7 +106,7 @@ public class PlayerData implements LSD{
     public Timer timeLeftToNextExecute(){
         PlayerDataItem playerDataItem = latestItem();
         if(playerDataItem != null){
-            long executeTime = Long.parseLong(latestItem().getTimeMiliseconds());
+            long executeTime = Long.parseLong(latestItem().getTimeMilliseconds());
             return new Timer(executeTime,executeTime + EXECUTE_WAIT_TIME);
         }
 

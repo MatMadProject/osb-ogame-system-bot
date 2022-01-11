@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.VBox?>
+
+<AnchorPane prefHeight="638.0" prefWidth="782.0" stylesheets="@../css/bot-window.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.controllers.ExpeditionLeafTaskController">
+    <children>
+        <VBox prefHeight="638.0" prefWidth="782.0" spacing="2.0" styleClass="expedition">
+            <children>
+            <VBox prefHeight="150.0" prefWidth="782.0" spacing="2.0">
+               <children>
+                      <Label alignment="CENTER" prefWidth="782.0" styleClass="footer" text="SETTINGS" textAlignment="CENTER">
+                          <VBox.margin>
+                              <Insets />
+                          </VBox.margin>
+                      </Label>
+                  <HBox prefHeight="131.0" prefWidth="782.0" spacing="2.0">
+                     <children>
+                        <VBox prefHeight="131.0" prefWidth="390.0">
+                           <children>
+                              <HBox alignment="CENTER_LEFT" prefHeight="31.0" prefWidth="386.0" spacing="5.0">
+                                 <children>
+                                    <ComboBox fx:id="comboBoxShip" prefWidth="150.0" styleClass="combo-box-autobuilder" />
+                                    <Label prefWidth="50.0" text="Value" />
+                                    <TextField fx:id="textFieldValue" alignment="CENTER" prefWidth="50.0" promptText="0-99999" />
+                                    <CheckBox fx:id="checkBoxAll" mnemonicParsing="false" prefWidth="50.0" text="All" />
+                                    <Button mnemonicParsing="false" onAction="#addShip" prefWidth="65.0" styleClass="button-auto-builder" text="Add" />
+                                 </children>
+                              </HBox>
+                              <HBox alignment="CENTER_LEFT" prefHeight="31.0" prefWidth="386.0" spacing="5.0">
+                                 <children>
+                                    <Label prefWidth="80.0" text="Galaxy" />
+                                    <TextField fx:id="textFieldGalaxy" alignment="CENTER" prefWidth="40.0" promptText="0-9" />
+                                    <Label prefWidth="80.0" text="System" />
+                                    <TextField fx:id="textFieldSystem" alignment="CENTER" prefWidth="40.0" promptText="1-499" />
+                                    <Label prefWidth="80.0" text="Planet" />
+                                    <TextField fx:id="textFieldPlanet" alignment="CENTER" disable="true" prefWidth="40.0" promptText="1-16" text="16" />
+                                 </children>
+                              </HBox>
+                              <Region prefHeight="38.0" prefWidth="386.0" />
+                                  <HBox alignment="CENTER_LEFT" prefHeight="31.0" prefWidth="386.0" spacing="5.0">
+                                      <children>
+                                          <ComboBox fx:id="comboBoxPlanet" prefWidth="150.0" styleClass="combo-box-autobuilder" />
+                                    <Region prefHeight="31.0" prefWidth="91.0" />
+                                    <Button mnemonicParsing="false" onAction="#addExpedition" prefWidth="135.0" styleClass="button-auto-builder" text="Add expedition" />
+                                      </children>
+                                  </HBox>
+                           </children>
+                           <padding>
+                              <Insets left="2.0" right="2.0" />
+                           </padding>
+                        </VBox>
+                        <VBox prefHeight="131.0" prefWidth="386.0" spacing="2.0">
+                           <children>
+                              <Label alignment="CENTER" prefWidth="382.0" styleClass="footer" text="SHIPS LIST" textAlignment="CENTER" />
+                                      <HBox prefHeight="15.0" prefWidth="377.0" spacing="2.0" styleClass="vbox-imperium-data" stylesheets="@../css/bot-window.css">
+                                          <children>
+                                              <Label prefWidth="290.0" styleClass="label-title" text="SHIP" />
+                                              <Label prefWidth="87.0" styleClass="label-title" text="VALUE" />
+                                          </children>
+                                      </HBox>
+                                  <ScrollPane hbarPolicy="NEVER" prefHeight="95.0" prefWidth="382.0">
+                                      <content>
+                                          <VBox fx:id="vBoxAddedShips" prefWidth="377.0" spacing="1.0" styleClass="vbox-imperium-data" />
+                                      </content>
+                                  </ScrollPane>
+                           </children>
+                           <padding>
+                              <Insets left="2.0" right="2.0" />
+                           </padding>
+                        </VBox>
+                     </children>
+                  </HBox>
+               </children>
+            </VBox>
+                <Label alignment="CENTER" layoutX="10.0" layoutY="43.0" prefWidth="782.0" styleClass="footer" text="QUEUE" textAlignment="CENTER">
+                    <VBox.margin>
+                        <Insets />
+                    </VBox.margin>
+                </Label>
+                <ScrollPane prefHeight="150.0" prefWidth="782.0">
+                    <content>
+                        <VBox prefWidth="777.0" spacing="1.0" styleClass="vbox-imperium-data">
+                            <children>
+                                <HBox prefHeight="17.0" prefWidth="777.0" spacing="2.0" styleClass="vbox-imperium-data" stylesheets="@../css/bot-window.css">
+                                    <children>
+                              <Label prefWidth="25.0" styleClass="label-title" text="ID" />
+                                        <Label prefWidth="70.0" styleClass="label-title" text="PLANET" />
+                              <Label prefWidth="70.0" styleClass="label-title" text="TARGET" />
+                              <Label prefWidth="125.0" styleClass="label-title" text="STORAGE" />
+                              <Label layoutX="190.0" layoutY="10.0" prefWidth="120.0" styleClass="label-title" text="FLEET" />
+                              <Label prefWidth="140.0" styleClass="label-title" text="STATUS" />
+                              <Label prefWidth="120.0" styleClass="label-title" text="STATUS TIME" />
+                              <Label prefWidth="65.0" styleClass="label-title" text="TIMER" />
+                                        <Label prefWidth="25.0" styleClass="label-title" />
+                                    </children>
+                                </HBox>
+                                <VBox fx:id="vBoxQueue" prefWidth="777.0" spacing="1.0" />
+                            </children></VBox>
+                    </content>
+                </ScrollPane>
+            </children>
+        </VBox>
+    </children>
+</AnchorPane>

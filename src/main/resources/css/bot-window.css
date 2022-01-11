@@ -53,7 +53,38 @@ Separator{
 .combo-box-autobuilder .arrow{
     -fx-background-color: color-a;
 }
-
+.expedition .text-field{
+    -fx-font-size: 10px;
+    -fx-text-alignment: center;
+ }
+.expedition .check-box{
+    -fx-font-size: 10px;
+    -fx-font-weight: 700;
+}
+.expedition .check-box .box{
+   -fx-background-color: color-c;
+}
+.expedition .check-box .mark{
+   /*
+   -fx-background-color: color-a;
+   */
+}
+.expedition .label-ship-list{
+    -fx-background-color: color-c;
+    -fx-background-radius: 2 2 2 2;
+    -fx-text-fill: black;
+    -fx-font-size: 10px;
+    -fx-alignment: center;
+    -fx-text-alignment: center;
+}
+.expedition .text-field{
+   -fx-background-color: color-c;
+   -fx-background-radius: 2 2 2 2;
+   -fx-text-fill: black;
+   -fx-font-size: 10px;
+   -fx-font-weight: 700;
+   -fx-prompt-text-fill: white;
+}
 .footer{
     -fx-background-color: color-c;
     -fx-background-radius: 2 2 2 2;
@@ -202,3 +233,22 @@ Separator{
       -fx-shape : " ";
       -fx-padding :0.15em 0.0;
  }
+
+/*
+ .table-view {
+     -fx-background-color: color-c;
+ }
+ .column-header{
+     -fx-size: 15px;
+     -fx-background-color: color-label-title-background;
+     -fx-text-fill: black;
+     -fx-font-size: 10px;
+     -fx-alignment: center;
+     -fx-text-alignment: center;
+     -fx-font-weight: 700;
+ }
+ .table-row-cell: hover {
+     -fx-background-color: #93f9b911;
+     -fx-text-background-color: red;
+ }
+*/

@@ -1,5 +1,5 @@
 package app.leaftask;
 
 public interface Execute {
-    void execute();
+    void execute() throws Exception;
 }

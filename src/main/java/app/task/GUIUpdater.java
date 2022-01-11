@@ -3,10 +3,12 @@ package app.task;
 import app.controllers.BotWindowController;
 import app.controllers_connector.AutoBuilderLeafTaskConnector;
 import app.controllers_connector.AutoResearchLeafTaskConnector;
+import app.controllers_connector.ExpeditionLeafTaskConnector;
 import app.controllers_connector.LeafTaskConnector;
 import app.data.DataLoader;
 import app.leaftask.AutoBuilderLeafTask;
 import app.leaftask.AutoResearchLeafTask;
+import app.leaftask.ExpeditionLeafTask;
 import app.leaftask.PlanetsLeafTask;
 import javafx.application.Platform;
 import ogame.utils.Waiter;
@@ -33,6 +35,7 @@ public class GUIUpdater extends Task {
                     doneProgressBar();
                     updateAutoBuilderGUI();
                     updateAutoResearchGUI();
+                    updateExpeditionGUI();
                 };
                 Platform.runLater(updater);
             }
@@ -92,6 +95,17 @@ public class GUIUpdater extends Task {
                 if(leafTaskConnector instanceof AutoResearchLeafTaskConnector){
                     ((AutoResearchLeafTaskConnector) leafTaskConnector).getController().updateHistoryList();
                     ((AutoResearchLeafTaskConnector) leafTaskConnector).getController().updateQueueList();
+                }
+            }
+        }
+    }
+
+    private void updateExpeditionGUI(){
+        if(botWindowController != null){
+            if(botWindowController.isSelectedLeafTask()){
+                LeafTaskConnector  leafTaskConnector = botWindowController.getSelectedLeafTask().getLeafTaskConnector();
+                if(leafTaskConnector instanceof ExpeditionLeafTaskConnector){
+                    ((ExpeditionLeafTaskConnector) leafTaskConnector).getController().updateQueue();
                 }
             }
         }
