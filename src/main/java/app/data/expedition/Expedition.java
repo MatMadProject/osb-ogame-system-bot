@@ -187,8 +187,23 @@ public class Expedition implements Serializable {
         final String SEPARATOR =";";
 
         return id + SEPARATOR + Calendar.getDateTime(System.currentTimeMillis()) + SEPARATOR + "\n" +
+                (flyFromExpeditionEvent != null ?  flyFromExpeditionEvent.getArrivalTime() + SEPARATOR
+                        + flyFromExpeditionEvent.getID() : "null") + SEPARATOR +
+                lootedResources + SEPARATOR +
+                (returningFleet.isEmpty() ? "null" : returningFleet.toString()) + SEPARATOR +
+                flyToExpeditionEvent.getArrivalTime() + SEPARATOR +
+                flyToExpeditionEvent.getID() + SEPARATOR +
+                flyOnExpeditionEvent.getArrivalTime() + SEPARATOR +
+                flyOnExpeditionEvent.getID() + SEPARATOR;
+    }
+
+    public String logOld(){
+        final String SEPARATOR =";";
+
+        return id + SEPARATOR + Calendar.getDateTime(System.currentTimeMillis()) + SEPARATOR + "\n" +
                 (flyFromExpeditionEvent != null ? flyFromExpeditionEvent.toString() : "null") + SEPARATOR +
                 lootedResources + SEPARATOR +
+                (itemShipLists.isEmpty() ? "null" : itemShipLists.toString()) + SEPARATOR +
                 (returningFleet.isEmpty() ? "null" : returningFleet.toString()) + SEPARATOR +
                 flyToExpeditionEvent.getArrivalTime() + SEPARATOR +
                 flyToExpeditionEvent.getID() + SEPARATOR +

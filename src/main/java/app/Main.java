@@ -15,9 +15,9 @@ public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-        if(Configuration.firstConfiguration) {
+        if(Configuration.firstConfiguration)
             Configuration.save();
-        }
+
         Configuration.saveCounter();
         loadStartWindow(primaryStage);
     }

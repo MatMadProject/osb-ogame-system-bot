@@ -64,7 +64,7 @@ public class Expeditions  implements LSD, Serializable {
                 o.writeObject(this);
                 o.close();
                 f.close();
-                AppLog.print(Expedition.class.getName(),0,"Data saved.");
+//                AppLog.print(Expedition.class.getName(),0,"Data saved.");
                 return true;
             }
             else

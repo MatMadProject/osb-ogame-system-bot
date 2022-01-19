@@ -23,6 +23,7 @@ import ogame.utils.watch.Timer;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 public class ExpeditionLeafTask extends LeafTask{
 
@@ -36,9 +37,10 @@ public class ExpeditionLeafTask extends LeafTask{
             if(isSleepTimeOut(System.currentTimeMillis())){
                 ArrayList<Expedition> expeditions = DataLoader.expeditions.getExpeditionList();
                 if(!expeditions.isEmpty())
-                    for(Expedition expedition : expeditions)
+                    for(Expedition expedition : expeditions){
                         selectTask(expedition);
-
+                        DataLoader.expeditions.save();
+                    }
                 setLastTimeExecute(System.currentTimeMillis());
             }
         }
@@ -70,6 +72,7 @@ public class ExpeditionLeafTask extends LeafTask{
             case NO_FLEET:
             case MAX_EXPEDITION:
             case MAX_FLEET_SLOT:
+            case DATA_ERROR:
                 wait(expedition);
                 break;
         }
@@ -103,6 +106,12 @@ public class ExpeditionLeafTask extends LeafTask{
         if(timeToFinish < 0){
             String idReturnEvent = expedition.getFlyFromExpeditionEvent().getID();
             Event currentEvent = expedition.getFlyFromExpeditionEvent();
+            //The bot starts up after a few hours of inactivity. The expedition event may have ended.
+            List<Event> expeditionEvents = EventBoxContent.events(OgameWeb.webDriver,Mission.EXPEDITION);
+            if(expeditionEvents.isEmpty()){
+                expedition.setStatus(Status.FINISHED);
+                expedition.setStatusTime(System.currentTimeMillis());
+            }
             if(!openEventBox())
                 return;
             Event event = getEvent(idReturnEvent);
@@ -174,6 +183,12 @@ public class ExpeditionLeafTask extends LeafTask{
         expedition.setFlyFromExpeditionEvent(returnEvent);
         //Downloads data of other events of expedition
         Event expeditionEvent = EventBoxContent.eventFromId(OgameWeb.webDriver, previousEventID(returnEvent.getID()));
+        //Download incorrect data or another event ID shift occurred
+        if(expeditionEvent == null){
+            expedition.setStatus(Status.DATA_ERROR);
+            expedition.setStatusTime(System.currentTimeMillis());
+            expedition.setTimer(new Timer(0,returnEvent.getArrivalTime()));
+        }
         Event flyToExpeditionEvent = EventBoxContent.eventFromId(OgameWeb.webDriver, previousEventID(expeditionEvent.getID()));
 
         //Downloads incorrect event data

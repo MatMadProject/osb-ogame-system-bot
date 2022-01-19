@@ -14,7 +14,8 @@ public enum Status implements Serializable {
     NO_FLEET,
     NO_FUEL,
     MAX_EXPEDITION,
-    MAX_FLEET_SLOT;
+    MAX_FLEET_SLOT,
+    DATA_ERROR;
 
     private static final long serialVersionUID = 1992L;
 }
