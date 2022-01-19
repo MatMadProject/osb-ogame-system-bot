@@ -104,6 +104,7 @@ public class ExpeditionLeafTask extends LeafTask{
     private void expedition(Expedition expedition) {
         long timeToFinish = Timer.timeSeconds(expedition.getTimer().getFinishDate(),System.currentTimeMillis()/1000);
         if(timeToFinish < 0){
+            refreshWebPage();
             String idReturnEvent = expedition.getFlyFromExpeditionEvent().getID();
             Event currentEvent = expedition.getFlyFromExpeditionEvent();
             //The bot starts up after a few hours of inactivity. The expedition event may have ended.

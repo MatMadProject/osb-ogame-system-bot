@@ -165,6 +165,12 @@ public class LeafTask implements Execute{
         return true;
     }
 
+    public boolean refreshWebPage(){
+        boolean refresh = Overview.click(OgameWeb.webDriver);
+        Waiter.sleep(200,300);
+        return refresh;
+    }
+
     public boolean clickFleetDispatch(){
         //Klikanie podgląd
         do{
