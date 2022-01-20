@@ -1,13 +1,12 @@
 package app.leaftask;
 
 import ogame.OgameWeb;
+import ogame.Type;
 import ogame.eventbox.Event;
 import ogame.planets.Coordinate;
 import ogame.planets.Planet;
 import ogame.planets.PlanetsList;
-import ogame.tabs.EventBoxContent;
-import ogame.tabs.FleetDispatch;
-import ogame.tabs.Overview;
+import ogame.tabs.*;
 import ogame.utils.AntiLooping;
 import ogame.utils.Waiter;
 
@@ -161,6 +160,43 @@ public class LeafTask implements Execute{
                 return false;
             }
         }while(!Overview.visible(OgameWeb.webDriver)); // Jest niewidoczne
+        getAntiLooping().reset();
+        return true;
+    }
+
+    public boolean clickSupplies(){
+        //Klikanie podgląd
+        do{
+            Supplies.click(OgameWeb.webDriver);
+            Waiter.sleep(200,300);
+            if(getAntiLooping().check()){
+                getAntiLooping().reset();
+                return false;
+            }
+        }while(!Supplies.visible(OgameWeb.webDriver)); // Jest niewidoczne
+        getAntiLooping().reset();
+        return true;
+    }
+
+    public boolean clickOnBuilding(Type type, int listIndex){
+        boolean checkFlag;
+        do{
+            if(type == Type.PRODUCTION)
+                Supplies.clickOnBuilding(OgameWeb.webDriver,listIndex);
+            else
+                Facilities.clickOnBuilding(OgameWeb.webDriver,listIndex);
+
+            Waiter.sleep(200,300);
+            if(getAntiLooping().check()){
+                getAntiLooping().reset();
+                return false;
+            }
+
+            if(type == Type.PRODUCTION)
+                checkFlag = !Supplies.visibleBuildingDetails(OgameWeb.webDriver,listIndex);
+            else
+                checkFlag = !Facilities.visibleBuildingDetails(OgameWeb.webDriver,listIndex);
+        }while(checkFlag);
         getAntiLooping().reset();
         return true;
     }

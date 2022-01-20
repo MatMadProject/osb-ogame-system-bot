@@ -110,4 +110,8 @@ public class ItemAutoBuilder implements Serializable {
     public void setStatusTime() {
         this.statusTime = System.currentTimeMillis();
     }
+
+    public boolean isBuildingAchievedUpgradeLevel(int currentBuildingLevel){
+        return currentBuildingLevel >= upgradeLevel;
+    }
 }
