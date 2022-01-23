@@ -202,7 +202,7 @@ public class LeafTask implements Execute{
     }
 
     public boolean refreshWebPage(){
-        boolean refresh = Overview.click(OgameWeb.webDriver);
+        boolean refresh = Overview.clickAlways(OgameWeb.webDriver);
         Waiter.sleep(200,300);
         return refresh;
     }
