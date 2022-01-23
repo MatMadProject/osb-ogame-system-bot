@@ -50,7 +50,7 @@
                                   <HBox alignment="CENTER_LEFT" prefHeight="31.0" prefWidth="386.0" spacing="5.0">
                                       <children>
                                           <ComboBox fx:id="comboBoxPlanet" prefWidth="150.0" styleClass="combo-box-autobuilder" />
-                                    <Region prefHeight="31.0" prefWidth="91.0" />
+                                    <Button fx:id="editButton" disable="true" mnemonicParsing="false" onAction="#saveShipsList" prefWidth="91.0" styleClass="button-auto-builder" text="Edit ship" />
                                     <Button mnemonicParsing="false" onAction="#addExpedition" prefWidth="135.0" styleClass="button-auto-builder" text="Add expedition" />
                                       </children>
                                   </HBox>

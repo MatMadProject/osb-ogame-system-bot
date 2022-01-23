@@ -114,6 +114,7 @@ public class AutoBuilderLeafTask extends LeafTask{
             Building building = itemAutoBuilder.getBuilding();
             Type type =  building.getDataTechnology().getType();
             Planet planet = itemAutoBuilder.getPlanet();
+            long endTimeInSeconds;
             int listIndex = building.getDataTechnology().getListIndex();
             //Clicking on planet
             if(!clickPlanet(planet))
@@ -137,7 +138,7 @@ public class AutoBuilderLeafTask extends LeafTask{
                         return;
                     }
                 }while(Supplies.statusOfBuilding(OgameWeb.webDriver,listIndex) != ogame.Status.ACTIVE);
-
+                endTimeInSeconds = Supplies.endDateOfUpgradeBuilding(OgameWeb.webDriver, listIndex);
             }
             else{
                 //Facilities clicking
@@ -158,9 +159,10 @@ public class AutoBuilderLeafTask extends LeafTask{
                         return;
                     }
                 }while(Facilities.statusOfBuilding(OgameWeb.webDriver,listIndex) != ogame.Status.ACTIVE);
-
+                endTimeInSeconds = Supplies.endDateOfUpgradeBuilding(OgameWeb.webDriver, listIndex);
             }
             building.setStatus(ogame.Status.ACTIVE);
+            itemAutoBuilder.setEndTimeInSeconds(endTimeInSeconds);
             AppLog.print(AutoBuilderLeafTask.class.getName(),2,"Start upgrade " + building.getName() +
                     " to level " + itemAutoBuilder.getUpgradeLevel() + ".");
             itemAutoBuilder.setStatus(Status.UPGRADING);
@@ -339,6 +341,11 @@ public class AutoBuilderLeafTask extends LeafTask{
                 itemAutoBuilder.setStatus(Status.FINISHED);
                 itemAutoBuilder.setStatusTime(System.currentTimeMillis());
                 return;
+            }
+            if(itemAutoBuilder.isBuildingUpgrading(status)){
+                itemAutoBuilder.getBuilding().setProductionTime(productionTime);
+                itemAutoBuilder.setStatus(Status.UPGRADING);
+                itemAutoBuilder.setStatusTime(System.currentTimeMillis());
             }
             //Update building data
             building.setProductionTime(productionTime);

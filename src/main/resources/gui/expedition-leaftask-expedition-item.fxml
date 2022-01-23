@@ -3,7 +3,7 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.HBox?>
 
-<HBox prefHeight="17.0" prefWidth="777.0" spacing="2.0" styleClass="vbox-imperium-data" stylesheets="@../css/bot-window.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.controllers.ExpeditionLeafTaskExpeditionItemController">
+<HBox fx:id="hBoxRoot" onMouseClicked="#select" prefHeight="17.0" prefWidth="777.0" spacing="2.0" styleClass="expediton-item" stylesheets="@../css/bot-window.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.controllers.ExpeditionLeafTaskExpeditionItemController">
    <children>
       <Label fx:id="labelId" prefWidth="25.0" />
       <Label fx:id="labelPlanet" prefWidth="70.0" />

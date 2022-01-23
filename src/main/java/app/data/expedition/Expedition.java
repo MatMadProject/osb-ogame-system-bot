@@ -13,13 +13,14 @@ import ogame.utils.watch.Timer;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Objects;
 
 public class Expedition implements Serializable {
 
     private static final long serialVersionUID = 1992L;
     private final Planet planet;
     private final Coordinate destinationCoordinate;
-    private final ArrayList<ItemShipList> itemShipLists;
+    private ArrayList<ItemShipList> itemShipLists;
     private HashMap<String,Integer> returningFleet = new HashMap<>();
     private String id;
     private long shipsBefore;
@@ -55,6 +56,10 @@ public class Expedition implements Serializable {
 
     public ArrayList<ItemShipList> getItemShipLists() {
         return itemShipLists;
+    }
+
+    public void setItemShipLists(ArrayList<ItemShipList> itemShipLists) {
+        this.itemShipLists = itemShipLists;
     }
 
     public String getId() {
@@ -209,5 +214,18 @@ public class Expedition implements Serializable {
                 flyToExpeditionEvent.getID() + SEPARATOR +
                 flyOnExpeditionEvent.getArrivalTime() + SEPARATOR +
                 flyOnExpeditionEvent.getID() + SEPARATOR;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Expedition that = (Expedition) o;
+        return Objects.equals(id, that.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
 }

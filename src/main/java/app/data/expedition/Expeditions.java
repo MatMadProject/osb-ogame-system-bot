@@ -35,7 +35,7 @@ public class Expeditions  implements LSD, Serializable {
                 Expeditions object = (Expeditions) o.readObject();
                 this.expeditionList = object.getExpeditionList();
                 this.maxExpeditions = object.getMaxExpeditions();
-                id = id();
+                id = object.id();
 
                 o.close();
                 f.close();

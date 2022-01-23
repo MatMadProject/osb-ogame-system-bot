@@ -96,7 +96,7 @@ Separator{
 }
 
 .hbox-task-selected{
-    -fx-background-color: color-task-container-selected;
+  -fx-background-color: color-task-container-selected;
 }
 
 .hbox-task-label{
@@ -111,9 +111,34 @@ Separator{
     -fx-text-fill: white;
     -fx-background-radius: 3 3 3 3;
 }
+/*
+Expediton leaf task
+*/
+.expediton-item .label{
+  -fx-background-color: color-c;
+  -fx-background-radius: 2 2 2 2;
+  -fx-text-fill: black;
+  -fx-font-size: 10px;
+  -fx-padding: 0.0 2.5 0.0 2.5; //top right bottom left
+  -fx-alignment: center;
+  -fx-text-alignment: center;
+}
+.expediton-item:hover .label{
+  -fx-background-color: color-pane-hoover;
+  -fx-text-fill: white;
+}
+.expediton-item > .label-button:hover{
+  -fx-background-color: color-pane-hoover;
+}
+.expediton-item-selected .label{
+  -fx-background-color: color-task-container-selected;
+  -fx-text-fill: white;
+}
+
+
 .label-task-info{
-    -fx-font-size: 10px;
-    -fx-text-fill: black;
+  -fx-font-size: 10px;
+  -fx-text-fill: black;
 }
 
 .on{

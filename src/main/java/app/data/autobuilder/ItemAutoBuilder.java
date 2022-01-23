@@ -13,6 +13,7 @@ public class ItemAutoBuilder implements Serializable {
     private final Building building;
     private final int upgradeLevel;
     private final long startTime;
+    private long endTimeInSeconds;
     private long finishTime;
     private Status status;
     private long statusTime;
@@ -29,6 +30,9 @@ public class ItemAutoBuilder implements Serializable {
 
     public long timeToFinish(){
         if(this.status == Status.UPGRADING){
+            if(this.getBuilding().getProductionTime() == null)
+                return Timer.timeSeconds(endTimeInSeconds,System.currentTimeMillis()/1000);
+
             long finishTime = this.building.getProductionTime().timeInSeconds() * 1000 + statusTime;
             return finishTime - System.currentTimeMillis();
         }
@@ -90,6 +94,14 @@ public class ItemAutoBuilder implements Serializable {
         this.timer = timer;
     }
 
+    public long getEndTimeInSeconds() {
+        return endTimeInSeconds;
+    }
+
+    public void setEndTimeInSeconds(long endTimeInSeconds) {
+        this.endTimeInSeconds = endTimeInSeconds;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -113,5 +125,8 @@ public class ItemAutoBuilder implements Serializable {
 
     public boolean isBuildingAchievedUpgradeLevel(int currentBuildingLevel){
         return currentBuildingLevel >= upgradeLevel;
+    }
+    public boolean isBuildingUpgrading(ogame.Status status){
+        return status == ogame.Status.ACTIVE;
     }
 }

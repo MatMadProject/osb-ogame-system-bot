@@ -6,6 +6,7 @@ import app.data.DataLoader;
 import app.data.expedition.*;
 import app.data.planets.ComboBoxPlanet;
 import javafx.collections.FXCollections;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.layout.VBox;
@@ -22,6 +23,7 @@ public class ExpeditionLeafTaskController {
     public TextField textFieldSystem;
     @FXML
     public TextField textFieldPlanet;
+    public Button editButton;
     @FXML
     private ComboBox<ComboBoxPlanet> comboBoxPlanet;
 
@@ -40,12 +42,14 @@ public class ExpeditionLeafTaskController {
     @FXML
     private VBox vBoxQueue;
 
+    private Expedition selectedExpedition;
+
     @FXML
     void initialize(){
         checkBoxAll.selectedProperty().addListener((observable, oldValue, newValue) -> textFieldValue.setDisable(newValue));
     }
 
-    private final ArrayList<ItemShipList> itemShipLists = new ArrayList<>();
+    private ArrayList<ItemShipList> itemShipLists = new ArrayList<>();
     @FXML
     void addShip() {
         Ship ship = comboBoxShip.getValue().getShip();
@@ -88,14 +92,13 @@ public class ExpeditionLeafTaskController {
         DataLoader.expeditions.save();
     }
 
-    private  void updateVBoxAddedShips(){
+    public void updateVBoxAddedShips(){
         vBoxAddedShips.getChildren().clear();
         for(ItemShipList itemShipList : itemShipLists){
             ExpeditionLeafTaskShipItemConnector connector = new ExpeditionLeafTaskShipItemConnector(itemShipList);
             vBoxAddedShips.getChildren().add(connector.content());
         }
     }
-
     private final ArrayList<ExpeditionLeafTaskExpeditionItemConnector> connectorArrayList = new ArrayList<>();
     public void updateQueue(){
         ArrayList<Expedition> queueList = DataLoader.expeditions.getExpeditionList();
@@ -139,4 +142,45 @@ public class ExpeditionLeafTaskController {
     public void setBotWindowController(BotWindowController botWindowController) {
         this.botWindowController = botWindowController;
     }
+    public void saveShipsList() {
+        selectedExpedition.setItemShipLists(new ArrayList<>(itemShipLists));
+        selectedExpedition = null;
+        disableEditButton();
+        clearShipsList();
+        updateVBoxAddedShips();
+        DataLoader.expeditions.save();
+    }
+
+    public void setSelectedExpedition(Expedition selectedExpedition) {
+        this.selectedExpedition = selectedExpedition;
+    }
+
+    public void setItemShipLists(ArrayList<ItemShipList> itemShipLists) {
+        this.itemShipLists = itemShipLists;
+    }
+
+    /**
+     * @param expedition ***
+     * @return If an expedition is selected returns true.
+     */
+    public boolean isExpeditionContainerSelected(Expedition expedition){
+        return expedition.equals(selectedExpedition);
+    }
+
+    /**
+     * @return If any expedition is selected returns true.
+     */
+    public boolean isExpeditionContainerSelected(){
+        return selectedExpedition != null;
+    }
+
+    public void disableEditButton(){
+        editButton.setDisable(!editButton.isDisable());
+    }
+    public void clearShipsList(){
+        itemShipLists.clear();
+    }
+
+
+
 }
