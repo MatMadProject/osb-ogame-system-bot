@@ -186,6 +186,7 @@ public class Expedition implements Serializable {
         setLootedResources(new Resources(0,0,0,0));
         setFlyDuration(0);
         setTimer(null);
+        returningFleet = new HashMap<>();
     }
 
     public String log(){
@@ -195,6 +196,8 @@ public class Expedition implements Serializable {
                 (flyFromExpeditionEvent != null ?  flyFromExpeditionEvent.getArrivalTime() + SEPARATOR
                         + flyFromExpeditionEvent.getID() : "null") + SEPARATOR +
                 lootedResources + SEPARATOR +
+                shipsBefore + SEPARATOR +
+                shipsAfter + SEPARATOR +
                 (returningFleet.isEmpty() ? "null" : returningFleet.toString()) + SEPARATOR +
                 flyToExpeditionEvent.getArrivalTime() + SEPARATOR +
                 flyToExpeditionEvent.getID() + SEPARATOR +

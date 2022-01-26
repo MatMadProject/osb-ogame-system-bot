@@ -161,7 +161,6 @@ public class AutoResearchLeafTask extends LeafTask{
             if(DataLoader.listItemAutoResearch.getQueueList().indexOf(itemAutoResearch) == 0){
                 itemAutoResearch.setStatus(Status.STARTING);
                 itemAutoResearch.setStatusTime();
-                return;
             }
             else {
                 itemAutoResearch.setStatus(Status.WAIT);
@@ -174,8 +173,8 @@ public class AutoResearchLeafTask extends LeafTask{
                 }
                 else
                     itemAutoResearch.setTimer(new Timer(currentTime,currentTime + TIME_WAIT_WHEN_ON_STATUS));
-                return;
             }
+            return;
         }
         if(research.getStatus() == ogame.Status.ACTIVE){
             if(DataLoader.listItemAutoResearch.isAnyResearchUprading()){
@@ -198,19 +197,19 @@ public class AutoResearchLeafTask extends LeafTask{
             }
             RequiredResources requiredResources = itemAutoResearch.getResearch().getRequiredResources();
             ResourcesProduction resourcesProduction = itemAutoResearch.getPlanet().getResourcesProduction();
-            int metal = ResourcesBar.metal(OgameWeb.webDriver);
-            int crystal = ResourcesBar.crystal(OgameWeb.webDriver);
-            int deuterium = ResourcesBar.deuterium(OgameWeb.webDriver);
-            int energy = ResourcesBar.energyBalanace(OgameWeb.webDriver);
+            long metal = ResourcesBar.metal(OgameWeb.webDriver);
+            long crystal = ResourcesBar.crystal(OgameWeb.webDriver);
+            long deuterium = ResourcesBar.deuterium(OgameWeb.webDriver);
+            long energy = ResourcesBar.energyBalanace(OgameWeb.webDriver);
 
             planet.getResources().setMetal(metal);
             planet.getResources().setCrystal(crystal);
             planet.getResources().setDeuterium(deuterium);
 
-            int metalBalance = requiredResources.getMetal() - metal;
-            int crystalBalance = requiredResources.getCrystal() - crystal;
-            int deuteriumBalance = requiredResources.getDeuterium() - deuterium;
-            int energyBalance = requiredResources.getEnergy() - energy;
+            long metalBalance = requiredResources.getMetal() - metal;
+            long crystalBalance = requiredResources.getCrystal() - crystal;
+            long deuteriumBalance = requiredResources.getDeuterium() - deuterium;
+            long energyBalance = requiredResources.getEnergy() - energy;
 
             long timeToResourceProduction = 0;
             long currentTime = System.currentTimeMillis();

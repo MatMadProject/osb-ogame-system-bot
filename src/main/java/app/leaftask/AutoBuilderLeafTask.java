@@ -89,6 +89,7 @@ public class AutoBuilderLeafTask extends LeafTask{
             planet.setUpdateResourcesProduction(true);
         }else
             planet.setUpdateTechnologyBuilding(true);
+        planet.setUpdatePlanetInformation(true);
         //Starting buliding next object on queue list.
         ItemAutoBuilder index1 = queueList.get(1);
         index1.setStatus(Status.DATA_DOWNLOADING);
@@ -121,15 +122,8 @@ public class AutoBuilderLeafTask extends LeafTask{
                 return;
             if(type == Type.PRODUCTION){
                 //Suppliec clicking
-                do{
-                    Supplies.click(OgameWeb.webDriver);
-                    Waiter.sleep(200,300);
-                    if(getAntiLooping().check()){
-                        getAntiLooping().reset();
-                        return;
-                    }
-                }while(!Supplies.visible(OgameWeb.webDriver));
-                //SUpgrade building
+                if(!clickSupplies())
+                    return;
                 do{
                     Supplies.upgradeBuilding(OgameWeb.webDriver,listIndex);
                     Waiter.sleep(200,300);
@@ -159,7 +153,7 @@ public class AutoBuilderLeafTask extends LeafTask{
                         return;
                     }
                 }while(Facilities.statusOfBuilding(OgameWeb.webDriver,listIndex) != ogame.Status.ACTIVE);
-                endTimeInSeconds = Supplies.endDateOfUpgradeBuilding(OgameWeb.webDriver, listIndex);
+                endTimeInSeconds = Facilities.endDateOfUpgradeBuilding(OgameWeb.webDriver, listIndex);
             }
             building.setStatus(ogame.Status.ACTIVE);
             itemAutoBuilder.setEndTimeInSeconds(endTimeInSeconds);
@@ -218,6 +212,10 @@ public class AutoBuilderLeafTask extends LeafTask{
                 }else{
                     itemAutoBuilder.setTimer(new Timer(currentTime,currentTime + TIME_WAIT_WHEN_ON_STATUS));
                 }
+                ItemAutoBuilder first = planetQueue.get(0);
+                if(first.getStatus() == Status.NOT_ENOUGH_RESOURCES){
+                    itemAutoBuilder.setTimer(first.getTimer());
+                }
             }
             return;
         }
@@ -242,33 +240,33 @@ public class AutoBuilderLeafTask extends LeafTask{
             }
             RequiredResources requiredResources = itemAutoBuilder.getBuilding().getRequiredResources();
             ResourcesProduction resourcesProduction = itemAutoBuilder.getPlanet().getResourcesProduction();
-            int metal = ResourcesBar.metal(OgameWeb.webDriver);
-            int crystal = ResourcesBar.crystal(OgameWeb.webDriver);
-            int deuterium = ResourcesBar.deuterium(OgameWeb.webDriver);
-            int energy = ResourcesBar.energyBalanace(OgameWeb.webDriver);
+            long metal = ResourcesBar.metal(OgameWeb.webDriver);
+            long crystal = ResourcesBar.crystal(OgameWeb.webDriver);
+            long deuterium = ResourcesBar.deuterium(OgameWeb.webDriver);
+            long energy = ResourcesBar.energyBalanace(OgameWeb.webDriver);
 
-            int metalBalance = requiredResources.getMetal() - metal;
-            int crystalBalance = requiredResources.getCrystal() - crystal;
-            int deuteriumBalance = requiredResources.getDeuterium() - deuterium;
-            int energyBalance = requiredResources.getEnergy() - energy;
+            long metalBalance = requiredResources.getMetal() - metal;
+            long crystalBalance = requiredResources.getCrystal() - crystal;
+            long deuteriumBalance = requiredResources.getDeuterium() - deuterium;
+            long energyBalance = requiredResources.getEnergy() - energy;
 
             planet.getResources().setMetal(metal);
             planet.getResources().setCrystal(crystal);
             planet.getResources().setDeuterium(deuterium);
 
-            long timeToResourceProduction = 0;
+            long timeToProductionResources = 0;
             long currentTime = System.currentTimeMillis();
             if(metalBalance > 0)
-                timeToResourceProduction = resourcesProduction.timeMilisecondsToMetalProduction(metalBalance);
+                timeToProductionResources = resourcesProduction.timeMilisecondsToMetalProduction(metalBalance);
             if(crystalBalance > 0){
                 long tmp = resourcesProduction.timeMilisecondsToCrystalProduction(crystalBalance);
-                if(tmp > timeToResourceProduction)
-                    timeToResourceProduction = tmp;
+                if(tmp > timeToProductionResources)
+                    timeToProductionResources = tmp;
             }
             if(deuteriumBalance > 0){
                 long tmp = resourcesProduction.timeMilisecondsToDeuteriumProduction(deuteriumBalance);
-                if(tmp > timeToResourceProduction)
-                    timeToResourceProduction = tmp;
+                if(tmp > timeToProductionResources)
+                    timeToProductionResources = tmp;
             }
             if(energyBalance > 0 && building.getRequiredResources().getEnergy() > 0){
                 itemAutoBuilder.setStatus(Status.NOT_ENOUGH_ENERGY);
@@ -282,7 +280,7 @@ public class AutoBuilderLeafTask extends LeafTask{
                 itemAutoBuilder.setStatus(Status.WAIT);
                 itemAutoBuilder.setStatusTime(currentTime);
             }
-            itemAutoBuilder.setTimer(new Timer(currentTime,currentTime+timeToResourceProduction));
+            itemAutoBuilder.setTimer(new Timer(currentTime,currentTime+timeToProductionResources));
             itemAutoBuilder.setStatus(Status.NOT_ENOUGH_RESOURCES);
             itemAutoBuilder.setStatusTime(currentTime);
         }
@@ -322,14 +320,6 @@ public class AutoBuilderLeafTask extends LeafTask{
             //Shows building details
             if(!clickOnBuilding(type,listIndex))
                 return;
-//            do{
-//                Supplies.clickOnBuilding(OgameWeb.webDriver,listIndex);
-//                Waiter.sleep(200,300);
-//                if(getAntiLooping().check()){
-//                    getAntiLooping().reset();
-//                    return;
-//                }
-//            }while(!Supplies.visibleBuildingDetails(OgameWeb.webDriver,listIndex));
             //Dowloads data
             ProductionTime productionTime = Supplies.productionTimeOfBuilding(OgameWeb.webDriver);
             RequiredResources requiredResources = Supplies.getRequiredResources(OgameWeb.webDriver,listIndex);

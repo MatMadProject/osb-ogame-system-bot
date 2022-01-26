@@ -5,7 +5,6 @@ import app.data.autobuilder.ItemAutoBuilder;
 import app.data.autobuilder.Status;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
-import javafx.scene.input.MouseEvent;
 import ogame.utils.log.AppLog;
 import ogame.utils.watch.Calendar;
 
@@ -38,7 +37,7 @@ public class AutoBuilderLeafTaskItemController {
     private ItemAutoBuilder itemAutoBuilder;
 
     @FXML
-    void delete(MouseEvent event) {
+    void delete() {
         if(itemAutoBuilder.getStatus() == Status.FINISHED){
             DataLoader.listItemAutoBuilder.getHistoryList().remove(itemAutoBuilder);
             autoBuilderLeafTaskController.updateHistoryList();
@@ -54,14 +53,11 @@ public class AutoBuilderLeafTaskItemController {
     }
 
     @FXML
-    void down(MouseEvent event) {
-        int listIndex = DataLoader.listItemAutoBuilder.getQueueList().indexOf(itemAutoBuilder);
-        int listSize = DataLoader.listItemAutoBuilder.getQueueList().size();
+    void down() {
     }
 
     @FXML
-    void up(MouseEvent event) {
-
+    void up() {
     }
 
     public void create(ItemAutoBuilder itemAutoBuilder){

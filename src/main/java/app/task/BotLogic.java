@@ -35,6 +35,7 @@ public class BotLogic extends Task{
             leafTaskManager.getTasks()[2].execute();
             leafTaskManager.getTasks()[3].execute();
             leafTaskManager.getTasks()[4].execute();
+            leafTaskManager.getTasks()[5].execute();
         }
     }
 }

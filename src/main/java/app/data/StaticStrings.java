@@ -48,6 +48,8 @@ public class StaticStrings {
     public static final String PLAYER_DATA_FILE = "player-data";
     //Error
     public static final String ERRORS_FILE = "error";
+    //Defence
+    public static final String DEFENCE_FILE = "defence";
     /*
     FOLDERS
      */
@@ -66,7 +68,7 @@ public class StaticStrings {
     /*
     VERSION
      */
-    public static final String VERSION = "Version 1.0.0 - beta";
+    public static final String VERSION = "Version 0.5 - beta";
 
     /*
     STRINGS

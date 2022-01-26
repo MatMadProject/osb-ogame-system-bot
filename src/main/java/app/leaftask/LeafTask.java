@@ -1,5 +1,6 @@
 package app.leaftask;
 
+import ogame.DataTechnology;
 import ogame.OgameWeb;
 import ogame.Type;
 import ogame.eventbox.Event;
@@ -220,6 +221,33 @@ public class LeafTask implements Execute{
         getAntiLooping().reset();
         return true;
     }
+    public boolean clickDefence(){
+        //Klikanie podgląd
+        do{
+            Defence.click(OgameWeb.webDriver);
+            Waiter.sleep(200,300);
+            if(getAntiLooping().check()){
+                getAntiLooping().reset();
+                return false;
+            }
+        }while(!Defence.visible(OgameWeb.webDriver)); // Jest niewidoczne
+        getAntiLooping().reset();
+        return true;
+    }
+
+    public boolean clickOnDefenceItem(DataTechnology dataTechnology){
+        do{
+            Defence.clickOnDefence(OgameWeb.webDriver,dataTechnology);
+            Waiter.sleep(200,300);
+            if(getAntiLooping().check()){
+                getAntiLooping().reset();
+                return false;
+            }
+        }while(!Defence.visibleDefenceDetails(OgameWeb.webDriver,dataTechnology));
+        getAntiLooping().reset();
+        return true;
+    }
+
 
     public boolean inputCoordinate(Coordinate coordinate){
         boolean flag;

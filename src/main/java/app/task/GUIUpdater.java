@@ -1,15 +1,8 @@
 package app.task;
 
 import app.controllers.BotWindowController;
-import app.controllers_connector.AutoBuilderLeafTaskConnector;
-import app.controllers_connector.AutoResearchLeafTaskConnector;
-import app.controllers_connector.ExpeditionLeafTaskConnector;
-import app.controllers_connector.LeafTaskConnector;
+import app.controllers_connector.*;
 import app.data.DataLoader;
-import app.leaftask.AutoBuilderLeafTask;
-import app.leaftask.AutoResearchLeafTask;
-import app.leaftask.ExpeditionLeafTask;
-import app.leaftask.PlanetsLeafTask;
 import javafx.application.Platform;
 import ogame.utils.Waiter;
 
@@ -36,6 +29,7 @@ public class GUIUpdater extends Task {
                     updateAutoBuilderGUI();
                     updateAutoResearchGUI();
                     updateExpeditionGUI();
+                    updateDefenceGUI();
                 };
                 Platform.runLater(updater);
             }
@@ -110,4 +104,18 @@ public class GUIUpdater extends Task {
             }
         }
     }
+
+    private void updateDefenceGUI() {
+        if(botWindowController != null){
+            if(botWindowController.isSelectedLeafTask()){
+                LeafTaskConnector  leafTaskConnector = botWindowController.getSelectedLeafTask().getLeafTaskConnector();
+                if(leafTaskConnector instanceof DefenceLeafTaskConnector){
+                    ((DefenceLeafTaskConnector) leafTaskConnector).getController().updateQueueList();
+                    ((DefenceLeafTaskConnector) leafTaskConnector).getController().updateHistoryList();
+                    ((DefenceLeafTaskConnector) leafTaskConnector).getController().updateDisplayError();
+                }
+            }
+        }
+    }
+
 }

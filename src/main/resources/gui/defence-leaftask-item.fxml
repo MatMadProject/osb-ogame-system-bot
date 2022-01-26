@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.HBox?>
+
+<HBox prefHeight="17.0" prefWidth="777.0" spacing="2.0" styleClass="defence-item" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.controllers.DefenceLeafTaskItemController">
+    <children>
+        <Label fx:id="labelId" prefWidth="25.0" />
+        <Label fx:id="labelPlanet" prefWidth="70.0" />
+        <Label fx:id="labelDefence" prefWidth="150.0" />
+        <Label fx:id="labelValue" prefWidth="75.0" />
+        <Label fx:id="labelStatus" prefWidth="150.0" />
+        <Label fx:id="labelStatusTime" prefWidth="120.0" />
+        <Label fx:id="labelTimer" prefWidth="65.0" text="--:--:--" />
+        <Label onMouseClicked="#delete" prefWidth="25.0" styleClass="label-button" text="x" />
+    </children>
+</HBox>

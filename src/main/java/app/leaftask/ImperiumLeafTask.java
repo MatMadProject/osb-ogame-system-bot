@@ -42,6 +42,8 @@ public class ImperiumLeafTask extends LeafTask{
                 }
                 if(DataLoader.playerData.timeLeftToNextExecute().isTimeLeft(System.currentTimeMillis()))
                     updatePlayerData();
+                if(DataLoader.researches.isUpdateData())
+                    updateResearches(DataLoader.researches.getResearchList());
 
                 setLastTimeExecute(System.currentTimeMillis());
             }
@@ -64,10 +66,6 @@ public class ImperiumLeafTask extends LeafTask{
                     break;
                 case 3:
                     planetTechnologyBuilding(list);
-                    break;
-                case 4:
-                    if(DataLoader.researches.isUpdateData())
-                        updateResearches(DataLoader.researches.getResearchList());
                     break;
             }
             DataLoader.planets.save();
@@ -117,39 +115,42 @@ public class ImperiumLeafTask extends LeafTask{
 
     public void planetInformation(List<Planet> list){
         for(Planet planet : list){
-            //Klikanie podgląd
-            clickOverview();
-            //Klikanie w właściwą planetę
-            clickPlanet(planet);
-            Waiter.sleep(500,750);
-            int builtUpFields = Overview.builtUpFields(OgameWeb.webDriver);
-            int maxPlanetFields = Overview.maxPlanetFields(OgameWeb.webDriver);
-            int minTemperature = Overview.minTemperature(OgameWeb.webDriver);
-            int maxTemperature = Overview.maxTemperature(OgameWeb.webDriver);
-            int diameter = Overview.planetDiameter(OgameWeb.webDriver);
-            int energy = ResourcesBar.energyBalanace(OgameWeb.webDriver);
-            int metal = ResourcesBar.metal(OgameWeb.webDriver);
-            int crystal = ResourcesBar.crystal(OgameWeb.webDriver);
-            int deuterium = ResourcesBar.deuterium(OgameWeb.webDriver);
+            if(planet.isUpdatePlanetInformation()){
+                //Klikanie podgląd
+                clickOverview();
+                //Klikanie w właściwą planetę
+                clickPlanet(planet);
+                Waiter.sleep(500,750);
+                int builtUpFields = Overview.builtUpFields(OgameWeb.webDriver);
+                int maxPlanetFields = Overview.maxPlanetFields(OgameWeb.webDriver);
+                int minTemperature = Overview.minTemperature(OgameWeb.webDriver);
+                int maxTemperature = Overview.maxTemperature(OgameWeb.webDriver);
+                int diameter = Overview.planetDiameter(OgameWeb.webDriver);
+                long energy = ResourcesBar.energyBalanace(OgameWeb.webDriver);
+                long metal = ResourcesBar.metal(OgameWeb.webDriver);
+                long crystal = ResourcesBar.crystal(OgameWeb.webDriver);
+                long deuterium = ResourcesBar.deuterium(OgameWeb.webDriver);
 
-            planet.setFields(new Fields(builtUpFields,maxPlanetFields));
-            planet.getResources().setEnergy(energy);
-            planet.getResources().setMetal(metal);
-            planet.getResources().setCrystal(crystal);
-            planet.getResources().setDeuterium(deuterium);
+                planet.setFields(new Fields(builtUpFields,maxPlanetFields));
+                planet.getResources().setEnergy(energy);
+                planet.getResources().setMetal(metal);
+                planet.getResources().setCrystal(crystal);
+                planet.getResources().setDeuterium(deuterium);
 
-            if(planet.getTemperature() == null)
-                planet.setTemperature(new Temperature(minTemperature, maxTemperature));
-            if(planet.getDiameter() == 0)
-                planet.setDiameter(diameter);
-            planet.setUpdateTime(System.currentTimeMillis());
-            if(!planet.isColonyDataAdded()){
-                ColonyDataItem colonyDataItem = new ColonyDataItem(planet);
-                ColonyData colonyData = DataLoader.colonyData;
-                if(colonyData.add(colonyDataItem))
-                    colonyData.save(colonyDataItem);
+                if(planet.getTemperature() == null)
+                    planet.setTemperature(new Temperature(minTemperature, maxTemperature));
+                if(planet.getDiameter() == 0)
+                    planet.setDiameter(diameter);
+                planet.setUpdateTime(System.currentTimeMillis());
+                if(!planet.isColonyDataAdded()){
+                    ColonyDataItem colonyDataItem = new ColonyDataItem(planet);
+                    ColonyData colonyData = DataLoader.colonyData;
+                    if(colonyData.add(colonyDataItem))
+                        colonyData.save(colonyDataItem);
 
-                planet.setColonyDataAdded();
+                    planet.setColonyDataAdded();
+                }
+                planet.setUpdatePlanetInformation(false);
             }
         }
     }
@@ -170,18 +171,18 @@ public class ImperiumLeafTask extends LeafTask{
                //Klikanie w właściwą planetę
                clickPlanet(planet);
                Waiter.sleep(500,750);
-               Building deutheriumSynthesizer = planet.getBuilding(DataTechnology.DEUTERIUM_SYNTHESIZER);
-               int metalPerHour = ResourceSettings.metalPerHour(OgameWeb.webDriver,deutheriumSynthesizer);
-               int metalPerDay = ResourceSettings.metalPerDay(OgameWeb.webDriver,deutheriumSynthesizer);
-               int metalPerWeek = ResourceSettings.metalPerWeek(OgameWeb.webDriver,deutheriumSynthesizer);
+               Building deuteriumSynthesizer = planet.getBuilding(DataTechnology.DEUTERIUM_SYNTHESIZER);
+               int metalPerHour = ResourceSettings.metalPerHour(OgameWeb.webDriver,deuteriumSynthesizer);
+               int metalPerDay = ResourceSettings.metalPerDay(OgameWeb.webDriver,deuteriumSynthesizer);
+               int metalPerWeek = ResourceSettings.metalPerWeek(OgameWeb.webDriver,deuteriumSynthesizer);
 
-               int crystalPerHour = ResourceSettings.crystalPerHour(OgameWeb.webDriver,deutheriumSynthesizer);
-               int crystalPerDay = ResourceSettings.crystalPerDay(OgameWeb.webDriver,deutheriumSynthesizer);
-               int crystalPerWeek = ResourceSettings.crystalPerWeek(OgameWeb.webDriver,deutheriumSynthesizer);
+               int crystalPerHour = ResourceSettings.crystalPerHour(OgameWeb.webDriver,deuteriumSynthesizer);
+               int crystalPerDay = ResourceSettings.crystalPerDay(OgameWeb.webDriver,deuteriumSynthesizer);
+               int crystalPerWeek = ResourceSettings.crystalPerWeek(OgameWeb.webDriver,deuteriumSynthesizer);
 
-               int deuteriumPerHour = ResourceSettings.deuteriumPerHour(OgameWeb.webDriver,deutheriumSynthesizer);
-               int deuteriumPerDay = ResourceSettings.deuteriumPerDay(OgameWeb.webDriver,deutheriumSynthesizer);
-               int deuteriumPerWeek = ResourceSettings.deuteriumPerWeek(OgameWeb.webDriver,deutheriumSynthesizer);
+               int deuteriumPerHour = ResourceSettings.deuteriumPerHour(OgameWeb.webDriver,deuteriumSynthesizer);
+               int deuteriumPerDay = ResourceSettings.deuteriumPerDay(OgameWeb.webDriver,deuteriumSynthesizer);
+               int deuteriumPerWeek = ResourceSettings.deuteriumPerWeek(OgameWeb.webDriver,deuteriumSynthesizer);
 
                planet.getResourcesProduction().setMetalPerHour(metalPerHour);
                planet.getResourcesProduction().setMetalPerDay(metalPerDay);
@@ -264,7 +265,7 @@ public class ImperiumLeafTask extends LeafTask{
 
     private void tickUpdate(){
         tick++;
-        if(tick > 4){
+        if(tick > 3){
             DataLoader.planets.setUpdateData(false);
             tick = 0;
         }

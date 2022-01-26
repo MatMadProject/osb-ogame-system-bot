@@ -112,6 +112,7 @@ public class ExpeditionLeafTask extends LeafTask{
             if(expeditionEvents.isEmpty()){
                 expedition.setStatus(Status.FINISHED);
                 expedition.setStatusTime(System.currentTimeMillis());
+                return;
             }
             if(!openEventBox())
                 return;
@@ -126,27 +127,19 @@ public class ExpeditionLeafTask extends LeafTask{
             }
 
             //Fleet not delayed
-            if(event.getArrivalTime() == currentEvent.getArrivalTime()){
-                FleetDetails fleetDetails = new FleetDetails(event.getFleetDetails());
-                Resources resources = fleetDetails.getResources();
-                ArrayList<FleetDetailsShip> returnedShips = fleetDetails.ships();
-                long shipsAfter = sumOfShips(returnedShips);
-                expedition.setLootedResources(resources);
-                expedition.setShipsAfter(shipsAfter);
+            if(event.getArrivalTime() == currentEvent.getArrivalTime())
                 expedition.setStatus(Status.RETURN);
-                expedition.setStatusTime(System.currentTimeMillis());
-            }
-            //Fleet delayed or accelerated
-            if(event.getArrivalTime() != currentEvent.getArrivalTime()){
-                FleetDetails fleetDetails = new FleetDetails(event.getFleetDetails());
-                Resources resources = fleetDetails.getResources();
-                ArrayList<FleetDetailsShip> returnedShips = fleetDetails.ships();
-                long shipsAfter = sumOfShips(returnedShips);
-                expedition.setLootedResources(resources);
-                expedition.setShipsAfter(shipsAfter);
+            else//Fleet delayed or accelerated
                 expedition.setStatus(Status.RETURN_CHANGED);
-                expedition.setStatusTime(System.currentTimeMillis());
-            }
+
+            expedition.setStatusTime(System.currentTimeMillis());
+
+            FleetDetails fleetDetails = new FleetDetails(event.getFleetDetails());
+            Resources resources = fleetDetails.getResources();
+            ArrayList<FleetDetailsShip> returnedShips = fleetDetails.ships();
+            long shipsAfter = sumOfShips(returnedShips);
+            expedition.setLootedResources(resources);
+            expedition.setShipsAfter(shipsAfter);
             expedition.setFlyFromExpeditionEvent(event);
             expedition.setReturningFleet(event);
             expedition.setTimer(new Timer(0,expedition.getFlyFromExpeditionEvent().getArrivalTime()));
@@ -202,7 +195,7 @@ public class ExpeditionLeafTask extends LeafTask{
         expedition.setStatusTime(System.currentTimeMillis());
         expedition.setTimer(new Timer(0,flyToExpeditionEvent.getArrivalTime()));
 
-        Expeditions.saveLog(expedition.log());
+//        Expeditions.saveLog(expedition.log());
     }
 
     private void sending(Expedition expedition){

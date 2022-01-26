@@ -37,7 +37,7 @@ Separator{
 
 .combo-box-autobuilder{
     -fx-background-color: color-c;
-    -fx-font-size: 12px;
+    -fx-font-size: 10px;
     -fx-font-weight: 700;
 }
 
@@ -52,38 +52,6 @@ Separator{
 
 .combo-box-autobuilder .arrow{
     -fx-background-color: color-a;
-}
-.expedition .text-field{
-    -fx-font-size: 10px;
-    -fx-text-alignment: center;
- }
-.expedition .check-box{
-    -fx-font-size: 10px;
-    -fx-font-weight: 700;
-}
-.expedition .check-box .box{
-   -fx-background-color: color-c;
-}
-.expedition .check-box .mark{
-   /*
-   -fx-background-color: color-a;
-   */
-}
-.expedition .label-ship-list{
-    -fx-background-color: color-c;
-    -fx-background-radius: 2 2 2 2;
-    -fx-text-fill: black;
-    -fx-font-size: 10px;
-    -fx-alignment: center;
-    -fx-text-alignment: center;
-}
-.expedition .text-field{
-   -fx-background-color: color-c;
-   -fx-background-radius: 2 2 2 2;
-   -fx-text-fill: black;
-   -fx-font-size: 10px;
-   -fx-font-weight: 700;
-   -fx-prompt-text-fill: white;
 }
 .footer{
     -fx-background-color: color-c;
@@ -134,8 +102,100 @@ Expediton leaf task
   -fx-background-color: color-task-container-selected;
   -fx-text-fill: white;
 }
+.expedition .text-field{
+    -fx-font-size: 10px;
+    -fx-text-alignment: center;
+ }
+.expedition .check-box{
+    -fx-font-size: 10px;
+    -fx-font-weight: 700;
+}
+.expedition .check-box .box{
+   -fx-background-color: color-c;
+}
+.expedition .check-box .mark{
+   /*
+   -fx-background-color: color-a;
+   */
+}
+.expedition .label-ship-list{
+    -fx-background-color: color-c;
+    -fx-background-radius: 2 2 2 2;
+    -fx-text-fill: black;
+    -fx-font-size: 10px;
+    -fx-alignment: center;
+    -fx-text-alignment: center;
+}
+.expedition .text-field{
+   -fx-background-color: color-c;
+   -fx-background-radius: 2 2 2 2;
+   -fx-text-fill: black;
+   -fx-font-size: 10px;
+   -fx-font-weight: 700;
+   -fx-prompt-text-fill: white;
+}
+/*--Expediton leaf task--*/
+/*--END--*/
+/*Defence Leaf Task*/
+.defence .text-field{
+  -fx-background-color: color-c;
+  -fx-background-radius: 2 2 2 2;
+  -fx-text-fill: black;
+  -fx-font-size: 10px;
+  -fx-font-weight: 700;
+  -fx-prompt-text-fill: white;
+}
+.defence .button{
+  -fx-font-size: 10px;
+  -fx-font-weight: 700;
+  -fx-background-radius: 2 2 2 2;
+  -fx-background-color: color-c;
+}
+.defence .button:hover{
+  -fx-background-color: color-a;
+  -fx-text-fill: white;
+}
+.defence .combo-box{
+    -fx-background-color: color-c;
+    -fx-font-size: 10px;
+    -fx-font-weight: 700;
+}
+.defence .combo-box. .label{
+    /* -fx-background-color: color-c;
+    -fx-font-size: 10px;
+    -fx-font-weight: 700; */
+}
 
+.defence .combo-box .list-cell{
+    -fx-background-color: color-c;
+}
 
+.defence .combo-box .list-cell:hover{
+    -fx-background-color: color-a;
+    -fx-text-fill: white;
+}
+
+.defence .combo-box .arrow{
+    -fx-background-color: color-a;
+}
+.defence .ikonli-font-icon:hover{
+  -fx-icon-color: white;
+  -fx-background-color: color-pane-hoover;
+}
+.defence-item .label{
+  -fx-background-color: color-c;
+  -fx-background-radius: 2 2 2 2;
+  -fx-text-fill: black;
+  -fx-font-size: 10px;
+  -fx-padding: 0.0 2.5 0.0 2.5; //top right bottom left
+  -fx-alignment: center;
+  -fx-text-alignment: center;
+}
+.defence-item > .label-button:hover{
+  -fx-background-color: color-pane-hoover;
+}
+/*Defence Leaf Task*/
+/*--END--*/
 .label-task-info{
   -fx-font-size: 10px;
   -fx-text-fill: black;

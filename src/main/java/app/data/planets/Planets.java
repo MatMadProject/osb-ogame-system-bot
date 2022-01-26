@@ -164,13 +164,14 @@ public class Planets implements LSD, Serializable {
             planet.setUpdateTechnologyBuilding(true);
             planet.setUpdateResourcesProduction(true);
             planet.setUpdateResourceBuilding(true);
+            planet.setUpdatePlanetInformation(true);
         }
     }
     public boolean isUpdateData() {
         for(Planet planet : planetList){
-            updateData = planet.isUpdateTechnologyBuilding();
-            updateData = planet.isUpdateResourceBuilding();
-            updateData = planet.isUpdateResourcesProduction();
+            if(!updateData)
+                updateData = planet.isUpdatePlanetInformation() || planet.isUpdateTechnologyBuilding() ||
+                planet.isUpdateResourceBuilding() || planet.isUpdateResourcesProduction();
         }
         return updateData;
     }
