@@ -126,7 +126,12 @@ public class ItemAutoBuilder implements Serializable {
     public boolean isBuildingAchievedUpgradeLevel(int currentBuildingLevel){
         return currentBuildingLevel >= upgradeLevel;
     }
+
     public boolean isBuildingUpgrading(ogame.Status status){
         return status == ogame.Status.ACTIVE;
+    }
+
+    public boolean isBuildingUpgrading(){
+        return this.status == Status.UPGRADING;
     }
 }

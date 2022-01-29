@@ -43,11 +43,11 @@ public class DefenceLeafTaskItemController {
         if(defence.getStatus() == Status.FINISHED){
             DataLoader.listDefenceItem.getHistoryList().remove(defence);
             defenceLeafTaskController.updateHistoryList();
-            AppLog.print(DefenceLeafTaskItemController.class.getName(),2,"Remove from history queue " + defence.getId() + ".");
+            AppLog.print(DefenceLeafTaskItemController.class.getName(),2,"Remove from history queue, id = " + defence.getId() + ".");
         }else{
             DataLoader.listDefenceItem.getQueueList().remove(defence);
             defenceLeafTaskController.updateQueueList();
-            AppLog.print(DefenceLeafTaskItemController.class.getName(),2,"Remove from defence queue " + defence.getId() + ".");
+            AppLog.print(DefenceLeafTaskItemController.class.getName(),2,"Remove from defence queue, id =  " + defence.getId() + ".");
         }
         DataLoader.listDefenceItem.save();
     }

@@ -11,5 +11,6 @@ public enum Status {
     NOT_ENOUGH_RESOURCES,
     OFF,
     CHECK,
-    NEXT
+    NEXT,
+    WAIT_FOR_STATUS
 }

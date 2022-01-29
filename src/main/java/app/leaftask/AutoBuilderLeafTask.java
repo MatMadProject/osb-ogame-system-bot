@@ -3,6 +3,8 @@ package app.leaftask;
 import app.data.DataLoader;
 import app.data.autobuilder.ItemAutoBuilder;
 import app.data.autobuilder.Status;
+import app.data.autoresearch.ItemAutoResearch;
+import ogame.DataTechnology;
 import ogame.OgameWeb;
 import ogame.ResourcesBar;
 import ogame.buildings.Building;
@@ -94,6 +96,9 @@ public class AutoBuilderLeafTask extends LeafTask{
         ItemAutoBuilder index1 = queueList.get(1);
         index1.setStatus(Status.DATA_DOWNLOADING);
         index1.setTimer(null);
+        if(building.getDataTechnology() == DataTechnology.ROBOTICS_FACTORY ||
+        building.getDataTechnology() == DataTechnology.NANITE_FACTORY)
+            DataLoader.listItemAutoBuilder.setStatusOnAllItems(planet,Status.DATA_DOWNLOADING);
     }
 
     private void isFinished(ItemAutoBuilder itemAutoBuilder) {
@@ -180,7 +185,7 @@ public class AutoBuilderLeafTask extends LeafTask{
             itemAutoBuilder.setStatus(Status.DATA_DOWNLOADING);
             itemAutoBuilder.setStatusTime(System.currentTimeMillis());
             itemAutoBuilder.setTimer(null);
-            Overview.click(OgameWeb.webDriver);
+            Overview.clickAlways(OgameWeb.webDriver);
         }
     }
 
@@ -230,6 +235,17 @@ public class AutoBuilderLeafTask extends LeafTask{
             }
         }
         if(building.getStatus() == ogame.Status.DISABLED){
+            if(building.getDataTechnology() == DataTechnology.RESEARCH_LABORATORY){
+                if(DataLoader.listItemAutoResearch.isAnyResearchUprading()){
+                    ItemAutoResearch research = DataLoader.listItemAutoResearch.getUpgradingResearch();
+                    long researchFinishTime = research.getFinishTime();
+                    itemAutoBuilder.setStatus(Status.WAIT);
+                    long currentTime = System.currentTimeMillis();
+                    itemAutoBuilder.setStatusTime(currentTime);
+                    itemAutoBuilder.setTimer(new Timer(currentTime, researchFinishTime));
+                    return;
+                }
+            }
             if(DataLoader.listItemAutoBuilder.isAnyBuildingUprading(planetQueue)){
                 itemAutoBuilder.setStatus(Status.WAIT);
                 long currentTime = System.currentTimeMillis();

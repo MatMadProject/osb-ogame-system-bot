@@ -140,9 +140,18 @@ public class ListDefenceItem implements Serializable, LSD {
 
         return null;
     }
+    public DefenceItem getDefenceStartingOnPlanet(Planet planet){
+        ArrayList<DefenceItem> planetQueue = getPlanetQueue(planet);
+        for(DefenceItem defenceItem : planetQueue)
+            if(defenceItem.getStatus() == Status.STARTING)
+                return defenceItem;
+
+        return null;
+    }
 
     public boolean isDefenceBuildingOnPlanet(Planet planet){
         DefenceItem defenceItem = getDefenceBuildingOnPlanet(planet);
-        return defenceItem != null;
+        DefenceItem startingItem = getDefenceStartingOnPlanet(planet);
+        return defenceItem != null || startingItem != null;
     }
 }

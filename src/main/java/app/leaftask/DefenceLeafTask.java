@@ -60,6 +60,7 @@ public class DefenceLeafTask extends LeafTask{
             case BUILDING:
             case OFF:
             case WAIT:
+            case WAIT_FOR_STATUS:
             case NEXT:
             case NOT_ENOUGH_RESOURCES:
                 wait(defenceItem);
@@ -79,6 +80,8 @@ public class DefenceLeafTask extends LeafTask{
         if(timeToFinish < 0){
             if(defenceItem.getStatus() == Status.BUILDING)
                 defenceItem.setStatus(Status.FINISHED);
+            else if(defenceItem.getStatus() == Status.WAIT_FOR_STATUS)
+                defenceItem.setStatus(Status.DATA_DOWNLOADED);
             else
                 defenceItem.setStatus(Status.DATA_DOWNLOADING);
 
@@ -135,19 +138,30 @@ public class DefenceLeafTask extends LeafTask{
         }
         if(DataLoader.listDefenceItem.isDefenceBuildingOnPlanet(planet)){
             DefenceItem firstOnQueue = DataLoader.listDefenceItem.getDefenceBuildingOnPlanet(planet);
-            defenceItem.setStatus(Status.WAIT);
             long currentTimeMillis = System.currentTimeMillis();
-            defenceItem.setStatusTime(currentTimeMillis);
-            defenceItem.setTimer(new Timer(0,firstOnQueue.getTimer().getFinishDate()));
+            long WAIT_SECONDS_FOR_CHANGE_STATUS = 10L;
+            if(firstOnQueue == null)//Status.STARTING
+                defenceItem.setTimer(new Timer(0,currentTimeMillis/1000 + WAIT_SECONDS_FOR_CHANGE_STATUS));
+            else
+                defenceItem.setTimer(new Timer(0,firstOnQueue.getTimer().getFinishDate()));
+            defenceItem.setStatus(Status.WAIT_FOR_STATUS);
+            defenceItem.setStatusTime(System.currentTimeMillis());
+
             return;
         }
         if(defence.getStatus() == ogame.Status.DISABLED){
+            if(DataLoader.listItemAutoBuilder.isNaniteFactoryUpradingOnPlanet(planet)){
+                long naniteFactoryFinishTimeSeconds = DataLoader.listItemAutoBuilder.naniteFactoryUpradingOnPlanet(planet).getFinishTime()/1000;
+                defenceItem.setTimer(new Timer(0,naniteFactoryFinishTimeSeconds));
+            } else if(DataLoader.listItemAutoBuilder.isShipyardUpradingOnPlanet(planet)){
+                long shipyardFinishTimeSeconds = DataLoader.listItemAutoBuilder.shipyardUpradingOnPlanet(planet).getFinishTime()/1000;
+                defenceItem.setTimer(new Timer(0,shipyardFinishTimeSeconds));
+            }else
+                defenceItem.setTimer(new Timer(0,System.currentTimeMillis()/1000 + defenceItem.getTimePeriod()));
+
             defenceItem.setStatus(Status.WAIT);
-            long currentTimeMillis = System.currentTimeMillis();
-            defenceItem.setStatusTime(currentTimeMillis);
-            defenceItem.setTimer(new Timer(0,currentTimeMillis/1000 + defenceItem.getTimePeriod()));
+            defenceItem.setStatusTime(System.currentTimeMillis());
             return;
-            //todo - sprawdzanie czy nie jest w budowie stocznia lub fabryka nanitów.
         }
 
         long metal = ResourcesBar.metal(OgameWeb.webDriver);

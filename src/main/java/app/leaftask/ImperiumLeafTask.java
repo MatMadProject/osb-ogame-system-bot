@@ -59,13 +59,13 @@ public class ImperiumLeafTask extends LeafTask{
                     planetInformation(list);
                     break;
                 case 1:
-                    planetProduction(list);
+                    planetTechnologyBuilding(list);
                     break;
                 case 2:
                     planetProductionBuilding(list);
                     break;
                 case 3:
-                    planetTechnologyBuilding(list);
+                    planetProduction(list);
                     break;
             }
             DataLoader.planets.save();
