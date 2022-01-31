@@ -1,4 +1,4 @@
-package app.data.defence;
+package app.data.shipyard;
 
 import ogame.DataTechnology;
 import ogame.Type;

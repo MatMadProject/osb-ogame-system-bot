@@ -3,7 +3,7 @@ package app.data;
 import app.data.autobuilder.ListItemAutoBuilder;
 import app.data.autoresearch.ListItemAutoResearch;
 import app.data.autoresearch.Researches;
-import app.data.defence.ListDefenceItem;
+import app.data.shipyard.ListDefenceItem;
 import app.data.expedition.Expeditions;
 import app.data.planets.ColonyData;
 import app.data.planets.Planets;

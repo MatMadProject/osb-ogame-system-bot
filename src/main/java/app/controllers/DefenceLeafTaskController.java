@@ -2,11 +2,12 @@ package app.controllers;
 
 import app.controllers_connector.DefenceLeafTaskItemConnector;
 import app.data.DataLoader;
-import app.data.defence.ComboBoxDefence;
-import app.data.defence.DefenceItem;
+import app.data.shipyard.ComboBoxDefence;
+import app.data.shipyard.DefenceItem;
 import app.data.planets.ComboBoxPlanet;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
@@ -29,6 +30,7 @@ public class DefenceLeafTaskController {
     public VBox vBoxHistory;
     public Label labelError;
     public VBox vBoxQueue;
+    public CheckBox checkBoxSingle;
     private long errorTimeStamp = 0;
 
     private BotWindowController botWindowController;
@@ -39,6 +41,14 @@ public class DefenceLeafTaskController {
 
     public void setBotWindowController(BotWindowController botWindowController) {
         this.botWindowController = botWindowController;
+    }
+    @FXML
+    public void initialize(){
+       checkBoxSingle.selectedProperty().addListener((observable, oldValue, newValue) -> {
+           textFieldHour.setDisable(newValue);
+           textFieldMinute.setDisable(newValue);
+           textFieldSeconds.setDisable(newValue);
+       });
     }
 
     public void update() {
@@ -80,6 +90,7 @@ public class DefenceLeafTaskController {
             value = 1;
 
         DefenceItem defenceItem = new DefenceItem(planet,defence,value,time);
+        defenceItem.setSingleExecute(checkBoxSingle.isSelected());
         if(DataLoader.listDefenceItem.add(defenceItem)){
             DefenceLeafTaskItemConnector connector = new DefenceLeafTaskItemConnector(defenceItem,this);
             vBoxQueue.getChildren().add(connector.content());

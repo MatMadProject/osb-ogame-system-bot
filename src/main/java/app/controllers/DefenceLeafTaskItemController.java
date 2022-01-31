@@ -1,8 +1,8 @@
 package app.controllers;
 
 import app.data.DataLoader;
-import app.data.defence.DefenceItem;
-import app.data.defence.Status;
+import app.data.shipyard.DefenceItem;
+import app.data.shipyard.Status;
 import javafx.scene.control.Label;
 import ogame.utils.log.AppLog;
 import ogame.utils.watch.Calendar;

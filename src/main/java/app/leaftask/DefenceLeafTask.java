@@ -1,8 +1,8 @@
 package app.leaftask;
 
 import app.data.DataLoader;
-import app.data.defence.DefenceItem;
-import app.data.defence.Status;
+import app.data.shipyard.DefenceItem;
+import app.data.shipyard.Status;
 import ogame.DataTechnology;
 import ogame.OgameWeb;
 import ogame.ResourcesBar;
@@ -20,7 +20,7 @@ public class DefenceLeafTask extends LeafTask{
     public DefenceLeafTask(int index, long sleepms, String name) {
         super(index, sleepms, name);
     }
-
+    private DefenceItem defenceItemToRemove;
     @Override
     public void execute() {
             if(isRun()){
@@ -31,6 +31,10 @@ public class DefenceLeafTask extends LeafTask{
                             selectTask(defenceItem);
                             DataLoader.listDefenceItem.save();
                         }
+                    if(defenceItemToRemove != null){
+                        DataLoader.listDefenceItem.getQueueList().remove(defenceItemToRemove);
+                        defenceItemToRemove = null;
+                    }
                     setLastTimeExecute(System.currentTimeMillis());
                 }
             }
@@ -69,10 +73,14 @@ public class DefenceLeafTask extends LeafTask{
 
     private void finished(DefenceItem defenceItem) {
         DataLoader.listDefenceItem.addToHistory(defenceItem.copy());
-        defenceItem.setStatus(Status.NEXT);
-        long currentTimeMilliseconds = System.currentTimeMillis();
-        defenceItem.setStatusTime(currentTimeMilliseconds);
-        defenceItem.setTimer(new Timer(0,currentTimeMilliseconds/1000 + defenceItem.getTimePeriod()));
+        if(defenceItem.isSingleExecute())
+            defenceItemToRemove = defenceItem;
+        else{
+            defenceItem.setStatus(Status.NEXT);
+            long currentTimeMilliseconds = System.currentTimeMillis();
+            defenceItem.setStatusTime(currentTimeMilliseconds);
+            defenceItem.setTimer(new Timer(0,currentTimeMilliseconds/1000 + defenceItem.getTimePeriod()));
+        }
     }
 
     private void wait(DefenceItem defenceItem) {
@@ -118,7 +126,7 @@ public class DefenceLeafTask extends LeafTask{
             return;
         if(!clickOnDefenceItem(dataTechnology))
             return;
-        Defence.inputDefenceAmount(OgameWeb.webDriver,defenceItem.getValue());
+        Defence.inputDefenceAmount(OgameWeb.webDriver, defenceItem.getValue());
         Waiter.sleep(200,200);
         Defence.clickBuiltDefence(OgameWeb.webDriver);
         defenceItem.setStatus(Status.CHECK);
@@ -140,13 +148,16 @@ public class DefenceLeafTask extends LeafTask{
             DefenceItem firstOnQueue = DataLoader.listDefenceItem.getDefenceBuildingOnPlanet(planet);
             long currentTimeMillis = System.currentTimeMillis();
             long WAIT_SECONDS_FOR_CHANGE_STATUS = 10L;
-            if(firstOnQueue == null)//Status.STARTING
+            if(firstOnQueue == null) {
                 defenceItem.setTimer(new Timer(0,currentTimeMillis/1000 + WAIT_SECONDS_FOR_CHANGE_STATUS));
-            else
+                defenceItem.setStatus(Status.WAIT_FOR_STATUS);
+            }
+            else{
                 defenceItem.setTimer(new Timer(0,firstOnQueue.getTimer().getFinishDate()));
-            defenceItem.setStatus(Status.WAIT_FOR_STATUS);
-            defenceItem.setStatusTime(System.currentTimeMillis());
+                defenceItem.setStatus(Status.WAIT);
+            }
 
+            defenceItem.setStatusTime(System.currentTimeMillis());
             return;
         }
         if(defence.getStatus() == ogame.Status.DISABLED){
@@ -211,7 +222,7 @@ public class DefenceLeafTask extends LeafTask{
         Planet planet = defenceItem.getPlanet();
         ogame.defence.Defence defence = defenceItem.getDefence();
         DataTechnology dataTechnology = defenceItem.getDefence().getDataTechnology();
-        //Clicking on planet
+
         if(!clickPlanet(planet))
             return;
         if(!clickDefence())

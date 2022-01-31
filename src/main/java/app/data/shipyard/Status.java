@@ -1,4 +1,4 @@
-package app.data.defence;
+package app.data.shipyard;
 
 public enum Status {
     ADDED,

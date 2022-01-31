@@ -1,4 +1,4 @@
-package app.data.defence;
+package app.data.shipyard;
 
 import app.data.DataLoader;
 import ogame.defence.Defence;
@@ -17,6 +17,7 @@ public class DefenceItem implements Serializable {
     private Status status;
     private long statusTime;
     private long timePeriod;
+    private boolean singleExecute;
     private Timer timer;
 
     public DefenceItem(Planet planet, Defence defence, int value, long timePeriod) {
@@ -86,6 +87,14 @@ public class DefenceItem implements Serializable {
 
     public void setTimer(Timer timer) {
         this.timer = timer;
+    }
+
+    public boolean isSingleExecute() {
+        return singleExecute;
+    }
+
+    public void setSingleExecute(boolean singleExecute) {
+        this.singleExecute = singleExecute;
     }
 
     public DefenceItem copy(){

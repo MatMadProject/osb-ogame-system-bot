@@ -178,6 +178,13 @@ Expediton leaf task
 .defence .combo-box .arrow{
     -fx-background-color: color-a;
 }
+.defence .check-box{
+    -fx-font-size: 10px;
+    -fx-font-weight: 700;
+}
+.defence .check-box .box{
+   -fx-background-color: color-c;
+}
 .defence .ikonli-font-icon:hover{
   -fx-icon-color: white;
   -fx-background-color: color-pane-hoover;
