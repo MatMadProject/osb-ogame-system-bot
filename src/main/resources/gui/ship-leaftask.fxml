@@ -11,14 +11,14 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<AnchorPane prefHeight="638.0" prefWidth="782.0" styleClass="defence" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.controllers.DefenceLeafTaskController">
+<AnchorPane prefHeight="638.0" prefWidth="782.0" styleClass="defence" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.controllers.ShipLeafTaskController">
     <children>
         <VBox prefHeight="638.0" prefWidth="782.0" spacing="2.0" styleClass="defence">
             <children>
                   <HBox alignment="CENTER_LEFT" prefHeight="29.0" prefWidth="782.0" spacing="5.0">
                       <children>
                               <ComboBox fx:id="comboBoxPlanet" prefWidth="80.0" />
-                              <ComboBox fx:id="comboBoxDefence" prefWidth="150.0" />
+                              <ComboBox fx:id="comboBoxShip" prefWidth="150.0" />
                               <Label prefWidth="50.0" text="Value" />
                               <TextField fx:id="textFieldValue" alignment="CENTER" prefWidth="50.0" promptText="0-99999" />
                               <Label prefWidth="45.0" text="Hour" />

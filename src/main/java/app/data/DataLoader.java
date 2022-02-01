@@ -8,6 +8,7 @@ import app.data.expedition.Expeditions;
 import app.data.planets.ColonyData;
 import app.data.planets.Planets;
 import app.data.player.PlayerData;
+import app.data.shipyard.ListShipItem;
 import ogame.utils.log.AppLog;
 
 public class DataLoader {
@@ -19,6 +20,7 @@ public class DataLoader {
     public static PlayerData playerData;
     public static Expeditions expeditions;
     public static ListDefenceItem listDefenceItem;
+    public static ListShipItem listShipItem;
 
     public DataLoader(){
         planets = new Planets();
@@ -27,6 +29,7 @@ public class DataLoader {
         listDefenceItem = new ListDefenceItem();
         listItemAutoBuilder = new ListItemAutoBuilder();
         listItemAutoResearch = new ListItemAutoResearch();
+        listShipItem = new ListShipItem();
         colonyData = new ColonyData();
         playerData = new PlayerData();
         AppLog.print(DataLoader.class.getName(),0,"Bot data loaded success.");

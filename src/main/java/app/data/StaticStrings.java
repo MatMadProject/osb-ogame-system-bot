@@ -50,6 +50,8 @@ public class StaticStrings {
     public static final String ERRORS_FILE = "error";
     //Defence
     public static final String DEFENCE_FILE = "defence";
+    //Ship
+    public static final String SHIP_FILE = "ship";
     /*
     FOLDERS
      */

@@ -37,6 +37,23 @@ public class ComboBoxShip {
 
         return list;
     }
+    public static ArrayList<ComboBoxShip> allShips (){
+        ArrayList<ComboBoxShip> list = new ArrayList<>();
+        ArrayList<DataTechnology> civil = DataTechnology.dataTechnologyList(Type.CIVIL);
+        ArrayList<DataTechnology> battle = DataTechnology.dataTechnologyList(Type.BATTLE);
+
+        for(DataTechnology ship : civil){
+            if(ship == DataTechnology.UNDEFINED)
+                continue;
+            list.add(new ComboBoxShip(new Ship(ship)));
+        }
+
+        for(DataTechnology ship : battle)
+            if(ship != DataTechnology.UNDEFINED)
+                list.add(new ComboBoxShip(new Ship(ship)));
+
+        return list;
+    }
 
     @Override
     public String toString() {

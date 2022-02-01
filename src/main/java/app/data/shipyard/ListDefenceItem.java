@@ -150,8 +150,8 @@ public class ListDefenceItem implements Serializable, LSD {
     }
 
     public boolean isDefenceBuildingOnPlanet(Planet planet){
-        DefenceItem defenceItem = getDefenceBuildingOnPlanet(planet);
+        DefenceItem buildingItem = getDefenceBuildingOnPlanet(planet);
         DefenceItem startingItem = getDefenceStartingOnPlanet(planet);
-        return defenceItem != null || startingItem != null;
+        return buildingItem != null || startingItem != null;
     }
 }

@@ -30,6 +30,7 @@ public class GUIUpdater extends Task {
                     updateAutoResearchGUI();
                     updateExpeditionGUI();
                     updateDefenceGUI();
+                    updateShipGUI();
                 };
                 Platform.runLater(updater);
             }
@@ -113,6 +114,19 @@ public class GUIUpdater extends Task {
                     ((DefenceLeafTaskConnector) leafTaskConnector).getController().updateQueueList();
                     ((DefenceLeafTaskConnector) leafTaskConnector).getController().updateHistoryList();
                     ((DefenceLeafTaskConnector) leafTaskConnector).getController().updateDisplayError();
+                }
+            }
+        }
+    }
+
+    private void updateShipGUI() {
+        if(botWindowController != null){
+            if(botWindowController.isSelectedLeafTask()){
+                LeafTaskConnector  leafTaskConnector = botWindowController.getSelectedLeafTask().getLeafTaskConnector();
+                if(leafTaskConnector instanceof ShipLeafTaskConnector){
+                    ((ShipLeafTaskConnector) leafTaskConnector).getController().updateQueueList();
+                    ((ShipLeafTaskConnector) leafTaskConnector).getController().updateHistoryList();
+                    ((ShipLeafTaskConnector) leafTaskConnector).getController().updateDisplayError();
                 }
             }
         }

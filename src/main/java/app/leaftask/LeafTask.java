@@ -234,7 +234,30 @@ public class LeafTask implements Execute{
         getAntiLooping().reset();
         return true;
     }
-
+    public boolean clickShipyard(){
+        do{
+            Shipyard.click(OgameWeb.webDriver);
+            Waiter.sleep(200,300);
+            if(getAntiLooping().check()){
+                getAntiLooping().reset();
+                return false;
+            }
+        }while(!Shipyard.visible(OgameWeb.webDriver)); // Jest niewidoczne
+        getAntiLooping().reset();
+        return true;
+    }
+    public boolean clickOnShipItem(DataTechnology dataTechnology){
+        do{
+            Shipyard.clickOnShip(OgameWeb.webDriver,dataTechnology);
+            Waiter.sleep(200,300);
+            if(getAntiLooping().check()){
+                getAntiLooping().reset();
+                return false;
+            }
+        }while(!Shipyard.visibleShipDetails(OgameWeb.webDriver,dataTechnology));
+        getAntiLooping().reset();
+        return true;
+    }
     public boolean clickOnDefenceItem(DataTechnology dataTechnology){
         do{
             Defence.clickOnDefence(OgameWeb.webDriver,dataTechnology);

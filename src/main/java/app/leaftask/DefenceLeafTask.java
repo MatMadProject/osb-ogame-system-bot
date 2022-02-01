@@ -2,6 +2,7 @@ package app.leaftask;
 
 import app.data.DataLoader;
 import app.data.shipyard.DefenceItem;
+import app.data.shipyard.ShipItem;
 import app.data.shipyard.Status;
 import ogame.DataTechnology;
 import ogame.OgameWeb;
@@ -146,6 +147,22 @@ public class DefenceLeafTask extends LeafTask{
         }
         if(DataLoader.listDefenceItem.isDefenceBuildingOnPlanet(planet)){
             DefenceItem firstOnQueue = DataLoader.listDefenceItem.getDefenceBuildingOnPlanet(planet);
+            long currentTimeMillis = System.currentTimeMillis();
+            long WAIT_SECONDS_FOR_CHANGE_STATUS = 10L;
+            if(firstOnQueue == null) {
+                defenceItem.setTimer(new Timer(0,currentTimeMillis/1000 + WAIT_SECONDS_FOR_CHANGE_STATUS));
+                defenceItem.setStatus(Status.WAIT_FOR_STATUS);
+            }
+            else{
+                defenceItem.setTimer(new Timer(0,firstOnQueue.getTimer().getFinishDate()));
+                defenceItem.setStatus(Status.WAIT);
+            }
+
+            defenceItem.setStatusTime(System.currentTimeMillis());
+            return;
+        }
+        if(DataLoader.listShipItem.isShipBuildingOnPlanet(planet)){
+            ShipItem firstOnQueue = DataLoader.listShipItem.getShipBuildingOnPlanet(planet);
             long currentTimeMillis = System.currentTimeMillis();
             long WAIT_SECONDS_FOR_CHANGE_STATUS = 10L;
             if(firstOnQueue == null) {
