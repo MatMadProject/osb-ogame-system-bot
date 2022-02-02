@@ -3,7 +3,6 @@ package app.data.autobuilder;
 import app.data.LSD;
 import app.data.MatMadFile;
 import app.data.StaticStrings;
-import app.data.planets.Planets;
 import ogame.DataTechnology;
 import ogame.Status;
 import ogame.buildings.Building;
@@ -160,76 +159,65 @@ public class ListItemAutoBuilder implements Serializable, LSD {
     }
 
     public boolean isAnyBuildingUprading(){
-        for(ItemAutoBuilder itemAutoBuilder : queueList)
-            if(itemAutoBuilder.getBuilding().getStatus() == Status.ACTIVE)
-                return true;
+        ItemAutoBuilder itemAutoBuilder = getUpgradingBuilding();
 
-        return false;
+        return itemAutoBuilder != null;
     }
 
-    public boolean isAnyBuildingUprading(ArrayList<ItemAutoBuilder> queueList){
-        for(ItemAutoBuilder itemAutoBuilder : queueList)
-            if(itemAutoBuilder.getBuilding().getStatus() == Status.ACTIVE)
-                return true;
+    public boolean isAnyBuildingUpradingOnPlanet(Planet planet){
+        ItemAutoBuilder itemAutoBuilder = getUpgradingBuildingOnPlanet(planet);
 
-        return false;
+        return itemAutoBuilder != null;
     }
 
     public ItemAutoBuilder getUpgradingBuilding(){
-        for(ItemAutoBuilder itemAutoBuilder : queueList)
-            if(itemAutoBuilder.getBuilding().getStatus() == Status.ACTIVE)
-                return itemAutoBuilder;
-
-        return null;
+        return queueList.stream()
+                .filter(item -> item.getBuilding().getStatus() == Status.ACTIVE)
+                .findFirst()
+                .orElse(null);
     }
 
-    public ItemAutoBuilder getUpgradingBuilding(ArrayList<ItemAutoBuilder> queueList){
-        for(ItemAutoBuilder itemAutoBuilder : queueList)
-            if(itemAutoBuilder.getBuilding().getStatus() == Status.ACTIVE)
-                return itemAutoBuilder;
-
-        return null;
-    }
-    public ItemAutoBuilder naniteFactoryUpradingOnPlanet(Planet planet){
+    public ItemAutoBuilder getUpgradingBuildingOnPlanet(Planet planet){
         ArrayList<ItemAutoBuilder> queuePlanet = getQueueListFromPlanet(planet);
-        ItemAutoBuilder building = queuePlanet.stream()
+        return queuePlanet.stream()
+                .filter(item -> item.getBuilding().getStatus() == Status.ACTIVE)
+                .findFirst()
+                .orElse(null);
+    }
+    public ItemAutoBuilder naniteFactoryUpgradingOnPlanet(Planet planet){
+        ArrayList<ItemAutoBuilder> queuePlanet = getQueueListFromPlanet(planet);
+        return queuePlanet.stream()
                 .filter(item -> item.getBuilding().getDataTechnology() == DataTechnology.NANITE_FACTORY)
                 .findFirst()
                 .orElse(null);
-
-        return building;
     }
-    public ItemAutoBuilder shipyardUpradingOnPlanet(Planet planet){
+    public ItemAutoBuilder shipyardUpgradingOnPlanet(Planet planet){
         ArrayList<ItemAutoBuilder> queuePlanet = getQueueListFromPlanet(planet);
-        ItemAutoBuilder building = queuePlanet.stream()
+        return queuePlanet.stream()
                 .filter(item -> item.getBuilding().getDataTechnology() == DataTechnology.SHIPYARD)
                 .findFirst()
                 .orElse(null);
-
-        return building;
     }
-    public ItemAutoBuilder researchLaboratorydUpradingOnPlanet(Planet planet){
+    public ItemAutoBuilder researchLaboratorydUpgradingOnPlanet(Planet planet){
         ArrayList<ItemAutoBuilder> queuePlanet = getQueueListFromPlanet(planet);
-        ItemAutoBuilder building = queuePlanet.stream()
+        return queuePlanet.stream()
                 .filter(item -> item.getBuilding().getDataTechnology() == DataTechnology.RESEARCH_LABORATORY)
                 .findFirst()
                 .orElse(null);
-
-        return building;
     }
     public boolean isNaniteFactoryUpradingOnPlanet(Planet planet){
-        ItemAutoBuilder building = naniteFactoryUpradingOnPlanet(planet);
+        ItemAutoBuilder building = naniteFactoryUpgradingOnPlanet(planet);
         return building != null && building.isBuildingUpgrading();
     }
     public boolean isShipyardUpradingOnPlanet(Planet planet){
-        ItemAutoBuilder building = shipyardUpradingOnPlanet(planet);
+        ItemAutoBuilder building = shipyardUpgradingOnPlanet(planet);
         return building != null && building.isBuildingUpgrading();
     }
     public boolean isResearchLaboratorydUpradingOnPlanet(Planet planet){
-        ItemAutoBuilder building = researchLaboratorydUpradingOnPlanet(planet);
+        ItemAutoBuilder building = researchLaboratorydUpgradingOnPlanet(planet);
         return building != null && building.isBuildingUpgrading();
     }
-    public void setStatusOnAllItems(Planet planet, app.data.autobuilder.Status status){
+    public void setStatusOnAllItems(Planet planet, app.leaftask.Status status){
         ArrayList<ItemAutoBuilder> queuePlanet = getQueueListFromPlanet(planet);
         for(ItemAutoBuilder itemAutoBuilder : queuePlanet)
             itemAutoBuilder.setStatus(status);

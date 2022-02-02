@@ -2,11 +2,12 @@ package app.controllers;
 
 import app.data.DataLoader;
 import app.data.autobuilder.ItemAutoBuilder;
-import app.data.autobuilder.Status;
+import app.leaftask.Status;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import ogame.utils.log.AppLog;
 import ogame.utils.watch.Calendar;
+import ogame.utils.watch.Timer;
 
 public class AutoBuilderLeafTaskItemController {
 
@@ -64,34 +65,32 @@ public class AutoBuilderLeafTaskItemController {
         labelPlanet.setText(itemAutoBuilder.getPlanet().getCoordinate().getText());
         labelBuilding.setText(itemAutoBuilder.getBuilding().getName());
         labelLevel.setText((itemAutoBuilder.getUpgradeLevel())+"");
-        labelStartTime.setText(Calendar.getDateTime(itemAutoBuilder.getStartTime()));
-        if(itemAutoBuilder.getTimer() != null)
-            labelFinishTime.setText(itemAutoBuilder.getTimer().leftTime());
-        else
-            labelFinishTime.setText(Calendar.getDateTime(itemAutoBuilder.getFinishTime()));
+        labelStartTime.setText(Calendar.getDateTime(itemAutoBuilder.getAddTimeToQueueInMilliseconds()));
+        labelFinishTime.setText(Timer.leftTimeSecond(itemAutoBuilder.getEndTimeInSeconds()));
         labelStatus.setText(itemAutoBuilder.getStatus()+"");
-        labelStatusTime.setText(Calendar.getDateTime(itemAutoBuilder.getStatusTime()));
+        labelStatusTime.setText(Calendar.getDateTime(itemAutoBuilder.getStatusTimeInMilliseconds()));
     }
 
     public void createHistoryItem(ItemAutoBuilder itemAutoBuilder){
         labelPlanet.setText(itemAutoBuilder.getPlanet().getCoordinate().getText());
         labelBuilding.setText(itemAutoBuilder.getBuilding().getName());
         labelLevel.setText((itemAutoBuilder.getUpgradeLevel())+"");
-        labelStartTime.setText(Calendar.getDateTime(itemAutoBuilder.getStartTime()));
-        labelFinishTime.setText(Calendar.getDateTime(itemAutoBuilder.getFinishTime()));
+        labelStartTime.setText(Calendar.getDateTime(itemAutoBuilder.getAddTimeToQueueInMilliseconds()));
+        labelFinishTime.setText(Calendar.getDateTime(itemAutoBuilder.getFinishTimeInMilliseconds()));
         labelStatus.setText(itemAutoBuilder.getStatus()+"");
-        labelStatusTime.setText(Calendar.getDateTime(itemAutoBuilder.getStatusTime()));
+        labelStatusTime.setText(Calendar.getDateTime(itemAutoBuilder.getStatusTimeInMilliseconds()));
         labelDown.setDisable(true);
         labelUp.setDisable(true);
     }
 
     public void update(){
-        if(itemAutoBuilder.getTimer() != null)
-            labelFinishTime.setText(itemAutoBuilder.getTimer().leftTime());
-        else
-            labelFinishTime.setText(Calendar.getDateTime(itemAutoBuilder.getFinishTime()));
+//        if(itemAutoBuilder.getTimer() != null)
+//            labelFinishTime.setText(itemAutoBuilder.getTimer().leftTime());
+//        else
+//            labelFinishTime.setText(Calendar.getDateTime(itemAutoBuilder.getFinishTimeInMilliseconds()));
+        labelFinishTime.setText(Timer.leftTimeSecond(itemAutoBuilder.getEndTimeInSeconds()));
         labelStatus.setText(itemAutoBuilder.getStatus()+"");
-        labelStatusTime.setText(Calendar.getDateTime(itemAutoBuilder.getStatusTime()));
+        labelStatusTime.setText(Calendar.getDateTime(itemAutoBuilder.getStatusTimeInMilliseconds()));
     }
 
 

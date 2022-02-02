@@ -2,9 +2,9 @@ package app.leaftask;
 
 import app.data.DataLoader;
 import app.data.autobuilder.ItemAutoBuilder;
-import app.data.autobuilder.Status;
 import app.data.autoresearch.ItemAutoResearch;
-import ogame.DataTechnology;
+import app.data.shipyard.DefenceItem;
+import app.data.shipyard.ShipItem;
 import ogame.OgameWeb;
 import ogame.ResourcesBar;
 import ogame.buildings.Building;
@@ -35,31 +35,35 @@ public class AutoBuilderLeafTask extends LeafTask{
             if(isSleepTimeOut(System.currentTimeMillis())){
                 ArrayList<ItemAutoBuilder> queueList = DataLoader.listItemAutoBuilder.getQueueList();
                 if(!queueList.isEmpty()){
+                    for(ItemAutoBuilder itemAutoBuilder : queueList){
+                        selectTask(itemAutoBuilder);
+                        DataLoader.listItemAutoBuilder.save();
+                    }
                     try{
                         for(ItemAutoBuilder itemAutoBuilder : queueList){
                             final Status status = itemAutoBuilder.getStatus();
                             switch(status){
                                 case ADDED:
                                 case DATA_DOWNLOADING:
-                                    downloadData(itemAutoBuilder);
+                                    dataDownloading(itemAutoBuilder);
                                     break;
                                 case DATA_DOWNLOADED:
-                                    checksData(itemAutoBuilder);
+                                    dataDownloaded(itemAutoBuilder);
+                                    break;
+                                case STARTING:
+                                    starting(itemAutoBuilder);
+                                    break;
+                                case UPGRADING:
+                                    upgrading(itemAutoBuilder);
+                                    break;
+                                case FINISHED:
+                                    finished(itemAutoBuilder, DataLoader.listItemAutoBuilder.getQueueListFromPlanet(itemAutoBuilder.getPlanet()));
                                     break;
                                 case WAIT:
                                 case NOT_ENOUGH_RESOURCES:
                                 case NOT_ENOUGH_ENERGY:
                                 case OFF:
                                     wait(itemAutoBuilder);
-                                    break;
-                                case STARTING:
-                                    upgrade(itemAutoBuilder);
-                                    break;
-                                case UPGRADING:
-                                    isFinished(itemAutoBuilder);
-                                    break;
-                                case FINISHED:
-                                    finish(itemAutoBuilder, DataLoader.listItemAutoBuilder.getQueueListFromPlanet(itemAutoBuilder.getPlanet()));
                                     break;
                             }
                         }
@@ -78,7 +82,37 @@ public class AutoBuilderLeafTask extends LeafTask{
         }
     }
 
-    private void finish(ItemAutoBuilder itemAutoBuilder, ArrayList<ItemAutoBuilder> queueList) {
+    private void selectTask(ItemAutoBuilder itemAutoBuilder) {
+        Status status = itemAutoBuilder.getStatus();
+        switch (status){
+            case ADDED:
+            case DATA_DOWNLOADING:
+                dataDownloading(itemAutoBuilder);
+                break;
+            case DATA_DOWNLOADED:
+                dataDownloaded(itemAutoBuilder);
+                break;
+            case STARTING:
+                starting(itemAutoBuilder);
+                break;
+            case UPGRADING:
+                upgrading(itemAutoBuilder);
+                break;
+            case FINISHED:
+                finished(itemAutoBuilder, DataLoader.listItemAutoBuilder.getQueueListFromPlanet(itemAutoBuilder.getPlanet()));
+            case SHIP_BUILD:
+            case DEFENCE_BUILD:
+            case RESEARCH_UPGRADE:
+            case WAIT:
+            case NOT_ENOUGH_RESOURCES:
+            case NOT_ENOUGH_ENERGY:
+            case OFF:
+                wait(itemAutoBuilder);
+                break;
+        }
+    }
+
+    private void finished(ItemAutoBuilder itemAutoBuilder, ArrayList<ItemAutoBuilder> queueList) {
         Building building = itemAutoBuilder.getBuilding();
         Planet planet = itemAutoBuilder.getPlanet();
         building.setProductionTime(null);
@@ -86,7 +120,7 @@ public class AutoBuilderLeafTask extends LeafTask{
         itemAutoBuilderToRemove = itemAutoBuilder;
         DataLoader.listItemAutoBuilder.getHistoryList().add(itemAutoBuilder);
         DataLoader.planets.setUpdateData(true);
-        if(building.getDataTechnology().getType() == Type.PRODUCTION){
+        if(itemAutoBuilder.isProductionBuilding()){
             planet.setUpdateResourceBuilding(true);
             planet.setUpdateResourcesProduction(true);
         }else
@@ -95,37 +129,35 @@ public class AutoBuilderLeafTask extends LeafTask{
         //Starting buliding next object on queue list.
         ItemAutoBuilder index1 = queueList.get(1);
         index1.setStatus(Status.DATA_DOWNLOADING);
-        index1.setTimer(null);
-        if(building.getDataTechnology() == DataTechnology.ROBOTICS_FACTORY ||
-        building.getDataTechnology() == DataTechnology.NANITE_FACTORY)
+        index1.setFinishTimeInMilliseconds(0);
+        if(itemAutoBuilder.isNaniteFactory() || itemAutoBuilder.isRoboticsFactory())
             DataLoader.listItemAutoBuilder.setStatusOnAllItems(planet,Status.DATA_DOWNLOADING);
     }
 
-    private void isFinished(ItemAutoBuilder itemAutoBuilder) {
-        long timeToFinish = itemAutoBuilder.timeToFinish();
+    private void upgrading(ItemAutoBuilder itemAutoBuilder) {
+        long timeToFinish = Timer.timeSeconds(System.currentTimeMillis()/1000,itemAutoBuilder.getEndTimeInSeconds());
         if(timeToFinish < 0){
             itemAutoBuilder.setStatus(Status.FINISHED);
             itemAutoBuilder.getBuilding().setStatus(ogame.Status.DISABLED);
             long currentTime = System.currentTimeMillis();
-            itemAutoBuilder.setStatusTime(currentTime);
-            itemAutoBuilder.setFinishTime(currentTime);
+            itemAutoBuilder.setStatusTimeInMilliseconds(currentTime);
+            itemAutoBuilder.setFinishTimeInMilliseconds(currentTime);
         }
     }
 
-    private void upgrade(ItemAutoBuilder itemAutoBuilder) {
+    private void starting(ItemAutoBuilder itemAutoBuilder) {
         ArrayList<ItemAutoBuilder> planetQueue = DataLoader.listItemAutoBuilder.getQueueListFromPlanet(itemAutoBuilder.getPlanet());
+        Planet planet = itemAutoBuilder.getPlanet();
         int indexOfList = planetQueue.indexOf(itemAutoBuilder);
         //Is on first position on queueList
         if(indexOfList == 0){
             Building building = itemAutoBuilder.getBuilding();
-            Type type =  building.getDataTechnology().getType();
-            Planet planet = itemAutoBuilder.getPlanet();
             long endTimeInSeconds;
             int listIndex = building.getDataTechnology().getListIndex();
             //Clicking on planet
             if(!clickPlanet(planet))
                 return;
-            if(type == Type.PRODUCTION){
+            if(itemAutoBuilder.isProductionBuilding()){
                 //Suppliec clicking
                 if(!clickSupplies())
                     return;
@@ -141,14 +173,8 @@ public class AutoBuilderLeafTask extends LeafTask{
             }
             else{
                 //Facilities clicking
-                do{
-                    Facilities.click(OgameWeb.webDriver);
-                    Waiter.sleep(200,300);
-                    if(getAntiLooping().check()){
-                        getAntiLooping().reset();
-                        return;
-                    }
-                }while(!Facilities.visible(OgameWeb.webDriver)); // Jest niewidoczne
+                if(!clickFacilities())
+                    return;
                 //Upgrade building
                 do{
                     Facilities.upgradeBuilding(OgameWeb.webDriver,listIndex);
@@ -165,93 +191,101 @@ public class AutoBuilderLeafTask extends LeafTask{
             AppLog.print(AutoBuilderLeafTask.class.getName(),2,"Start upgrade " + building.getName() +
                     " to level " + itemAutoBuilder.getUpgradeLevel() + ".");
             itemAutoBuilder.setStatus(Status.UPGRADING);
-            long currentTime = System.currentTimeMillis();
-            itemAutoBuilder.setStatusTime(currentTime);
-            itemAutoBuilder.updateFinishTime(currentTime);
+            itemAutoBuilder.setStatusTimeInMilliseconds();
         }else{
             //Checks is any building is upgrading
-            if(DataLoader.listItemAutoBuilder.isAnyBuildingUprading(planetQueue)){
+            if(DataLoader.listItemAutoBuilder.isAnyBuildingUpradingOnPlanet(planet)){
                 itemAutoBuilder.setStatus(Status.WAIT);
-                long currentTime = System.currentTimeMillis();
-                itemAutoBuilder.setStatusTime(currentTime);
-                ItemAutoBuilder itemAutoBuilderUpgrading = DataLoader.listItemAutoBuilder.getUpgradingBuilding(planetQueue);
-                itemAutoBuilder.setTimer(new Timer(currentTime,itemAutoBuilderUpgrading.getFinishTime()));
+                itemAutoBuilder.setStatusTimeInMilliseconds();
+                ItemAutoBuilder itemAutoBuilderUpgrading = DataLoader.listItemAutoBuilder.getUpgradingBuildingOnPlanet(planet);
+                itemAutoBuilder.setEndTimeInSeconds(itemAutoBuilderUpgrading.getEndTimeInSeconds());
             }
         }
     }
 
     private void wait(ItemAutoBuilder itemAutoBuilder) {
-        if(itemAutoBuilder.getTimer().isTimeLeft(System.currentTimeMillis())){
+        long timeToFinish = Timer.timeSeconds(System.currentTimeMillis()/1000,itemAutoBuilder.getEndTimeInSeconds());
+        if(timeToFinish < 0){
             itemAutoBuilder.setStatus(Status.DATA_DOWNLOADING);
-            itemAutoBuilder.setStatusTime(System.currentTimeMillis());
-            itemAutoBuilder.setTimer(null);
+            itemAutoBuilder.setStatusTimeInMilliseconds();
+            itemAutoBuilder.setEndTimeInSeconds(0);
             Overview.clickAlways(OgameWeb.webDriver);
         }
     }
 
-    private void checksData(ItemAutoBuilder itemAutoBuilder) {
+    private void dataDownloaded(ItemAutoBuilder itemAutoBuilder) {
         Building building = itemAutoBuilder.getBuilding();
         Planet planet = itemAutoBuilder.getPlanet();
-        long TIME_WAIT_WHEN_OFF_STATUS = 3600 * 1000L;
-        long TIME_WAIT_WHEN_ON_STATUS = 60 * 1000L;
+        long SECONDS_WAIT_WHEN_OFF_STATUS = 3600 ;
+        long SECONDS_WAIT_WHEN_ON_STATUS = 60;
         ArrayList<ItemAutoBuilder> planetQueue = DataLoader.listItemAutoBuilder.getQueueListFromPlanet(itemAutoBuilder.getPlanet());
-        if(building.getStatus() == ogame.Status.OFF){
+        if(itemAutoBuilder.isBuildingOgameStatusOff()){
             itemAutoBuilder.setStatus(Status.OFF);
-            long currentTime = System.currentTimeMillis();
-            itemAutoBuilder.setStatusTime(currentTime);
-            itemAutoBuilder.setTimer(new Timer(currentTime,currentTime+ TIME_WAIT_WHEN_OFF_STATUS));
+            itemAutoBuilder.setStatusTimeInMilliseconds();
+            itemAutoBuilder.setEndTimeInSeconds(System.currentTimeMillis()/1000 + SECONDS_WAIT_WHEN_OFF_STATUS);
             return;
         }
-        if(building.getStatus() == ogame.Status.ON){
-            if(planetQueue.indexOf(itemAutoBuilder) == 0){
+        if(itemAutoBuilder.isBuildingOgameStatusOn()){
+            if(itemAutoBuilder.isFirstOnQueue(planetQueue)){
                 itemAutoBuilder.setStatus(Status.STARTING);
-                itemAutoBuilder.setStatusTime();
+                itemAutoBuilder.setStatusTimeInMilliseconds();
 
             }else{
                 itemAutoBuilder.setStatus(Status.WAIT);
-                long currentTime = System.currentTimeMillis();
-                itemAutoBuilder.setStatusTime(currentTime);
-                if(DataLoader.listItemAutoBuilder.isAnyBuildingUprading(planetQueue)){
-                    ItemAutoBuilder itemAutoBuilderUpgrading = DataLoader.listItemAutoBuilder.getUpgradingBuilding(planetQueue);
-                    itemAutoBuilder.setTimer(new Timer(currentTime, itemAutoBuilderUpgrading.getFinishTime()));
-                }else{
-                    itemAutoBuilder.setTimer(new Timer(currentTime,currentTime + TIME_WAIT_WHEN_ON_STATUS));
-                }
+                itemAutoBuilder.setStatusTimeInMilliseconds();
+                if(DataLoader.listItemAutoBuilder.isAnyBuildingUpradingOnPlanet(planet)){
+                    ItemAutoBuilder itemAutoBuilderUpgrading = DataLoader.listItemAutoBuilder.getUpgradingBuildingOnPlanet(planet);
+                    itemAutoBuilder.setEndTimeInSeconds(itemAutoBuilderUpgrading.getEndTimeInSeconds());
+                }else
+                    itemAutoBuilder.setEndTimeInSeconds(System.currentTimeMillis()/1000 + SECONDS_WAIT_WHEN_ON_STATUS);
+
                 ItemAutoBuilder first = planetQueue.get(0);
-                if(first.getStatus() == Status.NOT_ENOUGH_RESOURCES){
-                    itemAutoBuilder.setTimer(first.getTimer());
-                }
+                if(first.getStatus() == Status.NOT_ENOUGH_RESOURCES)
+                    itemAutoBuilder.setEndTimeInSeconds(first.getEndTimeInSeconds());
+
             }
             return;
         }
-        if(building.getStatus() == ogame.Status.ACTIVE){
-            if(DataLoader.listItemAutoBuilder.isAnyBuildingUprading(planetQueue)){
+        if(itemAutoBuilder.isBuildingOgameStatusActive()){
+            if(DataLoader.listItemAutoBuilder.isAnyBuildingUpradingOnPlanet(planet)){
                 itemAutoBuilder.setStatus(Status.WAIT);
-                long currentTime = System.currentTimeMillis();
-                itemAutoBuilder.setStatusTime(currentTime);
-                ItemAutoBuilder itemAutoBuilderUpgrading = DataLoader.listItemAutoBuilder.getUpgradingBuilding(planetQueue);
-                itemAutoBuilder.setTimer(new Timer(currentTime, itemAutoBuilderUpgrading.getFinishTime()));
+                itemAutoBuilder.setStatusTimeInMilliseconds();
+                ItemAutoBuilder itemAutoBuilderUpgrading = DataLoader.listItemAutoBuilder.getUpgradingBuildingOnPlanet(planet);
+                itemAutoBuilder.setEndTimeInSeconds(itemAutoBuilderUpgrading.getEndTimeInSeconds());
                 return;
             }
         }
-        if(building.getStatus() == ogame.Status.DISABLED){
-            if(building.getDataTechnology() == DataTechnology.RESEARCH_LABORATORY){
+        if(itemAutoBuilder.isBuildingOgameStatusDisabled()){
+            if(itemAutoBuilder.isResearchLaboratory()){
                 if(DataLoader.listItemAutoResearch.isAnyResearchUprading()){
                     ItemAutoResearch research = DataLoader.listItemAutoResearch.getUpgradingResearch();
-                    long researchFinishTime = research.getFinishTime();
-                    itemAutoBuilder.setStatus(Status.WAIT);
-                    long currentTime = System.currentTimeMillis();
-                    itemAutoBuilder.setStatusTime(currentTime);
-                    itemAutoBuilder.setTimer(new Timer(currentTime, researchFinishTime));
+                    itemAutoBuilder.setStatus(Status.RESEARCH_UPGRADE);
+                    itemAutoBuilder.setStatusTimeInMilliseconds();
+                    itemAutoBuilder.setEndTimeInSeconds(research.getEndTimeInSeconds());
                     return;
                 }
             }
-            if(DataLoader.listItemAutoBuilder.isAnyBuildingUprading(planetQueue)){
+            if(itemAutoBuilder.isShipyard() || itemAutoBuilder.isNaniteFactory()){
+                if(DataLoader.listShipItem.isShipBuildingOnPlanet(planet)){
+                    ShipItem shipItem = DataLoader.listShipItem.getShipBuildingOnPlanet(planet);
+                    DefenceItem defenceItem = DataLoader.listDefenceItem.getDefenceBuildingOnPlanet(planet);
+                    if(shipItem != null){
+                        itemAutoBuilder.setStatus(Status.SHIP_BUILD);
+                        itemAutoBuilder.setStatusTimeInMilliseconds();
+                        itemAutoBuilder.setEndTimeInSeconds(shipItem.getEndTimeInSeconds());
+                    }
+                    if(defenceItem != null){
+                        itemAutoBuilder.setStatus(Status.DEFENCE_BUILD);
+                        itemAutoBuilder.setStatusTimeInMilliseconds();
+                        itemAutoBuilder.setEndTimeInSeconds(defenceItem.getEndTimeInSeconds());
+                    }
+                }
+            }
+            if(DataLoader.listItemAutoBuilder.isAnyBuildingUpradingOnPlanet(planet)){
                 itemAutoBuilder.setStatus(Status.WAIT);
-                long currentTime = System.currentTimeMillis();
-                itemAutoBuilder.setStatusTime(currentTime);
-                ItemAutoBuilder itemAutoBuilderUpgrading = DataLoader.listItemAutoBuilder.getUpgradingBuilding(planetQueue);
-                itemAutoBuilder.setTimer(new Timer(currentTime, itemAutoBuilderUpgrading.getFinishTime()));
+                itemAutoBuilder.setStatusTimeInMilliseconds();
+                ItemAutoBuilder itemAutoBuilderUpgrading = DataLoader.listItemAutoBuilder.getUpgradingBuildingOnPlanet(planet);
+                itemAutoBuilder.setEndTimeInSeconds(itemAutoBuilderUpgrading.getEndTimeInSeconds());
                 return;
             }
             RequiredResources requiredResources = itemAutoBuilder.getBuilding().getRequiredResources();
@@ -286,129 +320,129 @@ public class AutoBuilderLeafTask extends LeafTask{
             }
             if(energyBalance > 0 && building.getRequiredResources().getEnergy() > 0){
                 itemAutoBuilder.setStatus(Status.NOT_ENOUGH_ENERGY);
-                itemAutoBuilder.setStatusTime(currentTime);
-                itemAutoBuilder.setTimer(new Timer(currentTime,currentTime+ TIME_WAIT_WHEN_OFF_STATUS));
+                itemAutoBuilder.setStatusTimeInMilliseconds();
+                itemAutoBuilder.setEndTimeInSeconds(System.currentTimeMillis()/1000 + SECONDS_WAIT_WHEN_OFF_STATUS);
                 return;
             }
             //Jeżeli pierwszy item w kolejce ma status NOT_ENOUGH_RESOURCES
             if(planetQueue.get(0).getStatus() == Status.NOT_ENOUGH_RESOURCES){
-                itemAutoBuilder.setTimer(planetQueue.get(0).getTimer());
+                itemAutoBuilder.setEndTimeInSeconds(planetQueue.get(0).getEndTimeInSeconds());
                 itemAutoBuilder.setStatus(Status.WAIT);
-                itemAutoBuilder.setStatusTime(currentTime);
+                itemAutoBuilder.setStatusTimeInMilliseconds();
             }
-            itemAutoBuilder.setTimer(new Timer(currentTime,currentTime+timeToProductionResources));
+            itemAutoBuilder.setEndTimeInSeconds(currentTime + timeToProductionResources/1000);
             itemAutoBuilder.setStatus(Status.NOT_ENOUGH_RESOURCES);
-            itemAutoBuilder.setStatusTime(currentTime);
+            itemAutoBuilder.setStatusTimeInMilliseconds(currentTime);
         }
 
-        if(building.getStatus() == ogame.Status.UNDEFINED){
+        if(itemAutoBuilder.isBuildingOgameStatusUndefined()){
             itemAutoBuilder.setStatus(Status.DATA_DOWNLOADING);
-            itemAutoBuilder.setStatusTime(System.currentTimeMillis());
-            itemAutoBuilder.setTimer(null);
+            itemAutoBuilder.setStatusTimeInMilliseconds();
+            itemAutoBuilder.setEndTimeInSeconds(0);
             building.setProductionTime(null);
             building.setRequiredResources(null);
         }
     }
 
-    private void downloadData(ItemAutoBuilder itemAutoBuilder) {
-        itemAutoBuilder.setStatus(Status.DATA_DOWNLOADING);
-        itemAutoBuilder.setStatusTime(System.currentTimeMillis());
+    private void dataDownloading(ItemAutoBuilder itemAutoBuilder) {
         Building building = itemAutoBuilder.getBuilding();
         Type type =  building.getDataTechnology().getType();
         Planet planet = itemAutoBuilder.getPlanet();
+        ProductionTime productionTime;
+        RequiredResources requiredResources;
+        ogame.Status status;
+        int energyConsumption = -1;
+        int curentLevel;
         int listIndex = building.getDataTechnology().getListIndex();
+
         //Clicking on planet
         if(!clickPlanet(planet))
             return;
-
-        if(type == Type.PRODUCTION){
+        if(itemAutoBuilder.isProductionBuilding()){
             //Suppliec clicking
             if(!clickSupplies())
                 return;
             //Data was download on first time execute.
-            if(building.getProductionTime() != null && building.getRequiredResources() != null) {
-                ogame.Status status = Supplies.statusOfBuilding(OgameWeb.webDriver,listIndex);
+            if(itemAutoBuilder.isDataDownloaded()) {
+                status = Supplies.statusOfBuilding(OgameWeb.webDriver,listIndex);
                 building.setStatus(status);
                 itemAutoBuilder.setStatus(Status.DATA_DOWNLOADED);
-                itemAutoBuilder.setStatusTime(System.currentTimeMillis());
+                itemAutoBuilder.setStatusTimeInMilliseconds();
                 return;
             }
             //Shows building details
             if(!clickOnBuilding(type,listIndex))
                 return;
             //Dowloads data
-            ProductionTime productionTime = Supplies.productionTimeOfBuilding(OgameWeb.webDriver);
-            RequiredResources requiredResources = Supplies.getRequiredResources(OgameWeb.webDriver,listIndex);
-            int level = Supplies.levelOfBuilding(OgameWeb.webDriver,listIndex);
-            ogame.Status status = Supplies.statusOfBuilding(OgameWeb.webDriver,listIndex);
-            int energyConsumption = Supplies.energyConsumption(OgameWeb.webDriver);
+            productionTime = Supplies.productionTimeOfBuilding(OgameWeb.webDriver);
+            requiredResources = Supplies.getRequiredResources(OgameWeb.webDriver,listIndex);
+            curentLevel = Supplies.levelOfBuilding(OgameWeb.webDriver,listIndex);
+            status = Supplies.statusOfBuilding(OgameWeb.webDriver,listIndex);
+            energyConsumption = Supplies.energyConsumption(OgameWeb.webDriver);
             //When tries upgrade a upgraded building.
-            if(itemAutoBuilder.isBuildingAchievedUpgradeLevel(level)){
+            if(itemAutoBuilder.isBuildingAchievedUpgradeLevel(curentLevel)){
                 itemAutoBuilder.setStatus(Status.FINISHED);
-                itemAutoBuilder.setStatusTime(System.currentTimeMillis());
+                itemAutoBuilder.setStatusTimeInMilliseconds();
                 return;
             }
             if(itemAutoBuilder.isBuildingUpgrading(status)){
-                itemAutoBuilder.getBuilding().setProductionTime(productionTime);
+                long endTimeOfUpgrading = Supplies.endDateOfUpgradeBuilding(OgameWeb.webDriver,listIndex);
+                itemAutoBuilder.setEndTimeInSeconds(endTimeOfUpgrading);
                 itemAutoBuilder.setStatus(Status.UPGRADING);
-                itemAutoBuilder.setStatusTime(System.currentTimeMillis());
+                itemAutoBuilder.setStatusTimeInMilliseconds();
             }
             //Update building data
             building.setProductionTime(productionTime);
             building.setRequiredResources(requiredResources);
-            building.setLevel(level);
+            building.setLevel(curentLevel);
             building.setStatus(status);
             if(energyConsumption != -1)
                 itemAutoBuilder.setEnergyConsumption(energyConsumption);
-
-            AppLog.print(AutoBuilderLeafTask.class.getName(),2,"Downloads data of " + building.getName() + ". " +
-                    "Upgrade level : " + (level + 1) + ", " + requiredResources +
-                    (energyConsumption != -1 ? ", energy consumption: " + energyConsumption : "") + ".");
         }
         else{
             //Facilities clicking
-            do{
-                Facilities.click(OgameWeb.webDriver);
-                Waiter.sleep(200,300);
-                if(getAntiLooping().check()){
-                    getAntiLooping().reset();
-                    return;
-                }
-            }while(!Facilities.visible(OgameWeb.webDriver)); // Jest niewidoczne
+            if(!clickFacilities())
+                return;
             //Data was download on first time execute.
-            if(building.getProductionTime() != null && building.getRequiredResources() != null) {
-                ogame.Status status = Facilities.statusOfBuilding(OgameWeb.webDriver,listIndex);
+            if(itemAutoBuilder.isDataDownloaded()) {
+                status = Facilities.statusOfBuilding(OgameWeb.webDriver,listIndex);
                 building.setStatus(status);
                 itemAutoBuilder.setStatus(Status.DATA_DOWNLOADED);
-                itemAutoBuilder.setStatusTime(System.currentTimeMillis());
+                itemAutoBuilder.setStatusTimeInMilliseconds();
                 return;
             }
             //Shows building details
-            do{
-                Facilities.clickOnBuilding(OgameWeb.webDriver,building.getDataTechnology().getListIndex());
-                Waiter.sleep(200,300);
-                if(getAntiLooping().check()){
-                    getAntiLooping().reset();
-                    return;
-                }
-            }while(!Facilities.visibleBuildingDetails(OgameWeb.webDriver,building.getDataTechnology().getListIndex()));
+            if(!clickOnBuilding(type,listIndex))
+                return;
             //Dowloads data
-            ProductionTime productionTime = Facilities.productionTimeOfBuilding(OgameWeb.webDriver);
-            RequiredResources requiredResources = Facilities.getRequiredResources(OgameWeb.webDriver,listIndex);
-            int level = Facilities.levelOfBuilding(OgameWeb.webDriver,listIndex);
-            ogame.Status status = Facilities.statusOfBuilding(OgameWeb.webDriver,listIndex);
-
+            productionTime = Facilities.productionTimeOfBuilding(OgameWeb.webDriver);
+            requiredResources = Facilities.getRequiredResources(OgameWeb.webDriver,listIndex);
+            curentLevel = Facilities.levelOfBuilding(OgameWeb.webDriver,listIndex);
+            status = Facilities.statusOfBuilding(OgameWeb.webDriver,listIndex);
+            if(itemAutoBuilder.isBuildingAchievedUpgradeLevel(curentLevel)){
+                itemAutoBuilder.setStatus(Status.FINISHED);
+                itemAutoBuilder.setStatusTimeInMilliseconds();
+                return;
+            }
+            if(itemAutoBuilder.isBuildingUpgrading(status)){
+                long endTimeOfUpgading = Facilities.endDateOfUpgradeBuilding(OgameWeb.webDriver,listIndex);
+//                itemAutoBuilder.getBuilding().setProductionTime(productionTime);??
+                itemAutoBuilder.setEndTimeInSeconds(endTimeOfUpgading);
+                itemAutoBuilder.setStatus(Status.UPGRADING);
+                itemAutoBuilder.setStatusTimeInMilliseconds();
+            }
             //Update building data
             building.setProductionTime(productionTime);
             building.setRequiredResources(requiredResources);
-            building.setLevel(level);
+            building.setLevel(curentLevel);
             building.setStatus(status);
 
-
-            AppLog.print(AutoBuilderLeafTask.class.getName(),2,"Downloads data of " + building.getName() + " . " +
-                    "Upgrade level : " + (level + 1) + ", Required resources: " + requiredResources +  ".");
         }
+        AppLog.print(AutoBuilderLeafTask.class.getName(),2,"Downloads data of " + building.getName() + ". " +
+                "Current level : " + curentLevel + " ("+itemAutoBuilder.getUpgradeLevel()+"^), Required resources: " + requiredResources +
+                ", Production time: " + productionTime + ", " +(energyConsumption != -1 ? ", energy consumption: " + energyConsumption : "") + ".");
+
         itemAutoBuilder.setStatus(Status.DATA_DOWNLOADED);
-        itemAutoBuilder.setStatusTime(System.currentTimeMillis());
+        itemAutoBuilder.setStatusTimeInMilliseconds(System.currentTimeMillis());
     }
 }

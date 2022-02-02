@@ -14,6 +14,7 @@ public class ShipyardItem implements Serializable {
     private Status status;
     private long statusTime;
     private long timePeriod;
+    private long endTimeInSeconds;
     private boolean singleExecute;
     private Timer timer;
 
@@ -82,6 +83,14 @@ public class ShipyardItem implements Serializable {
 
     public void setTimer(Timer timer) {
         this.timer = timer;
+    }
+
+    public long getEndTimeInSeconds() {
+        return endTimeInSeconds;
+    }
+
+    public void setEndTimeInSeconds(long endTimeInSeconds) {
+        this.endTimeInSeconds = endTimeInSeconds;
     }
 
     @Override

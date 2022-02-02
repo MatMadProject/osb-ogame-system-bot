@@ -180,10 +180,10 @@ public class ShipLeafTask extends LeafTask {
         }
         if(ship.getStatus() == ogame.Status.DISABLED){
             if(DataLoader.listItemAutoBuilder.isNaniteFactoryUpradingOnPlanet(planet)){
-                long naniteFactoryFinishTimeSeconds = DataLoader.listItemAutoBuilder.naniteFactoryUpradingOnPlanet(planet).getFinishTime()/1000;
+                long naniteFactoryFinishTimeSeconds = DataLoader.listItemAutoBuilder.naniteFactoryUpgradingOnPlanet(planet).getEndTimeInSeconds();
                 shipItem.setTimer(new Timer(0,naniteFactoryFinishTimeSeconds));
             } else if(DataLoader.listItemAutoBuilder.isShipyardUpradingOnPlanet(planet)){
-                long shipyardFinishTimeSeconds = DataLoader.listItemAutoBuilder.shipyardUpradingOnPlanet(planet).getFinishTime()/1000;
+                long shipyardFinishTimeSeconds = DataLoader.listItemAutoBuilder.shipyardUpgradingOnPlanet(planet).getEndTimeInSeconds();
                 shipItem.setTimer(new Timer(0,shipyardFinishTimeSeconds));
             }else
                 shipItem.setTimer(new Timer(0,System.currentTimeMillis()/1000 + shipItem.getTimePeriod()));

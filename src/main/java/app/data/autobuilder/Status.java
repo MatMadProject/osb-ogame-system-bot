@@ -2,6 +2,7 @@ package app.data.autobuilder;
 
 import java.io.Serializable;
 
+@Deprecated
 public enum Status implements Serializable {
 
     ADDED,

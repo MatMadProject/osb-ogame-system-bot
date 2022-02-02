@@ -15,6 +15,7 @@ public class ItemAutoResearch implements Serializable {
     private final int upgradeLevel;
     private final long startTime;
     private long finishTime;
+    private long endTimeInSeconds;
     private Status status;
     private long statusTime;
     private Timer timer;
@@ -83,6 +84,14 @@ public class ItemAutoResearch implements Serializable {
 
     public void setTimer(Timer timer) {
         this.timer = timer;
+    }
+
+    public long getEndTimeInSeconds() {
+        return endTimeInSeconds;
+    }
+
+    public void setEndTimeInSeconds(long endTimeInSeconds) {
+        this.endTimeInSeconds = endTimeInSeconds;
     }
 
     @Override
