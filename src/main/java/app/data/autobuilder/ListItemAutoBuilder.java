@@ -222,6 +222,18 @@ public class ListItemAutoBuilder implements Serializable, LSD {
         for(ItemAutoBuilder itemAutoBuilder : queuePlanet)
             itemAutoBuilder.setStatus(status);
     }
+    public void setStatusOnAllItemsWithoutFirst(Planet planet, app.leaftask.Status status){
+        ArrayList<ItemAutoBuilder> queuePlanet = getQueueListFromPlanet(planet);
+        for(int i = 1; i<queuePlanet.size(); i++)
+            queuePlanet.get(i).setStatus(status);
+    }
+    public void startNextBuildingOnPlanet(Planet planet){
+        ArrayList<ItemAutoBuilder> queuePlanet = getQueueListFromPlanet(planet);
+        if(queuePlanet.size() > 1){
+            queuePlanet.get(1).setStatus(app.leaftask.Status.DATA_DOWNLOADING);
+            queuePlanet.get(1).setEndTimeInSeconds(0);
+        }
+    }
 
     /**
      * Downloads building queue for planet.

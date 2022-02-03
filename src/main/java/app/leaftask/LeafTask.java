@@ -192,6 +192,19 @@ public class LeafTask implements Execute{
         return true;
     }
 
+    public boolean clickResearch(){
+        do{
+            Research.click(OgameWeb.webDriver);
+            Waiter.sleep(200,300);
+            if(getAntiLooping().check()){
+                getAntiLooping().reset();
+                return false;
+            }
+        }while(!Research.visible(OgameWeb.webDriver)); // Jest niewidoczne
+        getAntiLooping().reset();
+        return true;
+    }
+
     public boolean clickOnBuilding(Type type, int listIndex){
         boolean checkFlag;
         do{

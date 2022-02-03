@@ -1,8 +1,8 @@
 package app.leaftask;
 
 import app.data.DataLoader;
+import app.data.autobuilder.ItemAutoBuilder;
 import app.data.autoresearch.ItemAutoResearch;
-import app.data.autoresearch.Status;
 import ogame.OgameWeb;
 import ogame.ResourcesBar;
 import ogame.buildings.RequiredResources;
@@ -10,6 +10,7 @@ import ogame.planets.Planet;
 import ogame.planets.ResourcesProduction;
 import ogame.researches.Research;
 import ogame.Type;
+import ogame.tabs.Overview;
 import ogame.utils.Waiter;
 import ogame.utils.log.AppLog;
 import ogame.utils.watch.Timer;
@@ -28,31 +29,11 @@ public class AutoResearchLeafTask extends LeafTask{
         if (isRun()) {
             if (isSleepTimeOut(System.currentTimeMillis())) {
                 ArrayList<ItemAutoResearch> queueList = DataLoader.listItemAutoResearch.getQueueList();
-                if(!queueList.isEmpty()){
-                    try{
-                        for(ItemAutoResearch itemAutoResearch : queueList){
-                            final Status STATUS = itemAutoResearch.getStatus();
-                            if(STATUS == Status.ADDED)
-                                downloadData(itemAutoResearch);
-                            if(STATUS == Status.DATA_DOWNLOADING)
-                                downloadData(itemAutoResearch);
-                            if(STATUS == Status.DATA_DOWNLOADED)
-                                checksData(itemAutoResearch);
-                            if(STATUS == Status.WAIT || STATUS == Status.NOT_ENOUGH_RESOURCES || STATUS == Status.NOT_ENOUGH_ENERGY ||
-                            STATUS == Status.OFF)
-                                wait(itemAutoResearch);
-                            if(STATUS == Status.STARTING)
-                                upgrade(itemAutoResearch);
-                            if(STATUS == Status.UPGRADING)
-                                isFinished(itemAutoResearch);
-                            if(STATUS == Status.FINISHED)
-                                finish(itemAutoResearch, queueList);
-                        }
-                    }catch (Exception e){
-                        AppLog.print(AutoResearchLeafTask.class.getName(),1,"When iterates queueList on" +
-                                " first step.");
+                if (!queueList.isEmpty()) {
+                    for (ItemAutoResearch itemAutoResearch : queueList) {
+                        selectTask(itemAutoResearch);
                     }
-                    if(itemAutoResearchToRemove != null){
+                    if (itemAutoResearchToRemove != null) {
                         queueList.remove(itemAutoResearchToRemove);
                         itemAutoResearchToRemove = null;
                     }
@@ -63,7 +44,37 @@ public class AutoResearchLeafTask extends LeafTask{
         }
     }
 
-    private void finish(ItemAutoResearch itemAutoResearch, ArrayList<ItemAutoResearch> queueList) {
+    private void selectTask(ItemAutoResearch itemAutoResearch) {
+        Status status = itemAutoResearch.getStatus();
+        switch (status){
+            case ADDED:
+            case DATA_DOWNLOADING:
+                dataDownloading(itemAutoResearch);
+                break;
+            case DATA_DOWNLOADED:
+                dataDownloaded(itemAutoResearch);
+                break;
+            case STARTING:
+                starting(itemAutoResearch);
+                break;
+            case UPGRADING:
+                upgrading(itemAutoResearch);
+                break;
+            case FINISHED:
+                finished(itemAutoResearch);
+                break;
+            case LABORATORY_BUILD:
+            case WAIT:
+            case NOT_ENOUGH_RESOURCES:
+            case NOT_ENOUGH_ENERGY:
+            case OFF:
+                wait(itemAutoResearch);
+                break;
+        }
+    }
+
+
+    private void finished(ItemAutoResearch itemAutoResearch) {
         Research research = itemAutoResearch.getResearch();
         research.setProductionTime(null);
         research.setRequiredResources(null);
@@ -72,23 +83,21 @@ public class AutoResearchLeafTask extends LeafTask{
         DataLoader.researches.setUpdateData(true);
 
         //Starting buliding next object on queue list.
-        ItemAutoResearch index1 = queueList.get(1);
-        index1.setStatus(Status.DATA_DOWNLOADING);
-        index1.setTimer(null);
+        DataLoader.listItemAutoResearch.startNextResearchOnQueue();
     }
 
-    private void isFinished(ItemAutoResearch itemAutoResearch) {
-        long timeToFinish = itemAutoResearch.timeToFinish();
+    private void upgrading(ItemAutoResearch itemAutoResearch) {
+        long timeToFinish = Timer.timeSeconds(itemAutoResearch.getEndTimeInSeconds(),System.currentTimeMillis()/1000);
         if(timeToFinish < 0){
             itemAutoResearch.setStatus(Status.FINISHED);
             itemAutoResearch.getResearch().setStatus(ogame.Status.DISABLED);
             long currentTime = System.currentTimeMillis();
-            itemAutoResearch.setStatusTime(currentTime);
-            itemAutoResearch.setFinishTime(currentTime);
+            itemAutoResearch.setStatusTimeInMilliseconds(currentTime);
+            itemAutoResearch.setFinishTimeInMilliseconds(currentTime);
         }
     }
 
-    private void upgrade(ItemAutoResearch itemAutoResearch) {
+    private void starting(ItemAutoResearch itemAutoResearch) {
         int indexOfList = DataLoader.listItemAutoResearch.getQueueList().indexOf(itemAutoResearch);
         //Is on first position on queueList
         if(indexOfList == 0){
@@ -100,14 +109,8 @@ public class AutoResearchLeafTask extends LeafTask{
             if(!clickPlanet(planet))
                 return;
             //Clicking on research tabs
-            do{
-                ogame.tabs.Research.click(OgameWeb.webDriver);
-                Waiter.sleep(200,300);
-                if(getAntiLooping().check()){
-                    getAntiLooping().reset();
-                    return;
-                }
-            }while(!ogame.tabs.Research.visible(OgameWeb.webDriver));
+            if(!clickResearch())
+                return;
             //Upgrade building
             do{
                 ogame.tabs.Research.upgrade(OgameWeb.webDriver,listIndex,type);
@@ -117,83 +120,83 @@ public class AutoResearchLeafTask extends LeafTask{
                     return;
                 }
             }while(ogame.tabs.Research.statusOfResearch(OgameWeb.webDriver,listIndex,type) != ogame.Status.ACTIVE);
-
+            long endTimeInSeconds = ogame.tabs.Research.endDateOfUpgradeResearch(OgameWeb.webDriver,itemAutoResearch.getResearch().getDataTechnology());
             research.setStatus(ogame.Status.ACTIVE);
+            itemAutoResearch.setEndTimeInSeconds(endTimeInSeconds);
             AppLog.print(AutoResearchLeafTask.class.getName(),2,"Start upgrade " + research.getName() +
                     " to level " + itemAutoResearch.getUpgradeLevel() + ".");
             itemAutoResearch.setStatus(Status.UPGRADING);
-            long currentTime = System.currentTimeMillis();
-            itemAutoResearch.setStatusTime(currentTime);
-            itemAutoResearch.updateFinishTime(currentTime);
-        }else{
-            if(DataLoader.listItemAutoResearch.isAnyResearchUprading()){
+            itemAutoResearch.setStatusTimeInMilliseconds();
+        }else
+            if(DataLoader.listItemAutoResearch.isAnyResearchUprading()) {
                 itemAutoResearch.setStatus(Status.WAIT);
-                long currentTime = System.currentTimeMillis();
-                itemAutoResearch.setStatusTime(currentTime);
+                itemAutoResearch.setStatusTimeInMilliseconds();
                 ItemAutoResearch itemAutoResearchUpgrading = DataLoader.listItemAutoResearch.getUpgradingResearch();
-                itemAutoResearch.setTimer(new Timer(currentTime, itemAutoResearchUpgrading.getFinishTime()));
+                itemAutoResearch.setEndTimeInSeconds(itemAutoResearchUpgrading.getEndTimeInSeconds());
             }
-        }
     }
 
     private void wait(ItemAutoResearch itemAutoResearch) {
-        if(itemAutoResearch.getTimer().isTimeLeft(System.currentTimeMillis())){
+        long timeToFinish = Timer.timeSeconds(itemAutoResearch.getEndTimeInSeconds(),System.currentTimeMillis()/1000);
+        if(timeToFinish < 0){
             itemAutoResearch.setStatus(Status.DATA_DOWNLOADING);
-            itemAutoResearch.setStatusTime(System.currentTimeMillis());
-            itemAutoResearch.setTimer(null);
+            itemAutoResearch.setStatusTimeInMilliseconds();
+            itemAutoResearch.setEndTimeInSeconds(0);
+            Overview.clickAlways(OgameWeb.webDriver);
         }
     }
 
 
 
-    private void checksData(ItemAutoResearch itemAutoResearch) {
-        Research research = itemAutoResearch.getResearch();
+    private void dataDownloaded(ItemAutoResearch itemAutoResearch) {
         Planet planet = itemAutoResearch.getPlanet();
-        long TIME_WAIT_WHEN_OFF_STATUS = 3600 * 1000L;
-        if(research.getStatus() == ogame.Status.OFF){
+        long SECONDS_WAIT_WHEN_OFF_STATUS = 3600;
+        if(itemAutoResearch.isResearchOgameStatusOff()){
             itemAutoResearch.setStatus(Status.OFF);
-            long currentTime = System.currentTimeMillis();
-            itemAutoResearch.setStatusTime(currentTime);
-            itemAutoResearch.setTimer(new Timer(currentTime,currentTime+ TIME_WAIT_WHEN_OFF_STATUS));
+            itemAutoResearch.setStatusTimeInMilliseconds();
+            itemAutoResearch.setEndTimeInSeconds(System.currentTimeMillis()/1000 + SECONDS_WAIT_WHEN_OFF_STATUS);
             return;
         }
-        if(research.getStatus() == ogame.Status.ON){
+        if(itemAutoResearch.isResearchOgameStatusOn()){
             if(DataLoader.listItemAutoResearch.getQueueList().indexOf(itemAutoResearch) == 0){
                 itemAutoResearch.setStatus(Status.STARTING);
-                itemAutoResearch.setStatusTime();
+                itemAutoResearch.setStatusTimeInMilliseconds();
             }
             else {
                 itemAutoResearch.setStatus(Status.WAIT);
-                long currentTime = System.currentTimeMillis();
-                itemAutoResearch.setStatusTime(currentTime);
-                long TIME_WAIT_WHEN_ON_STATUS = 60 * 1000L;
+                itemAutoResearch.setStatusTimeInMilliseconds();
+                long SECONDS_WAIT_WHEN_ON_STATUS = 60;
                 if(DataLoader.listItemAutoResearch.isAnyResearchUprading()) {
                     ItemAutoResearch itemAutoResearchUpgrading = DataLoader.listItemAutoResearch.getUpgradingResearch();
-                    itemAutoResearch.setTimer(new Timer(currentTime, itemAutoResearchUpgrading.getFinishTime()));
+                    itemAutoResearch.setEndTimeInSeconds(itemAutoResearchUpgrading.getEndTimeInSeconds());
                 }
                 else
-                    itemAutoResearch.setTimer(new Timer(currentTime,currentTime + TIME_WAIT_WHEN_ON_STATUS));
+                    itemAutoResearch.setEndTimeInSeconds(System.currentTimeMillis()/1000 + SECONDS_WAIT_WHEN_ON_STATUS);
             }
             return;
         }
-        if(research.getStatus() == ogame.Status.ACTIVE){
+        if(itemAutoResearch.isResearchOgameStatusActive()){
             if(DataLoader.listItemAutoResearch.isAnyResearchUprading()){
                 itemAutoResearch.setStatus(Status.WAIT);
-                long currentTime = System.currentTimeMillis();
-                itemAutoResearch.setStatusTime(currentTime);
+                itemAutoResearch.setStatusTimeInMilliseconds();
                 ItemAutoResearch itemAutoResearchUpgrading = DataLoader.listItemAutoResearch.getUpgradingResearch();
-                itemAutoResearch.setTimer(new Timer(currentTime, itemAutoResearchUpgrading.getFinishTime()));
+                itemAutoResearch.setEndTimeInSeconds(itemAutoResearchUpgrading.getEndTimeInSeconds());
                 return;
             }
         }
-        if(research.getStatus() == ogame.Status.DISABLED){
+        if(itemAutoResearch.isResearchOgameStatusDisabled()){
             if(DataLoader.listItemAutoResearch.isAnyResearchUprading()){
                 itemAutoResearch.setStatus(Status.WAIT);
-                long currentTime = System.currentTimeMillis();
-                itemAutoResearch.setStatusTime(currentTime);
+                itemAutoResearch.setStatusTimeInMilliseconds();
                 ItemAutoResearch itemAutoResearchUpgrading = DataLoader.listItemAutoResearch.getUpgradingResearch();
-                itemAutoResearch.setTimer(new Timer(currentTime, itemAutoResearchUpgrading.getFinishTime()));
+                itemAutoResearch.setEndTimeInSeconds(itemAutoResearchUpgrading.getEndTimeInSeconds());
                 return;
+            }
+            if(DataLoader.listItemAutoBuilder.isResearchLaboratorydUpradingOnPlanet(planet)){
+                ItemAutoBuilder researchUpgrading = DataLoader.listItemAutoBuilder.researchLaboratorydUpgradingOnPlanet(planet);
+                itemAutoResearch.setStatus(Status.LABORATORY_BUILD);
+                itemAutoResearch.setStatusTimeInMilliseconds();
+                itemAutoResearch.setEndTimeInSeconds(researchUpgrading.getEndTimeInSeconds());
             }
             RequiredResources requiredResources = itemAutoResearch.getResearch().getRequiredResources();
             ResourcesProduction resourcesProduction = itemAutoResearch.getPlanet().getResourcesProduction();
@@ -212,7 +215,6 @@ public class AutoResearchLeafTask extends LeafTask{
             long energyBalance = requiredResources.getEnergy() - energy;
 
             long timeToResourceProduction = 0;
-            long currentTime = System.currentTimeMillis();
             if(metalBalance > 0)
                 timeToResourceProduction = resourcesProduction.timeMilisecondsToMetalProduction(metalBalance);
             if(crystalBalance > 0){
@@ -227,18 +229,16 @@ public class AutoResearchLeafTask extends LeafTask{
             }
             if(energyBalance > 0){
                 itemAutoResearch.setStatus(Status.NOT_ENOUGH_ENERGY);
-                itemAutoResearch.setStatusTime(currentTime);
-                itemAutoResearch.setTimer(new Timer(currentTime,currentTime+ TIME_WAIT_WHEN_OFF_STATUS));
+                itemAutoResearch.setStatusTimeInMilliseconds();
+                itemAutoResearch.setEndTimeInSeconds(System.currentTimeMillis()/1000 + SECONDS_WAIT_WHEN_OFF_STATUS);
             }
-            itemAutoResearch.setTimer(new Timer(currentTime,currentTime+timeToResourceProduction));
+            itemAutoResearch.setEndTimeInSeconds(System.currentTimeMillis()/1000 + timeToResourceProduction/1000);
             itemAutoResearch.setStatus(Status.NOT_ENOUGH_RESOURCES);
-            itemAutoResearch.setStatusTime(currentTime);
+            itemAutoResearch.setStatusTimeInMilliseconds();
         }
     }
 
-    private void downloadData(ItemAutoResearch itemAutoResearch) {
-        itemAutoResearch.setStatus(Status.DATA_DOWNLOADING);
-        itemAutoResearch.setStatusTime(System.currentTimeMillis());
+    private void dataDownloading(ItemAutoResearch itemAutoResearch) {
         Research research = itemAutoResearch.getResearch();
         Type type = research.getDataTechnology().getType();
         Planet planet = itemAutoResearch.getPlanet();
@@ -247,20 +247,14 @@ public class AutoResearchLeafTask extends LeafTask{
         if(!clickPlanet(planet))
             return;
         //Clickinh on research tabs
-        do{
-            ogame.tabs.Research.click(OgameWeb.webDriver);
-            Waiter.sleep(200,300);
-            if(getAntiLooping().check()){
-                getAntiLooping().reset();
-                return;
-            }
-        }while(!ogame.tabs.Research.visible(OgameWeb.webDriver));
+        if(!clickResearch())
+            return;
         //Data was download on first time execute.
-        if(research.getProductionTime() != null && research.getRequiredResources() != null) {
+        if(itemAutoResearch.isDataDownloaded()) {
             ogame.Status status = ogame.tabs.Research.statusOfResearch(OgameWeb.webDriver,listIndex,type);
             research.setStatus(status);
             itemAutoResearch.setStatus(Status.DATA_DOWNLOADED);
-            itemAutoResearch.setStatusTime(System.currentTimeMillis());
+            itemAutoResearch.setStatusTimeInMilliseconds();
             return;
         }
         //Shows research details
@@ -275,18 +269,24 @@ public class AutoResearchLeafTask extends LeafTask{
         //Dowloads data
         ProductionTime productionTime = ogame.tabs.Research.productionTimeOfResearch(OgameWeb.webDriver);
         RequiredResources requiredResources = ogame.tabs.Research.getRequiredResources(OgameWeb.webDriver,listIndex,type);
-        int level = ogame.tabs.Research.levelOfResearch(OgameWeb.webDriver,listIndex,type);
+        int curentLevel = ogame.tabs.Research.levelOfResearch(OgameWeb.webDriver,listIndex,type);
         ogame.Status status = ogame.tabs.Research.statusOfResearch(OgameWeb.webDriver,listIndex,type);
+        if(itemAutoResearch.isResearchAchievedUpgradeLevel(curentLevel)){
+            itemAutoResearch.setStatus(Status.FINISHED);
+            itemAutoResearch.setStatusTimeInMilliseconds();
+            return;
+        }
         //Update research data
         research.setProductionTime(productionTime);
         research.setRequiredResources(requiredResources);
-        research.setLevel(level);
+        research.setLevel(curentLevel);
         research.setStatus(status);
 
-        AppLog.print(AutoBuilderLeafTask.class.getName(),2,"Downloads data of " + research.getName() + ". " +
-                "Upgrade level : " + (level + 1) + ", " + requiredResources + ".");
 
+        AppLog.print(AutoResearchLeafTask.class.getName(),2,"Downloads data of " + research.getName() + ". " +
+                "Current level : " + curentLevel + " ("+itemAutoResearch.getUpgradeLevel()+"^), Required resources: " + requiredResources +
+                ", Production time: " + productionTime + ".");
         itemAutoResearch.setStatus(Status.DATA_DOWNLOADED);
-        itemAutoResearch.setStatusTime(System.currentTimeMillis());
+        itemAutoResearch.setStatusTimeInMilliseconds(System.currentTimeMillis());
     }
 }

@@ -2,7 +2,6 @@ package app.controllers;
 
 import app.data.DataLoader;
 import app.data.autobuilder.ItemAutoBuilder;
-import app.leaftask.Status;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import ogame.utils.log.AppLog;
@@ -36,10 +35,11 @@ public class AutoBuilderLeafTaskItemController {
 
     private AutoBuilderLeafTaskController autoBuilderLeafTaskController;
     private ItemAutoBuilder itemAutoBuilder;
+    private boolean historyItem = false;
 
     @FXML
     void delete() {
-        if(itemAutoBuilder.getStatus() == Status.FINISHED){
+        if(historyItem){
             DataLoader.listItemAutoBuilder.getHistoryList().remove(itemAutoBuilder);
             autoBuilderLeafTaskController.updateHistoryList();
             AppLog.print(AutoResearchLeafTaskItemController.class.getName(),2,"Remove from built history: Upgrade "+ itemAutoBuilder.getBuilding().getName() + " to "
@@ -49,6 +49,8 @@ public class AutoBuilderLeafTaskItemController {
             autoBuilderLeafTaskController.updateQueueList();
             AppLog.print(AutoResearchLeafTaskItemController.class.getName(),2,"Remove from built queue: Upgrade "+ itemAutoBuilder.getBuilding().getName() + " to "
                     + itemAutoBuilder.getUpgradeLevel() +" level on " + itemAutoBuilder.getPlanet().getCoordinate().getText() + ".");
+            if(itemAutoBuilder.isFirstOnQueue())
+                DataLoader.listItemAutoBuilder.startNextBuildingOnPlanet(itemAutoBuilder.getPlanet());
         }
         DataLoader.listItemAutoBuilder.save();
     }
@@ -66,7 +68,7 @@ public class AutoBuilderLeafTaskItemController {
         labelBuilding.setText(itemAutoBuilder.getBuilding().getName());
         labelLevel.setText((itemAutoBuilder.getUpgradeLevel())+"");
         labelStartTime.setText(Calendar.getDateTime(itemAutoBuilder.getAddTimeToQueueInMilliseconds()));
-        labelFinishTime.setText(Timer.leftTimeSecond(itemAutoBuilder.getEndTimeInSeconds()));
+        labelFinishTime.setText(itemAutoBuilder.getEndTimeInSeconds() == 0 ? "--:--:--" : Timer.leftTimeSecond(itemAutoBuilder.getEndTimeInSeconds()));
         labelStatus.setText(itemAutoBuilder.getStatus()+"");
         labelStatusTime.setText(Calendar.getDateTime(itemAutoBuilder.getStatusTimeInMilliseconds()));
     }
@@ -84,11 +86,7 @@ public class AutoBuilderLeafTaskItemController {
     }
 
     public void update(){
-//        if(itemAutoBuilder.getTimer() != null)
-//            labelFinishTime.setText(itemAutoBuilder.getTimer().leftTime());
-//        else
-//            labelFinishTime.setText(Calendar.getDateTime(itemAutoBuilder.getFinishTimeInMilliseconds()));
-        labelFinishTime.setText(Timer.leftTimeSecond(itemAutoBuilder.getEndTimeInSeconds()));
+        labelFinishTime.setText(itemAutoBuilder.getEndTimeInSeconds() == 0 ? "--:--:--" : Timer.leftTimeSecond(itemAutoBuilder.getEndTimeInSeconds()));
         labelStatus.setText(itemAutoBuilder.getStatus()+"");
         labelStatusTime.setText(Calendar.getDateTime(itemAutoBuilder.getStatusTimeInMilliseconds()));
     }
@@ -101,5 +99,9 @@ public class AutoBuilderLeafTaskItemController {
 
     public void setItemAutoBuilder(ItemAutoBuilder itemAutoBuilder) {
         this.itemAutoBuilder = itemAutoBuilder;
+    }
+
+    public void setHistoryItem() {
+        this.historyItem = true;
     }
 }

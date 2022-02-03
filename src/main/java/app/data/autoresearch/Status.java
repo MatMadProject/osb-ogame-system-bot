@@ -1,5 +1,5 @@
 package app.data.autoresearch;
-
+@Deprecated
 public enum Status {
     ADDED,
     DATA_DOWNLOADING,

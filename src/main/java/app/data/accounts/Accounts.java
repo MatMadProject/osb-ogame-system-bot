@@ -121,67 +121,68 @@ public class Accounts
      * Creates folders for bots on the first time.
      */
     private static void createFolder() {
-        URLFactory urlFactory;
-        try {
-            urlFactory = new URLFactory(Configuration.runPath());
-            String path = urlFactory.disk() + StaticStrings.MAIN_FOLDER + File.separator + StaticStrings.ACCOUNT_FOLDER + File.separator +
-                    StaticStrings.PLAYER_FOLDER + File.separator;
-            // planety.
-            String pathName = path +
-                    StaticStrings.PLANETY_FOLDER;
-            File file = new File(pathName);
-            file.mkdirs();
-            // ekspedycje.
-            pathName = path +
-                    StaticStrings.EKSPEDYCJE_FOLDER;
-            file = new File(pathName);
-            file.mkdirs();
-            // ekspedycje statystyki
-            pathName = path +
-                    StaticStrings.EKSPEDYCJE_FOLDER + File.separator + StaticStrings.EKSPEDYCJE_STAT_FOLDER;
-            file = new File(pathName);
-            file.mkdirs();
-            // farming.
-            pathName = path +
-                    StaticStrings.FARMING_FOLDER;
-            file = new File(pathName);
-            file.mkdirs();
-            // log.
-            pathName = path +
-                    StaticStrings.LOG_FOLDER;
-            file = new File(pathName);
-            file.mkdirs();
-            // autobot.
-            pathName = path +
-                    StaticStrings.AUTOBOT_FOLDER;
-            file = new File(pathName);
-            file.mkdirs();
-            // autotransport.
-            pathName = path +
-                    StaticStrings.AUTOTRANSPORT_FOLDER;
-            file = new File(pathName);
-            file.mkdirs();
-            // fleetsave
-            pathName = path +
-                    StaticStrings.FLEETSAVE_FOLDER;
-            file = new File(pathName);
-            file.mkdirs();
-            // player data
-            pathName = path +
-                    StaticStrings.PLAYER_DATA_FOLDER;
-            file = new File(pathName);
-            file.mkdirs();
-            // badania
-            pathName = path +
-                    StaticStrings.BADANIA_FOLDER;
-            file = new File(pathName);
-            file.mkdirs();
-
-            AppLog.print(Accounts.class.getName(),0,"Success on create bot folders.");
-        }
-        catch (URISyntaxException e) {
-            e.printStackTrace();
-            AppLog.print(Accounts.class.getName(),1,"Fails on create bot folders.");
-        }
+        AppLog.print(Accounts.class.getName(),1,"Creating folders for new player is off.");
+//        URLFactory urlFactory;
+//        try {
+//            urlFactory = new URLFactory(Configuration.runPath());
+//            String path = urlFactory.disk() + StaticStrings.MAIN_FOLDER + File.separator + StaticStrings.ACCOUNT_FOLDER + File.separator +
+//                    StaticStrings.PLAYER_FOLDER + File.separator;
+//            // planety.
+//            String pathName = path +
+//                    StaticStrings.PLANETY_FOLDER;
+//            File file = new File(pathName);
+//            file.mkdirs();
+//            // ekspedycje.
+//            pathName = path +
+//                    StaticStrings.EKSPEDYCJE_FOLDER;
+//            file = new File(pathName);
+//            file.mkdirs();
+//            // ekspedycje statystyki
+//            pathName = path +
+//                    StaticStrings.EKSPEDYCJE_FOLDER + File.separator + StaticStrings.EKSPEDYCJE_STAT_FOLDER;
+//            file = new File(pathName);
+//            file.mkdirs();
+//            // farming.
+//            pathName = path +
+//                    StaticStrings.FARMING_FOLDER;
+//            file = new File(pathName);
+//            file.mkdirs();
+//            // log.
+//            pathName = path +
+//                    StaticStrings.LOG_FOLDER;
+//            file = new File(pathName);
+//            file.mkdirs();
+//            // autobot.
+//            pathName = path +
+//                    StaticStrings.AUTOBOT_FOLDER;
+//            file = new File(pathName);
+//            file.mkdirs();
+//            // autotransport.
+//            pathName = path +
+//                    StaticStrings.AUTOTRANSPORT_FOLDER;
+//            file = new File(pathName);
+//            file.mkdirs();
+//            // fleetsave
+//            pathName = path +
+//                    StaticStrings.FLEETSAVE_FOLDER;
+//            file = new File(pathName);
+//            file.mkdirs();
+//            // player data
+//            pathName = path +
+//                    StaticStrings.PLAYER_DATA_FOLDER;
+//            file = new File(pathName);
+//            file.mkdirs();
+//            // badania
+//            pathName = path +
+//                    StaticStrings.BADANIA_FOLDER;
+//            file = new File(pathName);
+//            file.mkdirs();
+//
+//            AppLog.print(Accounts.class.getName(),0,"Success on create bot folders.");
+//        }
+//        catch (URISyntaxException e) {
+//            e.printStackTrace();
+//            AppLog.print(Accounts.class.getName(),1,"Fails on create bot folders.");
+//        }
     }
 }

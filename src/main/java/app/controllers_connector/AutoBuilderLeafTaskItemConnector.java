@@ -14,7 +14,7 @@ public class AutoBuilderLeafTaskItemConnector implements LeafTaskConnector{
 
     private AutoBuilderLeafTaskItemController controller;
     private HBox content;
-    private ItemAutoBuilder itemAutoBuilder;
+    private final ItemAutoBuilder itemAutoBuilder;
 
     public AutoBuilderLeafTaskItemConnector(ItemAutoBuilder itemAutoBuilder, AutoBuilderLeafTaskController autoBuilderLeafTaskController){
         this.itemAutoBuilder = itemAutoBuilder;
@@ -43,8 +43,10 @@ public class AutoBuilderLeafTaskItemConnector implements LeafTaskConnector{
 
 
     public Node contentHistoryItem() {
-        if(controller != null)
+        if(controller != null){
             controller.createHistoryItem(itemAutoBuilder);
+            controller.setHistoryItem();
+        }
         return content;
     }
 

@@ -82,7 +82,7 @@ public class AutoResearchLeafTaskController {
             vBoxHistory.getChildren().clear();
             for(ItemAutoResearch itemAutoResearch : historyList){
                 AutoResearchLeafTaskItemConnector autoResearchLeafTaskItemConnector = new AutoResearchLeafTaskItemConnector(itemAutoResearch, this);
-                vBoxHistory.getChildren().add(autoResearchLeafTaskItemConnector.historyListItem());
+                vBoxHistory.getChildren().add(autoResearchLeafTaskItemConnector.contentHistoryItem());
             }
         }
     }

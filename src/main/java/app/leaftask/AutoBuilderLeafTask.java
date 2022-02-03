@@ -39,38 +39,6 @@ public class AutoBuilderLeafTask extends LeafTask{
                         selectTask(itemAutoBuilder);
                         DataLoader.listItemAutoBuilder.save();
                     }
-                    try{
-                        for(ItemAutoBuilder itemAutoBuilder : queueList){
-                            final Status status = itemAutoBuilder.getStatus();
-                            switch(status){
-                                case ADDED:
-                                case DATA_DOWNLOADING:
-                                    dataDownloading(itemAutoBuilder);
-                                    break;
-                                case DATA_DOWNLOADED:
-                                    dataDownloaded(itemAutoBuilder);
-                                    break;
-                                case STARTING:
-                                    starting(itemAutoBuilder);
-                                    break;
-                                case UPGRADING:
-                                    upgrading(itemAutoBuilder);
-                                    break;
-                                case FINISHED:
-                                    finished(itemAutoBuilder, DataLoader.listItemAutoBuilder.getQueueListFromPlanet(itemAutoBuilder.getPlanet()));
-                                    break;
-                                case WAIT:
-                                case NOT_ENOUGH_RESOURCES:
-                                case NOT_ENOUGH_ENERGY:
-                                case OFF:
-                                    wait(itemAutoBuilder);
-                                    break;
-                            }
-                        }
-                    }catch(Exception ex){
-                        AppLog.print(AutoBuilderLeafTask.class.getName(),1,"When iterates queueList on" +
-                                " first step.");
-                    }
                     if(itemAutoBuilderToRemove != null){
                         queueList.remove(itemAutoBuilderToRemove);
                         itemAutoBuilderToRemove = null;
@@ -99,7 +67,8 @@ public class AutoBuilderLeafTask extends LeafTask{
                 upgrading(itemAutoBuilder);
                 break;
             case FINISHED:
-                finished(itemAutoBuilder, DataLoader.listItemAutoBuilder.getQueueListFromPlanet(itemAutoBuilder.getPlanet()));
+                finished(itemAutoBuilder);
+                break;
             case SHIP_BUILD:
             case DEFENCE_BUILD:
             case RESEARCH_UPGRADE:
@@ -112,7 +81,7 @@ public class AutoBuilderLeafTask extends LeafTask{
         }
     }
 
-    private void finished(ItemAutoBuilder itemAutoBuilder, ArrayList<ItemAutoBuilder> queueList) {
+    private void finished(ItemAutoBuilder itemAutoBuilder) {
         Building building = itemAutoBuilder.getBuilding();
         Planet planet = itemAutoBuilder.getPlanet();
         building.setProductionTime(null);
@@ -127,15 +96,13 @@ public class AutoBuilderLeafTask extends LeafTask{
             planet.setUpdateTechnologyBuilding(true);
         planet.setUpdatePlanetInformation(true);
         //Starting buliding next object on queue list.
-        ItemAutoBuilder index1 = queueList.get(1);
-        index1.setStatus(Status.DATA_DOWNLOADING);
-        index1.setFinishTimeInMilliseconds(0);
+        DataLoader.listItemAutoBuilder.startNextBuildingOnPlanet(planet);
         if(itemAutoBuilder.isNaniteFactory() || itemAutoBuilder.isRoboticsFactory())
-            DataLoader.listItemAutoBuilder.setStatusOnAllItems(planet,Status.DATA_DOWNLOADING);
+            DataLoader.listItemAutoBuilder.setStatusOnAllItemsWithoutFirst(planet,Status.DATA_DOWNLOADING);
     }
 
     private void upgrading(ItemAutoBuilder itemAutoBuilder) {
-        long timeToFinish = Timer.timeSeconds(System.currentTimeMillis()/1000,itemAutoBuilder.getEndTimeInSeconds());
+        long timeToFinish = Timer.timeSeconds(itemAutoBuilder.getEndTimeInSeconds(),System.currentTimeMillis()/1000);
         if(timeToFinish < 0){
             itemAutoBuilder.setStatus(Status.FINISHED);
             itemAutoBuilder.getBuilding().setStatus(ogame.Status.DISABLED);
@@ -204,7 +171,7 @@ public class AutoBuilderLeafTask extends LeafTask{
     }
 
     private void wait(ItemAutoBuilder itemAutoBuilder) {
-        long timeToFinish = Timer.timeSeconds(System.currentTimeMillis()/1000,itemAutoBuilder.getEndTimeInSeconds());
+        long timeToFinish = Timer.timeSeconds(itemAutoBuilder.getEndTimeInSeconds(),System.currentTimeMillis()/1000);
         if(timeToFinish < 0){
             itemAutoBuilder.setStatus(Status.DATA_DOWNLOADING);
             itemAutoBuilder.setStatusTimeInMilliseconds();
@@ -229,7 +196,6 @@ public class AutoBuilderLeafTask extends LeafTask{
             if(itemAutoBuilder.isFirstOnQueue(planetQueue)){
                 itemAutoBuilder.setStatus(Status.STARTING);
                 itemAutoBuilder.setStatusTimeInMilliseconds();
-
             }else{
                 itemAutoBuilder.setStatus(Status.WAIT);
                 itemAutoBuilder.setStatusTimeInMilliseconds();
@@ -238,11 +204,9 @@ public class AutoBuilderLeafTask extends LeafTask{
                     itemAutoBuilder.setEndTimeInSeconds(itemAutoBuilderUpgrading.getEndTimeInSeconds());
                 }else
                     itemAutoBuilder.setEndTimeInSeconds(System.currentTimeMillis()/1000 + SECONDS_WAIT_WHEN_ON_STATUS);
-
                 ItemAutoBuilder first = planetQueue.get(0);
-                if(first.getStatus() == Status.NOT_ENOUGH_RESOURCES)
+                if(first.hasWaitingStatus())
                     itemAutoBuilder.setEndTimeInSeconds(first.getEndTimeInSeconds());
-
             }
             return;
         }
@@ -268,16 +232,20 @@ public class AutoBuilderLeafTask extends LeafTask{
             if(itemAutoBuilder.isShipyard() || itemAutoBuilder.isNaniteFactory()){
                 if(DataLoader.listShipItem.isShipBuildingOnPlanet(planet)){
                     ShipItem shipItem = DataLoader.listShipItem.getShipBuildingOnPlanet(planet);
-                    DefenceItem defenceItem = DataLoader.listDefenceItem.getDefenceBuildingOnPlanet(planet);
                     if(shipItem != null){
                         itemAutoBuilder.setStatus(Status.SHIP_BUILD);
                         itemAutoBuilder.setStatusTimeInMilliseconds();
                         itemAutoBuilder.setEndTimeInSeconds(shipItem.getEndTimeInSeconds());
+                        return;
                     }
+                }
+                if(DataLoader.listDefenceItem.isDefenceBuildingOnPlanet(planet)){
+                    DefenceItem defenceItem = DataLoader.listDefenceItem.getDefenceBuildingOnPlanet(planet);
                     if(defenceItem != null){
                         itemAutoBuilder.setStatus(Status.DEFENCE_BUILD);
                         itemAutoBuilder.setStatusTimeInMilliseconds();
                         itemAutoBuilder.setEndTimeInSeconds(defenceItem.getEndTimeInSeconds());
+                        return;
                     }
                 }
             }

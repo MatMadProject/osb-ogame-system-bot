@@ -3,8 +3,6 @@ package app.data.autoresearch;
 import app.data.LSD;
 import app.data.MatMadFile;
 import app.data.StaticStrings;
-import app.data.autobuilder.ItemAutoBuilder;
-import app.data.planets.Planets;
 import ogame.Status;
 import ogame.researches.Research;
 import ogame.utils.log.AppLog;
@@ -142,16 +140,19 @@ public class ListItemAutoResearch implements Serializable, LSD {
         return level;
     }
     public boolean isAnyResearchUprading(){
-        for(ItemAutoResearch itemAutoResearch : queueList)
-            if(itemAutoResearch.getResearch().getStatus() == ogame.Status.ACTIVE)
-                return true;
-        return false;
+        ItemAutoResearch itemAutoResearch = getUpgradingResearch();
+        return itemAutoResearch != null;
     }
     public ItemAutoResearch getUpgradingResearch(){
-        for(ItemAutoResearch itemAutoResearch : queueList)
-            if(itemAutoResearch.getResearch().getStatus() == Status.ACTIVE)
-                return itemAutoResearch;
-
-        return null;
+        return queueList.stream()
+                .filter(item -> item.getResearch().getStatus() == Status.ACTIVE)
+                .findFirst()
+                .orElse(null);
+    }
+    public void startNextResearchOnQueue(){
+        if(queueList.size() > 1){
+            queueList.get(1).setStatus(app.leaftask.Status.DATA_DOWNLOADING);
+            queueList.get(1).setEndTimeInSeconds(0);
+        }
     }
 }

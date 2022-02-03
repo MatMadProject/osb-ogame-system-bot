@@ -40,10 +40,11 @@ public class AutoResearchLeafTaskItemConnector implements LeafTaskConnector{
         return content;
     }
 
-    public Node historyListItem() {
-        if(controller != null)
+    public Node contentHistoryItem() {
+        if(controller != null){
             controller.createHistoryItem(itemAutoResearch);
-
+            controller.setHistoryItem();
+        }
         return content;
     }
 

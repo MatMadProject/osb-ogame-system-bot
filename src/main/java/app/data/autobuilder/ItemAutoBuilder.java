@@ -1,5 +1,6 @@
 package app.data.autobuilder;
 
+import app.data.DataLoader;
 import app.leaftask.Status;
 import ogame.DataTechnology;
 import ogame.Type;
@@ -130,7 +131,7 @@ public class ItemAutoBuilder implements Serializable {
         return building.getStatus() == ogame.Status.OFF;
     }
     public boolean isBuildingOgameStatusOn(){
-        return building.getStatus() == ogame.Status.OFF;
+        return building.getStatus() == ogame.Status.ON;
     }
     public boolean isBuildingOgameStatusActive(){
         return building.getStatus() == ogame.Status.ACTIVE;
@@ -143,6 +144,14 @@ public class ItemAutoBuilder implements Serializable {
     }
     public boolean isFirstOnQueue(ArrayList<ItemAutoBuilder> planetQueue){
         return  planetQueue.indexOf(this) == 0;
+    }
+    public boolean isFirstOnQueue(){
+        ArrayList<ItemAutoBuilder> planetQueue = DataLoader.listItemAutoBuilder.getQueueListFromPlanet(planet);
+        return  planetQueue.indexOf(this) == 0;
+    }
+    public boolean hasWaitingStatus(){
+        return status == Status.NOT_ENOUGH_RESOURCES || status == Status.RESEARCH_UPGRADE ||
+                status == Status.SHIP_BUILD || status == Status.DEFENCE_BUILD;
     }
 
     @Override
