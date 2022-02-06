@@ -3,6 +3,7 @@ package app.data.shipyard;
 import app.data.LSD;
 import app.data.MatMadFile;
 import app.data.StaticStrings;
+import app.leaftask.Status;
 import ogame.planets.Planet;
 import ogame.utils.log.AppLog;
 
@@ -134,11 +135,13 @@ public class ListDefenceItem implements Serializable, LSD {
 
     public DefenceItem getDefenceBuildingOnPlanet(Planet planet){
         ArrayList<DefenceItem> planetQueue = getPlanetQueue(planet);
-        for(DefenceItem defenceItem : planetQueue)
-            if(defenceItem.getStatus() == Status.BUILDING)
-                return defenceItem;
-
-        return null;
+        return planetQueue.stream()
+                .filter(item -> item.getStatus() == Status.BUILDING)
+                .findFirst()
+                .orElse(null);
+//        for(DefenceItem defenceItem : planetQueue)
+//            if(defenceItem.getStatus() == Status.BUILDING)
+//                return defenceItem;
     }
     public DefenceItem getDefenceStartingOnPlanet(Planet planet){
         ArrayList<DefenceItem> planetQueue = getPlanetQueue(planet);

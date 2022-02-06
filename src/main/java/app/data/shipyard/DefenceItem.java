@@ -15,7 +15,6 @@ public class DefenceItem extends ShipyardItem implements Serializable {
         super(planet,value,timePeriod);
 
         this.defence = defence;
-        setStatus(Status.ADDED);
         setId(DataLoader.listDefenceItem.getId()+"");
     }
 
@@ -30,10 +29,10 @@ public class DefenceItem extends ShipyardItem implements Serializable {
 
 
     public DefenceItem copy(){
-        DefenceItem defenceItem = new DefenceItem(getPlanet(),defence,getValue(),getTimePeriod());
+        DefenceItem defenceItem = new DefenceItem(getPlanet(),defence,getValue(), getTimePeriodInSeconds());
         defenceItem.setId(getId());
         defenceItem.setStatus(getStatus());
-        defenceItem.setStatusTime(getStatusTime());
+        defenceItem.setStatusTimeInMilliseconds(getStatusTimeInMilliseconds());
         return defenceItem;
     }
 

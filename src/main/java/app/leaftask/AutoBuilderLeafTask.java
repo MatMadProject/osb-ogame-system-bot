@@ -82,23 +82,25 @@ public class AutoBuilderLeafTask extends LeafTask{
     }
 
     private void finished(ItemAutoBuilder itemAutoBuilder) {
-        Building building = itemAutoBuilder.getBuilding();
-        Planet planet = itemAutoBuilder.getPlanet();
-        building.setProductionTime(null);
-        building.setRequiredResources(null);
-        itemAutoBuilderToRemove = itemAutoBuilder;
-        DataLoader.listItemAutoBuilder.getHistoryList().add(itemAutoBuilder);
-        DataLoader.planets.setUpdateData(true);
-        if(itemAutoBuilder.isProductionBuilding()){
-            planet.setUpdateResourceBuilding(true);
-            planet.setUpdateResourcesProduction(true);
-        }else
-            planet.setUpdateTechnologyBuilding(true);
-        planet.setUpdatePlanetInformation(true);
-        //Starting buliding next object on queue list.
-        DataLoader.listItemAutoBuilder.startNextBuildingOnPlanet(planet);
-        if(itemAutoBuilder.isNaniteFactory() || itemAutoBuilder.isRoboticsFactory())
-            DataLoader.listItemAutoBuilder.setStatusOnAllItemsWithoutFirst(planet,Status.DATA_DOWNLOADING);
+        if(itemAutoBuilderToRemove == null){
+            Building building = itemAutoBuilder.getBuilding();
+            Planet planet = itemAutoBuilder.getPlanet();
+            building.setProductionTime(null);
+            building.setRequiredResources(null);
+            itemAutoBuilderToRemove = itemAutoBuilder;
+            DataLoader.listItemAutoBuilder.getHistoryList().add(itemAutoBuilder);
+            DataLoader.planets.setUpdateData(true);
+            if(itemAutoBuilder.isProductionBuilding()){
+                planet.setUpdateResourceBuilding(true);
+                planet.setUpdateResourcesProduction(true);
+            }else
+                planet.setUpdateTechnologyBuilding(true);
+            planet.setUpdatePlanetInformation(true);
+            //Starting buliding next object on queue list.
+            DataLoader.listItemAutoBuilder.startNextBuildingOnPlanet(planet);
+            if(itemAutoBuilder.isNaniteFactory() || itemAutoBuilder.isRoboticsFactory())
+                DataLoader.listItemAutoBuilder.setStatusOnAllItemsWithoutFirst(planet,Status.DATA_DOWNLOADING);
+        }
     }
 
     private void upgrading(ItemAutoBuilder itemAutoBuilder) {
@@ -297,8 +299,9 @@ public class AutoBuilderLeafTask extends LeafTask{
                 itemAutoBuilder.setEndTimeInSeconds(planetQueue.get(0).getEndTimeInSeconds());
                 itemAutoBuilder.setStatus(Status.WAIT);
                 itemAutoBuilder.setStatusTimeInMilliseconds();
+                return;
             }
-            itemAutoBuilder.setEndTimeInSeconds(currentTime + timeToProductionResources/1000);
+            itemAutoBuilder.setEndTimeInSeconds(currentTime/1000 + timeToProductionResources/1000);
             itemAutoBuilder.setStatus(Status.NOT_ENOUGH_RESOURCES);
             itemAutoBuilder.setStatusTimeInMilliseconds(currentTime);
         }

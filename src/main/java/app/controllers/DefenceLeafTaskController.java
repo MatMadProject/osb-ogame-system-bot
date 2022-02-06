@@ -122,6 +122,7 @@ public class DefenceLeafTaskController {
             vBoxHistory.getChildren().clear();
             for(DefenceItem defenceItem : historyList){
                 DefenceLeafTaskItemConnector connector = new DefenceLeafTaskItemConnector(defenceItem,this);
+                connector.getController().setHistoryItem();
                 vBoxHistory.getChildren().add(connector.content());
             }
         }

@@ -1,5 +1,6 @@
 package app.data.shipyard;
 
+import app.leaftask.Status;
 import ogame.planets.Planet;
 import ogame.utils.watch.Timer;
 
@@ -11,9 +12,9 @@ public class ShipyardItem implements Serializable {
     private final Planet planet;
     private int value;
     private String id;
-    private Status status;
-    private long statusTime;
-    private long timePeriod;
+    private app.leaftask.Status status;
+    private long statusTimeInMilliseconds;
+    private long timePeriodInSeconds;
     private long endTimeInSeconds;
     private boolean singleExecute;
     private Timer timer;
@@ -21,7 +22,7 @@ public class ShipyardItem implements Serializable {
     public ShipyardItem(Planet planet, int value, long timePeriod) {
         this.planet = planet;
         this.value = value;
-        this.timePeriod = timePeriod;
+        this.timePeriodInSeconds = timePeriod;
         status = Status.ADDED;
     }
 
@@ -53,20 +54,23 @@ public class ShipyardItem implements Serializable {
         this.status = status;
     }
 
-    public long getStatusTime() {
-        return statusTime;
+    public long getStatusTimeInMilliseconds() {
+        return statusTimeInMilliseconds;
     }
 
-    public void setStatusTime(long statusTime) {
-        this.statusTime = statusTime;
+    public void setStatusTimeInMilliseconds(long statusTimeInMilliseconds) {
+        this.statusTimeInMilliseconds = statusTimeInMilliseconds;
+    }
+    public void setStatusTimeInMilliseconds() {
+        this.statusTimeInMilliseconds = System.currentTimeMillis();
     }
 
-    public long getTimePeriod() {
-        return timePeriod;
+    public long getTimePeriodInSeconds() {
+        return timePeriodInSeconds;
     }
 
-    public void setTimePeriod(long timePeriod) {
-        this.timePeriod = timePeriod;
+    public void setTimePeriodInSeconds(long timePeriodInSeconds) {
+        this.timePeriodInSeconds = timePeriodInSeconds;
     }
 
     public boolean isSingleExecute() {
@@ -113,8 +117,8 @@ public class ShipyardItem implements Serializable {
                 ", value=" + value +
                 ", id='" + id + '\'' +
                 ", status=" + status +
-                ", statusTime=" + statusTime +
-                ", timePeriod=" + timePeriod +
+                ", statusTime=" + statusTimeInMilliseconds +
+                ", timePeriod=" + timePeriodInSeconds +
                 ", singleExecute=" + singleExecute +
                 ", timer=" + timer +
                 '}';

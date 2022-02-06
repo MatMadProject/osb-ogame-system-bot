@@ -1,5 +1,6 @@
 package app.data.shipyard;
 
+@Deprecated
 public enum Status {
     ADDED,
     DATA_DOWNLOADING,

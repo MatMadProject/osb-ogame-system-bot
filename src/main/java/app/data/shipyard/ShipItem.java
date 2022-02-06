@@ -14,7 +14,6 @@ public class ShipItem extends ShipyardItem implements Serializable {
     public ShipItem(Planet planet, Ship ship, int value, long timePeriod) {
         super(planet, value, timePeriod);
         this.ship = ship;
-        setStatus(Status.ADDED);
         setId(DataLoader.listShipItem.getId()+"");
     }
 
@@ -27,11 +26,27 @@ public class ShipItem extends ShipyardItem implements Serializable {
     }
 
     public ShipItem copy(){
-        ShipItem shipItem = new ShipItem(getPlanet(),ship,getValue(),getTimePeriod());
+        ShipItem shipItem = new ShipItem(getPlanet(),ship,getValue(), getTimePeriodInSeconds());
         shipItem.setId(getId());
         shipItem.setStatus(getStatus());
-        shipItem.setStatusTime(getStatusTime());
+        shipItem.setStatusTimeInMilliseconds(getStatusTimeInMilliseconds());
         return shipItem;
+    }
+
+    public boolean isShipOgameStatusOff(){
+        return ship.getStatus() == ogame.Status.OFF;
+    }
+    public boolean isShipOgameStatusOn(){
+        return ship.getStatus() == ogame.Status.ON;
+    }
+    public boolean isShipOgameStatusActive(){
+        return ship.getStatus() == ogame.Status.ACTIVE;
+    }
+    public boolean isShipOgameStatusUndefined(){
+        return ship.getStatus() == ogame.Status.UNDEFINED;
+    }
+    public boolean isShipOgameStatusDisabled(){
+        return ship.getStatus() == ogame.Status.DISABLED;
     }
 
     @Override

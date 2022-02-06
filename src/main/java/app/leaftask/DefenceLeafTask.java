@@ -3,7 +3,6 @@ package app.leaftask;
 import app.data.DataLoader;
 import app.data.shipyard.DefenceItem;
 import app.data.shipyard.ShipItem;
-import app.data.shipyard.Status;
 import ogame.DataTechnology;
 import ogame.OgameWeb;
 import ogame.ResourcesBar;
@@ -11,6 +10,7 @@ import ogame.planets.Planet;
 import ogame.planets.ResourcesProduction;
 import ogame.tabs.Defence;
 import ogame.utils.Waiter;
+import ogame.utils.log.AppLog;
 import ogame.utils.watch.Timer;
 import ogame.watch.ProductionTime;
 
@@ -73,19 +73,20 @@ public class DefenceLeafTask extends LeafTask{
     }
 
     private void finished(DefenceItem defenceItem) {
-        DataLoader.listDefenceItem.addToHistory(defenceItem.copy());
-        if(defenceItem.isSingleExecute())
-            defenceItemToRemove = defenceItem;
-        else{
-            defenceItem.setStatus(Status.NEXT);
-            long currentTimeMilliseconds = System.currentTimeMillis();
-            defenceItem.setStatusTime(currentTimeMilliseconds);
-            defenceItem.setTimer(new Timer(0,currentTimeMilliseconds/1000 + defenceItem.getTimePeriod()));
+        if(defenceItemToRemove == null){
+            DataLoader.listDefenceItem.addToHistory(defenceItem.copy());
+            if(defenceItem.isSingleExecute())
+                defenceItemToRemove = defenceItem;
+            else{
+                defenceItem.setStatus(Status.NEXT);
+                defenceItem.setStatusTimeInMilliseconds();
+                defenceItem.setEndTimeInSeconds(System.currentTimeMillis()/1000 + defenceItem.getTimePeriodInSeconds());
+            }
         }
     }
 
     private void wait(DefenceItem defenceItem) {
-        long timeToFinish = Timer.timeSeconds(defenceItem.getTimer().getFinishDate(),System.currentTimeMillis()/1000);
+        long timeToFinish = Timer.timeSeconds(defenceItem.getEndTimeInSeconds(),System.currentTimeMillis()/1000);
         if(timeToFinish < 0){
             if(defenceItem.getStatus() == Status.BUILDING)
                 defenceItem.setStatus(Status.FINISHED);
@@ -94,7 +95,7 @@ public class DefenceLeafTask extends LeafTask{
             else
                 defenceItem.setStatus(Status.DATA_DOWNLOADING);
 
-            defenceItem.setStatusTime(System.currentTimeMillis());
+            defenceItem.setStatusTimeInMilliseconds();
         }
     }
 
@@ -109,11 +110,11 @@ public class DefenceLeafTask extends LeafTask{
         if(status == ogame.Status.ACTIVE){
             long endDateOfUpgrade = Defence.endDateOfUpgrade(OgameWeb.webDriver,dataTechnology);
             defenceItem.setStatus(Status.BUILDING);
-            defenceItem.setStatusTime(System.currentTimeMillis());
+            defenceItem.setStatusTimeInMilliseconds(System.currentTimeMillis());
             defenceItem.setTimer(new Timer(0,endDateOfUpgrade));
         }else{
             defenceItem.setStatus(Status.DATA_DOWNLOADING);
-            defenceItem.setStatusTime(System.currentTimeMillis());
+            defenceItem.setStatusTimeInMilliseconds(System.currentTimeMillis());
         }
     }
 
@@ -127,11 +128,18 @@ public class DefenceLeafTask extends LeafTask{
             return;
         if(!clickOnDefenceItem(dataTechnology))
             return;
-        Defence.inputDefenceAmount(OgameWeb.webDriver, defenceItem.getValue());
-        Waiter.sleep(200,200);
-        Defence.clickBuiltDefence(OgameWeb.webDriver);
-        defenceItem.setStatus(Status.CHECK);
-        defenceItem.setStatusTime(System.currentTimeMillis());
+        do{
+            Defence.inputDefenceAmount(OgameWeb.webDriver, defenceItem.getValue());
+            Waiter.sleep(200,200);
+            Defence.clickBuiltDefence(OgameWeb.webDriver);
+            Waiter.sleep(400,400);
+        }while (Defence.statusOfDefence(OgameWeb.webDriver, dataTechnology) != ogame.Status.ACTIVE);
+        long endInSeconds = Defence.endDateOfUpgrade(OgameWeb.webDriver, dataTechnology);
+        AppLog.print(DefenceLeafTask.class.getName(),2,"Start building " + defenceItem.getValue() + " " +
+                defenceItem.getDefence().getName() + " on "+ defenceItem.getPlanet().getCoordinate().getText() +".");
+        defenceItem.setEndTimeInSeconds(endInSeconds);
+        defenceItem.setStatus(Status.BUILDING);
+        defenceItem.setStatusTimeInMilliseconds();
     }
 
     private void dataDownloaded(DefenceItem defenceItem) {
@@ -140,55 +148,52 @@ public class DefenceLeafTask extends LeafTask{
         Planet planet = defenceItem.getPlanet();
         if(defence.getStatus() == ogame.Status.OFF){
             defenceItem.setStatus(Status.OFF);
-            long currentTimeMillis = System.currentTimeMillis();
-            defenceItem.setStatusTime(currentTimeMillis);
-            defenceItem.setTimer(new Timer(0,currentTimeMillis/1000 + defenceItem.getTimePeriod()));
+            defenceItem.setStatusTimeInMilliseconds();
+            defenceItem.setEndTimeInSeconds(System.currentTimeMillis()/1000 + defenceItem.getTimePeriodInSeconds());
             return;
         }
         if(DataLoader.listDefenceItem.isDefenceBuildingOnPlanet(planet)){
             DefenceItem firstOnQueue = DataLoader.listDefenceItem.getDefenceBuildingOnPlanet(planet);
-            long currentTimeMillis = System.currentTimeMillis();
-            long WAIT_SECONDS_FOR_CHANGE_STATUS = 10L;
+            final long WAIT_SECONDS_FOR_CHANGE_STATUS = 10L;
             if(firstOnQueue == null) {
-                defenceItem.setTimer(new Timer(0,currentTimeMillis/1000 + WAIT_SECONDS_FOR_CHANGE_STATUS));
+                defenceItem.setEndTimeInSeconds(System.currentTimeMillis()/1000 + WAIT_SECONDS_FOR_CHANGE_STATUS);
                 defenceItem.setStatus(Status.WAIT_FOR_STATUS);
             }
             else{
-                defenceItem.setTimer(new Timer(0,firstOnQueue.getTimer().getFinishDate()));
+                defenceItem.setEndTimeInSeconds(firstOnQueue.getEndTimeInSeconds());
                 defenceItem.setStatus(Status.WAIT);
             }
 
-            defenceItem.setStatusTime(System.currentTimeMillis());
+            defenceItem.setStatusTimeInMilliseconds();
             return;
         }
         if(DataLoader.listShipItem.isShipBuildingOnPlanet(planet)){
             ShipItem firstOnQueue = DataLoader.listShipItem.getShipBuildingOnPlanet(planet);
-            long currentTimeMillis = System.currentTimeMillis();
-            long WAIT_SECONDS_FOR_CHANGE_STATUS = 10L;
+            final long WAIT_SECONDS_FOR_CHANGE_STATUS = 10L;
             if(firstOnQueue == null) {
-                defenceItem.setTimer(new Timer(0,currentTimeMillis/1000 + WAIT_SECONDS_FOR_CHANGE_STATUS));
+                defenceItem.setEndTimeInSeconds(System.currentTimeMillis()/1000 + WAIT_SECONDS_FOR_CHANGE_STATUS);
                 defenceItem.setStatus(Status.WAIT_FOR_STATUS);
             }
             else{
-                defenceItem.setTimer(new Timer(0,firstOnQueue.getTimer().getFinishDate()));
+                defenceItem.setEndTimeInSeconds(firstOnQueue.getEndTimeInSeconds());
                 defenceItem.setStatus(Status.WAIT);
             }
 
-            defenceItem.setStatusTime(System.currentTimeMillis());
+            defenceItem.setStatusTimeInMilliseconds();
             return;
         }
         if(defence.getStatus() == ogame.Status.DISABLED){
             if(DataLoader.listItemAutoBuilder.isNaniteFactoryUpradingOnPlanet(planet)){
                 long naniteFactoryFinishTimeSeconds = DataLoader.listItemAutoBuilder.naniteFactoryUpgradingOnPlanet(planet).getEndTimeInSeconds();
-                defenceItem.setTimer(new Timer(0,naniteFactoryFinishTimeSeconds));
+                defenceItem.setEndTimeInSeconds(naniteFactoryFinishTimeSeconds);
             } else if(DataLoader.listItemAutoBuilder.isShipyardUpradingOnPlanet(planet)){
                 long shipyardFinishTimeSeconds = DataLoader.listItemAutoBuilder.shipyardUpgradingOnPlanet(planet).getEndTimeInSeconds();
-                defenceItem.setTimer(new Timer(0,shipyardFinishTimeSeconds));
+                defenceItem.setEndTimeInSeconds(shipyardFinishTimeSeconds);
             }else
-                defenceItem.setTimer(new Timer(0,System.currentTimeMillis()/1000 + defenceItem.getTimePeriod()));
+                defenceItem.setEndTimeInSeconds(System.currentTimeMillis()/1000 + defenceItem.getTimePeriodInSeconds());
 
             defenceItem.setStatus(Status.WAIT);
-            defenceItem.setStatusTime(System.currentTimeMillis());
+            defenceItem.setStatusTimeInMilliseconds();
             return;
         }
 
@@ -204,35 +209,34 @@ public class DefenceLeafTask extends LeafTask{
         long crystalBalance = requiredCrystal - crystal;
         long deuteriumBalance = requiredDeuterium - deuterium;
 
-        long timeToProductionResources = 0;
+        long millisecondsToProductionResources = 0;
 
         if(requiredMetal > metal){
             long tmp = resourcesProduction.timeMilisecondsToMetalProduction(metalBalance);
-            if(tmp > timeToProductionResources)
-                timeToProductionResources = tmp;
+            if(tmp > millisecondsToProductionResources)
+                millisecondsToProductionResources = tmp;
         }
         if(requiredCrystal > crystal){
             long tmp = resourcesProduction.timeMilisecondsToCrystalProduction(crystalBalance);
-            if(tmp > timeToProductionResources)
-                timeToProductionResources = tmp;
+            if(tmp > millisecondsToProductionResources)
+                millisecondsToProductionResources = tmp;
         }
         if(requiredDeuterium > deuterium){
             long tmp = resourcesProduction.timeMilisecondsToDeuteriumProduction(deuteriumBalance);
-            if(tmp > timeToProductionResources)
-                timeToProductionResources = tmp;
+            if(tmp > millisecondsToProductionResources)
+                millisecondsToProductionResources = tmp;
         }
 
-        if(timeToProductionResources > 0){
+        if(millisecondsToProductionResources > 0){
             defenceItem.setStatus(Status.NOT_ENOUGH_RESOURCES);
-            long currentTimeMillis = System.currentTimeMillis();
-            defenceItem.setStatusTime(currentTimeMillis);
-            defenceItem.setTimer(new Timer(0,currentTimeMillis/1000 + timeToProductionResources/1000));
+            defenceItem.setStatusTimeInMilliseconds();
+            defenceItem.setEndTimeInSeconds(System.currentTimeMillis()/1000 + millisecondsToProductionResources/1000);
             return;
         }
 
         defenceItem.setStatus(Status.STARTING);
-        defenceItem.setStatusTime(System.currentTimeMillis());
-        defenceItem.setTimer(null);
+        defenceItem.setStatusTimeInMilliseconds();
+        defenceItem.setEndTimeInSeconds(0);
     }
 
     private void dataDownloading(DefenceItem defenceItem) {
@@ -253,11 +257,11 @@ public class DefenceLeafTask extends LeafTask{
         defence.setProductionTime(productionTime);
 
         defenceItem.setStatus(Status.DATA_DOWNLOADED);
-        defenceItem.setStatusTime(System.currentTimeMillis());
+        defenceItem.setStatusTimeInMilliseconds(System.currentTimeMillis());
     }
 
     private void added(DefenceItem defenceItem) {
         defenceItem.setStatus(Status.DATA_DOWNLOADING);
-        defenceItem.setStatusTime(System.currentTimeMillis());
+        defenceItem.setStatusTimeInMilliseconds(System.currentTimeMillis());
     }
 }

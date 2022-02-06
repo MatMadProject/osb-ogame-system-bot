@@ -2,10 +2,10 @@ package app.controllers;
 
 import app.data.DataLoader;
 import app.data.shipyard.DefenceItem;
-import app.data.shipyard.Status;
 import javafx.scene.control.Label;
 import ogame.utils.log.AppLog;
 import ogame.utils.watch.Calendar;
+import ogame.utils.watch.Timer;
 
 public class DefenceLeafTaskItemController {
     public Label labelId;
@@ -17,6 +17,7 @@ public class DefenceLeafTaskItemController {
     public Label labelTimer;
     private DefenceLeafTaskController defenceLeafTaskController;
     private DefenceItem defence;
+    private boolean historyItem = false;
 
     public void setDefenceLeafTaskController(DefenceLeafTaskController defenceLeafTaskController) {
         this.defenceLeafTaskController = defenceLeafTaskController;
@@ -32,15 +33,12 @@ public class DefenceLeafTaskItemController {
         labelDefence.setText(defence.getDefence().getName());
         labelValue.setText(defence.getValue()+"");
         labelStatus.setText(defence.getStatus().name());
-        labelStatusTime.setText(Calendar.getDateTime(defence.getStatusTime()));
-        if(defence.getTimer() != null)
-            labelTimer.setText(defence.getTimer().leftTimeSecond());
-        else
-            labelTimer.setText("--:--:--");
+        labelStatusTime.setText(Calendar.getDateTime(defence.getStatusTimeInMilliseconds()));
+        labelTimer.setText(defence.getEndTimeInSeconds() == 0 ? "--:--:--" : Timer.leftTimeSecond(defence.getEndTimeInSeconds()));
     }
 
     public void delete() {
-        if(defence.getStatus() == Status.FINISHED){
+        if(historyItem){
             DataLoader.listDefenceItem.getHistoryList().remove(defence);
             defenceLeafTaskController.updateHistoryList();
             AppLog.print(DefenceLeafTaskItemController.class.getName(),2,"Remove from history queue, id = " + defence.getId() + ".");
@@ -50,5 +48,8 @@ public class DefenceLeafTaskItemController {
             AppLog.print(DefenceLeafTaskItemController.class.getName(),2,"Remove from defence queue, id =  " + defence.getId() + ".");
         }
         DataLoader.listDefenceItem.save();
+    }
+    public void setHistoryItem() {
+        this.historyItem = true;
     }
 }

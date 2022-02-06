@@ -118,6 +118,7 @@ public class ShipLeafTaskController {
             vBoxHistory.getChildren().clear();
             for(ShipItem shipItem : historyList){
                 ShipLeafTaskItemConnector connector = new ShipLeafTaskItemConnector(shipItem,this);
+                connector.getController().setHistoryItem();
                 vBoxHistory.getChildren().add(connector.content());
             }
         }

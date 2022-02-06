@@ -3,7 +3,6 @@ package app.leaftask;
 import app.data.DataLoader;
 import app.data.shipyard.DefenceItem;
 import app.data.shipyard.ShipItem;
-import app.data.shipyard.Status;
 import ogame.DataTechnology;
 import ogame.OgameWeb;
 import ogame.ResourcesBar;
@@ -12,6 +11,7 @@ import ogame.planets.ResourcesProduction;
 import ogame.ships.Ship;
 import ogame.tabs.Shipyard;
 import ogame.utils.Waiter;
+import ogame.utils.log.AppLog;
 import ogame.utils.watch.Timer;
 import ogame.watch.ProductionTime;
 
@@ -74,7 +74,7 @@ public class ShipLeafTask extends LeafTask {
     }
 
     private void wait(ShipItem shipItem) {
-        long timeToFinish = Timer.timeSeconds(shipItem.getTimer().getFinishDate(),System.currentTimeMillis()/1000);
+        long timeToFinish = Timer.timeSeconds(shipItem.getEndTimeInSeconds(),System.currentTimeMillis()/1000);
         if(timeToFinish < 0){
             if(shipItem.getStatus() == Status.BUILDING)
                 shipItem.setStatus(Status.FINISHED);
@@ -83,19 +83,21 @@ public class ShipLeafTask extends LeafTask {
             else
                 shipItem.setStatus(Status.DATA_DOWNLOADING);
 
-            shipItem.setStatusTime(System.currentTimeMillis());
+            shipItem.setStatusTimeInMilliseconds();
         }
     }
 
     private void finished(ShipItem shipItem) {
-        DataLoader.listShipItem.addToHistory(shipItem.copy());
-        if(shipItem.isSingleExecute())
-            shipItemToRemove = shipItem;
-        else{
-            shipItem.setStatus(Status.NEXT);
-            long currentTimeMilliseconds = System.currentTimeMillis();
-            shipItem.setStatusTime(currentTimeMilliseconds);
-            shipItem.setTimer(new Timer(0,currentTimeMilliseconds/1000 + shipItem.getTimePeriod()));
+        if(shipItemToRemove == null){
+            DataLoader.listShipItem.addToHistory(shipItem.copy());
+            if(shipItem.isSingleExecute())
+
+                shipItemToRemove = shipItem;
+            else{
+                shipItem.setStatus(Status.NEXT);
+                shipItem.setStatusTimeInMilliseconds();
+                shipItem.setEndTimeInSeconds(System.currentTimeMillis()/1000 + shipItem.getTimePeriodInSeconds());
+            }
         }
     }
 
@@ -110,11 +112,11 @@ public class ShipLeafTask extends LeafTask {
         if(status == ogame.Status.ACTIVE){
             long endDateOfUpgrade = Shipyard.endDateOfUpgradeBuilding(OgameWeb.webDriver,dataTechnology);
             shipItem.setStatus(Status.BUILDING);
-            shipItem.setStatusTime(System.currentTimeMillis());
+            shipItem.setStatusTimeInMilliseconds(System.currentTimeMillis());
             shipItem.setTimer(new Timer(0,endDateOfUpgrade));
         }else{
             shipItem.setStatus(Status.DATA_DOWNLOADING);
-            shipItem.setStatusTime(System.currentTimeMillis());
+            shipItem.setStatusTimeInMilliseconds(System.currentTimeMillis());
         }
     }
 
@@ -128,68 +130,70 @@ public class ShipLeafTask extends LeafTask {
             return;
         if(!clickOnShipItem(dataTechnology))
             return;
-        Shipyard.inputShipAmount(OgameWeb.webDriver, shipItem.getValue());
-        Waiter.sleep(200,200);
-        Shipyard.clickBuiltShip(OgameWeb.webDriver);
-        shipItem.setStatus(Status.CHECK);
-        shipItem.setStatusTime(System.currentTimeMillis());
+        do{
+            Shipyard.inputShipAmount(OgameWeb.webDriver, shipItem.getValue());
+            Waiter.sleep(200,200);
+            Shipyard.clickBuiltShip(OgameWeb.webDriver);
+            Waiter.sleep(400,400);
+        }while (Shipyard.statusOfShip(OgameWeb.webDriver, dataTechnology) != ogame.Status.ACTIVE);
+        long endInSeconds = Shipyard.endDateOfUpgradeBuilding(OgameWeb.webDriver,dataTechnology);
+        AppLog.print(DefenceLeafTask.class.getName(),2,"Start building " + shipItem.getValue() + " " +
+                shipItem.getShip().getName() + " on "+ shipItem.getPlanet().getCoordinate().getText() +".");
+        shipItem.setEndTimeInSeconds(endInSeconds);
+        shipItem.setStatus(Status.BUILDING);
+        shipItem.setStatusTimeInMilliseconds();
     }
 
     private void dataDownloaded(ShipItem shipItem) {
         Ship ship = shipItem.getShip();
         ResourcesProduction resourcesProduction = shipItem.getPlanet().getResourcesProduction();
         Planet planet = shipItem.getPlanet();
-        if(ship.getStatus() == ogame.Status.OFF){
+        final long WAIT_SECONDS_FOR_CHANGE_STATUS = 10L;
+        if(shipItem.isShipOgameStatusOff()){
             shipItem.setStatus(Status.OFF);
-            long currentTimeMillis = System.currentTimeMillis();
-            shipItem.setStatusTime(currentTimeMillis);
-            shipItem.setTimer(new Timer(0,currentTimeMillis/1000 + shipItem.getTimePeriod()));
+            shipItem.setStatusTimeInMilliseconds();
+            shipItem.setEndTimeInSeconds(System.currentTimeMillis()/1000 + shipItem.getTimePeriodInSeconds());
             return;
         }
         if(DataLoader.listShipItem.isShipBuildingOnPlanet(planet)){
             ShipItem firstOnQueue = DataLoader.listShipItem.getShipBuildingOnPlanet(planet);
-            long currentTimeMillis = System.currentTimeMillis();
-            long WAIT_SECONDS_FOR_CHANGE_STATUS = 10L;
             if(firstOnQueue == null) {
-                shipItem.setTimer(new Timer(0,currentTimeMillis/1000 + WAIT_SECONDS_FOR_CHANGE_STATUS));
+                shipItem.setEndTimeInSeconds(System.currentTimeMillis()/1000 + WAIT_SECONDS_FOR_CHANGE_STATUS);
                 shipItem.setStatus(Status.WAIT_FOR_STATUS);
             }
             else{
-                shipItem.setTimer(new Timer(0,firstOnQueue.getTimer().getFinishDate()));
+                shipItem.setEndTimeInSeconds(firstOnQueue.getEndTimeInSeconds());
                 shipItem.setStatus(Status.WAIT);
             }
-
-            shipItem.setStatusTime(System.currentTimeMillis());
+            shipItem.setStatusTimeInMilliseconds();
             return;
         }
         if(DataLoader.listDefenceItem.isDefenceBuildingOnPlanet(planet)){
             DefenceItem firstOnQueue = DataLoader.listDefenceItem.getDefenceBuildingOnPlanet(planet);
-            long currentTimeMillis = System.currentTimeMillis();
-            long WAIT_SECONDS_FOR_CHANGE_STATUS = 10L;
             if(firstOnQueue == null) {
-                shipItem.setTimer(new Timer(0,currentTimeMillis/1000 + WAIT_SECONDS_FOR_CHANGE_STATUS));
+                shipItem.setEndTimeInSeconds(System.currentTimeMillis()/1000 + WAIT_SECONDS_FOR_CHANGE_STATUS);
                 shipItem.setStatus(Status.WAIT_FOR_STATUS);
             }
             else{
-                shipItem.setTimer(new Timer(0,firstOnQueue.getTimer().getFinishDate()));
+                shipItem.setEndTimeInSeconds(firstOnQueue.getEndTimeInSeconds());
                 shipItem.setStatus(Status.WAIT);
             }
 
-            shipItem.setStatusTime(System.currentTimeMillis());
+            shipItem.setStatusTimeInMilliseconds();
             return;
         }
-        if(ship.getStatus() == ogame.Status.DISABLED){
+        if(shipItem.isShipOgameStatusDisabled()){
             if(DataLoader.listItemAutoBuilder.isNaniteFactoryUpradingOnPlanet(planet)){
                 long naniteFactoryFinishTimeSeconds = DataLoader.listItemAutoBuilder.naniteFactoryUpgradingOnPlanet(planet).getEndTimeInSeconds();
-                shipItem.setTimer(new Timer(0,naniteFactoryFinishTimeSeconds));
+                shipItem.setEndTimeInSeconds(naniteFactoryFinishTimeSeconds);
             } else if(DataLoader.listItemAutoBuilder.isShipyardUpradingOnPlanet(planet)){
                 long shipyardFinishTimeSeconds = DataLoader.listItemAutoBuilder.shipyardUpgradingOnPlanet(planet).getEndTimeInSeconds();
-                shipItem.setTimer(new Timer(0,shipyardFinishTimeSeconds));
+                shipItem.setEndTimeInSeconds(shipyardFinishTimeSeconds);
             }else
-                shipItem.setTimer(new Timer(0,System.currentTimeMillis()/1000 + shipItem.getTimePeriod()));
+                shipItem.setEndTimeInSeconds(System.currentTimeMillis()/1000 + shipItem.getTimePeriodInSeconds());
 
             shipItem.setStatus(Status.WAIT);
-            shipItem.setStatusTime(System.currentTimeMillis());
+            shipItem.setStatusTimeInMilliseconds();
             return;
         }
 
@@ -205,35 +209,34 @@ public class ShipLeafTask extends LeafTask {
         long crystalBalance = requiredCrystal - crystal;
         long deuteriumBalance = requiredDeuterium - deuterium;
 
-        long timeToProductionResources = 0;
+        long millisecondsToProductionResources = 0;
 
         if(requiredMetal > metal){
             long tmp = resourcesProduction.timeMilisecondsToMetalProduction(metalBalance);
-            if(tmp > timeToProductionResources)
-                timeToProductionResources = tmp;
+            if(tmp > millisecondsToProductionResources)
+                millisecondsToProductionResources = tmp;
         }
         if(requiredCrystal > crystal){
             long tmp = resourcesProduction.timeMilisecondsToCrystalProduction(crystalBalance);
-            if(tmp > timeToProductionResources)
-                timeToProductionResources = tmp;
+            if(tmp > millisecondsToProductionResources)
+                millisecondsToProductionResources = tmp;
         }
         if(requiredDeuterium > deuterium){
             long tmp = resourcesProduction.timeMilisecondsToDeuteriumProduction(deuteriumBalance);
-            if(tmp > timeToProductionResources)
-                timeToProductionResources = tmp;
+            if(tmp > millisecondsToProductionResources)
+                millisecondsToProductionResources = tmp;
         }
 
-        if(timeToProductionResources > 0){
+        if(millisecondsToProductionResources > 0){
             shipItem.setStatus(Status.NOT_ENOUGH_RESOURCES);
-            long currentTimeMillis = System.currentTimeMillis();
-            shipItem.setStatusTime(currentTimeMillis);
-            shipItem.setTimer(new Timer(0,currentTimeMillis/1000 + timeToProductionResources/1000));
+            shipItem.setStatusTimeInMilliseconds();
+            shipItem.setEndTimeInSeconds(System.currentTimeMillis()/1000 + millisecondsToProductionResources/1000);
             return;
         }
 
         shipItem.setStatus(Status.STARTING);
-        shipItem.setStatusTime(System.currentTimeMillis());
-        shipItem.setTimer(null);
+        shipItem.setStatusTimeInMilliseconds();
+        shipItem.setEndTimeInSeconds(0);
     }
 
     private void dataDownloading(ShipItem shipItem) {
@@ -254,11 +257,11 @@ public class ShipLeafTask extends LeafTask {
         ship.setProductionTime(productionTime);
 
         shipItem.setStatus(Status.DATA_DOWNLOADED);
-        shipItem.setStatusTime(System.currentTimeMillis());
+        shipItem.setStatusTimeInMilliseconds();
     }
 
     private void added(ShipItem shipItem) {
         shipItem.setStatus(Status.DATA_DOWNLOADING);
-        shipItem.setStatusTime(System.currentTimeMillis());
+        shipItem.setStatusTimeInMilliseconds();
     }
 }
