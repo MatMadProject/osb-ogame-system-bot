@@ -1,8 +1,9 @@
 package app.data;
 
+import app.data.autobuilder.LevelBuildings;
 import app.data.autobuilder.ListItemAutoBuilder;
-import app.data.autoresearch.ListItemAutoResearch;
-import app.data.autoresearch.Researches;
+import app.data.autobuilder.ListItemAutoResearch;
+import app.data.autobuilder.Researches;
 import app.data.shipyard.ListDefenceItem;
 import app.data.expedition.Expeditions;
 import app.data.planets.ColonyData;
@@ -21,6 +22,7 @@ public class DataLoader {
     public static Expeditions expeditions;
     public static ListDefenceItem listDefenceItem;
     public static ListShipItem listShipItem;
+    public static LevelBuildings levelBuildings;
 
     public DataLoader(){
         planets = new Planets();
@@ -32,6 +34,7 @@ public class DataLoader {
         listShipItem = new ListShipItem();
         colonyData = new ColonyData();
         playerData = new PlayerData();
+        levelBuildings = new LevelBuildings();
         AppLog.print(DataLoader.class.getName(),0,"Bot data loaded success.");
     }
 }

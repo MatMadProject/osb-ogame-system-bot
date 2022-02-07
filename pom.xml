@@ -6,7 +6,7 @@
 
     <groupId>com.matmadproject</groupId>
     <artifactId>osb-ogame-system-bot</artifactId>
-    <version>1.5.1</version>
+    <version>1.7.0</version>
     <packaging>jar</packaging>
 
     <dependencies>

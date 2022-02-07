@@ -1,7 +1,7 @@
 package app.controllers;
 
 import app.data.DataLoader;
-import app.data.autoresearch.ItemAutoResearch;
+import app.data.autobuilder.ItemAutoResearch;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import ogame.utils.log.AppLog;

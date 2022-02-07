@@ -45,12 +45,14 @@ public class AutoBuilderLeafTaskItemController {
             AppLog.print(AutoResearchLeafTaskItemController.class.getName(),2,"Remove from built history: Upgrade "+ itemAutoBuilder.getBuilding().getName() + " to "
                     + itemAutoBuilder.getUpgradeLevel() +" level on " + itemAutoBuilder.getPlanet().getCoordinate().getText() + ".");
         }else{
+            if(itemAutoBuilder.isFirstOnQueue())
+                DataLoader.listItemAutoBuilder.startNextBuildingOnPlanet(itemAutoBuilder.getPlanet());
+
             DataLoader.listItemAutoBuilder.getQueueList().remove(itemAutoBuilder);
             autoBuilderLeafTaskController.updateQueueList();
             AppLog.print(AutoResearchLeafTaskItemController.class.getName(),2,"Remove from built queue: Upgrade "+ itemAutoBuilder.getBuilding().getName() + " to "
                     + itemAutoBuilder.getUpgradeLevel() +" level on " + itemAutoBuilder.getPlanet().getCoordinate().getText() + ".");
-            if(itemAutoBuilder.isFirstOnQueue())
-                DataLoader.listItemAutoBuilder.startNextBuildingOnPlanet(itemAutoBuilder.getPlanet());
+
         }
         DataLoader.listItemAutoBuilder.save();
     }

@@ -2,7 +2,7 @@ package app.controllers;
 
 import app.controllers_connector.AutoResearchLeafTaskItemConnector;
 import app.data.DataLoader;
-import app.data.autoresearch.ItemAutoResearch;
+import app.data.autobuilder.ItemAutoResearch;
 import app.data.planets.ComboBoxPlanet;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;

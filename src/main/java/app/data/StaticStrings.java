@@ -11,14 +11,14 @@ public class StaticStrings {
             StaticStrings.MAIN_FOLDER + File.separator +
             StaticStrings.ACCOUNT_FOLDER + File.separator +
             StaticStrings.PLAYER_FOLDER + File.separator;
-
+    public static String MAIN_PATH = StaticStrings.DISK + File.separator +
+            StaticStrings.MAIN_FOLDER + File.separator;
     public static void setPlayerFolderPath() {
         PLAYER_FOLDER_PATH = StaticStrings.DISK + File.separator +
                 StaticStrings.MAIN_FOLDER + File.separator +
                 StaticStrings.ACCOUNT_FOLDER + File.separator +
                 StaticStrings.PLAYER_FOLDER + File.separator;
     }
-
     /*
         FILES
          */
@@ -44,6 +44,7 @@ public class StaticStrings {
     //AutoBuilder
     public static final String AUTO_BUILDER_FILE = "autobuilder";
     public static final String AUTO_RESEARCH_FILE = "autoresearch";
+    public static final String LEVEL_BUILDINGS_FILE = "level-buildings";
     //Player data
     public static final String PLAYER_DATA_FILE = "player-data";
     //Error

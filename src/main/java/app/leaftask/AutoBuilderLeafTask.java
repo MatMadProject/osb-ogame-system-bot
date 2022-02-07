@@ -2,7 +2,8 @@ package app.leaftask;
 
 import app.data.DataLoader;
 import app.data.autobuilder.ItemAutoBuilder;
-import app.data.autoresearch.ItemAutoResearch;
+import app.data.autobuilder.ItemAutoResearch;
+import app.data.autobuilder.LevelBuildingItem;
 import app.data.shipyard.DefenceItem;
 import app.data.shipyard.ShipItem;
 import ogame.OgameWeb;
@@ -188,6 +189,7 @@ public class AutoBuilderLeafTask extends LeafTask{
         long SECONDS_WAIT_WHEN_OFF_STATUS = 3600 ;
         long SECONDS_WAIT_WHEN_ON_STATUS = 60;
         ArrayList<ItemAutoBuilder> planetQueue = DataLoader.listItemAutoBuilder.getQueueListFromPlanet(itemAutoBuilder.getPlanet());
+        ItemAutoBuilder firstItemOnPlanetQueue = planetQueue.get(0);
         if(itemAutoBuilder.isBuildingOgameStatusOff()){
             itemAutoBuilder.setStatus(Status.OFF);
             itemAutoBuilder.setStatusTimeInMilliseconds();
@@ -206,9 +208,9 @@ public class AutoBuilderLeafTask extends LeafTask{
                     itemAutoBuilder.setEndTimeInSeconds(itemAutoBuilderUpgrading.getEndTimeInSeconds());
                 }else
                     itemAutoBuilder.setEndTimeInSeconds(System.currentTimeMillis()/1000 + SECONDS_WAIT_WHEN_ON_STATUS);
-                ItemAutoBuilder first = planetQueue.get(0);
-                if(first.hasWaitingStatus())
-                    itemAutoBuilder.setEndTimeInSeconds(first.getEndTimeInSeconds());
+
+                if(firstItemOnPlanetQueue.hasWaitingStatus())
+                    itemAutoBuilder.setEndTimeInSeconds(firstItemOnPlanetQueue.getEndTimeInSeconds());
             }
             return;
         }
@@ -295,8 +297,8 @@ public class AutoBuilderLeafTask extends LeafTask{
                 return;
             }
             //Jeżeli pierwszy item w kolejce ma status NOT_ENOUGH_RESOURCES
-            if(planetQueue.get(0).getStatus() == Status.NOT_ENOUGH_RESOURCES){
-                itemAutoBuilder.setEndTimeInSeconds(planetQueue.get(0).getEndTimeInSeconds());
+            if(firstItemOnPlanetQueue.hasWaitingStatus()){
+                itemAutoBuilder.setEndTimeInSeconds(firstItemOnPlanetQueue.getEndTimeInSeconds());
                 itemAutoBuilder.setStatus(Status.WAIT);
                 itemAutoBuilder.setStatusTimeInMilliseconds();
                 return;
@@ -344,9 +346,17 @@ public class AutoBuilderLeafTask extends LeafTask{
             //Shows building details
             if(!clickOnBuilding(type,listIndex))
                 return;
+            if(DataLoader.levelBuildings.isItemExistOnList(building.getDataTechnology(),itemAutoBuilder.getUpgradeLevel()))
+                requiredResources = DataLoader.levelBuildings.requiredResourcesForBuilding(building.getDataTechnology(),itemAutoBuilder.getUpgradeLevel());
+            else{
+                requiredResources = Supplies.getRequiredResources(OgameWeb.webDriver,listIndex);
+                LevelBuildingItem levelBuildingItem = new LevelBuildingItem(System.currentTimeMillis(),building.getDataTechnology(),requiredResources
+                        , itemAutoBuilder.getUpgradeLevel());
+                DataLoader.levelBuildings.addToList(levelBuildingItem);
+            }
             //Dowloads data
             productionTime = Supplies.productionTimeOfBuilding(OgameWeb.webDriver);
-            requiredResources = Supplies.getRequiredResources(OgameWeb.webDriver,listIndex);
+
             curentLevel = Supplies.levelOfBuilding(OgameWeb.webDriver,listIndex);
             status = Supplies.statusOfBuilding(OgameWeb.webDriver,listIndex);
             energyConsumption = Supplies.energyConsumption(OgameWeb.webDriver);

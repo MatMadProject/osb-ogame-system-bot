@@ -2,7 +2,7 @@ package app.controllers_connector;
 
 import app.controllers.AutoResearchLeafTaskController;
 import app.controllers.AutoResearchLeafTaskItemController;
-import app.data.autoresearch.ItemAutoResearch;
+import app.data.autobuilder.ItemAutoResearch;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.layout.HBox;

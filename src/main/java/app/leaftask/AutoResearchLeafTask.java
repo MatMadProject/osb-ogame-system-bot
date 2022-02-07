@@ -2,7 +2,8 @@ package app.leaftask;
 
 import app.data.DataLoader;
 import app.data.autobuilder.ItemAutoBuilder;
-import app.data.autoresearch.ItemAutoResearch;
+import app.data.autobuilder.ItemAutoResearch;
+import app.data.autobuilder.LevelBuildingItem;
 import ogame.OgameWeb;
 import ogame.ResourcesBar;
 import ogame.buildings.RequiredResources;
@@ -242,6 +243,8 @@ public class AutoResearchLeafTask extends LeafTask{
         Research research = itemAutoResearch.getResearch();
         Type type = research.getDataTechnology().getType();
         Planet planet = itemAutoResearch.getPlanet();
+        RequiredResources requiredResources;
+        ProductionTime productionTime;
         int listIndex = research.getDataTechnology().getListIndex();
         //Clicking on planet
         if(!clickPlanet(planet))
@@ -267,8 +270,15 @@ public class AutoResearchLeafTask extends LeafTask{
             }
         }while(!ogame.tabs.Research.visibleResearchDetails(OgameWeb.webDriver,listIndex,type));
         //Dowloads data
-        ProductionTime productionTime = ogame.tabs.Research.productionTimeOfResearch(OgameWeb.webDriver);
-        RequiredResources requiredResources = ogame.tabs.Research.getRequiredResources(OgameWeb.webDriver,listIndex,type);
+        if(DataLoader.levelBuildings.isItemExistOnList(research.getDataTechnology(),itemAutoResearch.getUpgradeLevel()))
+            requiredResources = DataLoader.levelBuildings.requiredResourcesForBuilding(research.getDataTechnology(),itemAutoResearch.getUpgradeLevel());
+        else{
+            requiredResources = ogame.tabs.Research.getRequiredResources(OgameWeb.webDriver,listIndex,type);
+            LevelBuildingItem levelBuildingItem = new LevelBuildingItem(System.currentTimeMillis(),research.getDataTechnology(),requiredResources
+                    , itemAutoResearch.getUpgradeLevel());
+            DataLoader.levelBuildings.addToList(levelBuildingItem);
+        }
+        productionTime = ogame.tabs.Research.productionTimeOfResearch(OgameWeb.webDriver);
         int curentLevel = ogame.tabs.Research.levelOfResearch(OgameWeb.webDriver,listIndex,type);
         ogame.Status status = ogame.tabs.Research.statusOfResearch(OgameWeb.webDriver,listIndex,type);
         if(itemAutoResearch.isResearchAchievedUpgradeLevel(curentLevel)){

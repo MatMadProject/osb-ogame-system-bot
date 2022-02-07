@@ -151,7 +151,7 @@ public class ItemAutoBuilder implements Serializable {
     }
     public boolean hasWaitingStatus(){
         return status == Status.NOT_ENOUGH_RESOURCES || status == Status.RESEARCH_UPGRADE ||
-                status == Status.SHIP_BUILD || status == Status.DEFENCE_BUILD;
+                status == Status.SHIP_BUILD || status == Status.DEFENCE_BUILD || status == Status.WAIT;
     }
 
     @Override

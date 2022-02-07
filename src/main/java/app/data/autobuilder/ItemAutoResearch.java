@@ -1,4 +1,4 @@
-package app.data.autoresearch;
+package app.data.autobuilder;
 
 import app.data.DataLoader;
 import app.leaftask.Status;
