@@ -19,7 +19,8 @@ public class LeafTaskManager {
             new AutoResearchLeafTask(3,1000,"Auto research"),
             new ExpeditionLeafTask(4,1000,"Expedition"),
             new DefenceLeafTask(5,1000,"Defence"),
-            new ShipLeafTask(6,250,"Ship")
+            new ShipLeafTask(6,250,"Ship"),
+            new TransportLeafTask(7,250,"Transport")
         };
         listSize = leafTasks.length;
     }

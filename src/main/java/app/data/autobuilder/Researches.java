@@ -139,6 +139,10 @@ public class Researches implements LSD, Serializable {
         return null;
     }
 
+    public int hyperspaceTechnologyLevel(){
+        return getResearch(DataTechnology.HYPERSPACE_TECHOLOGY).getLevel();
+    }
+
     public boolean isUpdateData() {
         return updateData;
     }

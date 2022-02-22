@@ -58,6 +58,10 @@ Separator{
     -fx-background-radius: 2 2 2 2;
     -fx-text-fill: black;
 }
+.error-label{
+    -fx-text-fill: white;
+    -fx-background-color: color-error;
+}
 .hbox-task:hover{
     -fx-background-color: color-pane-hoover;
     -fx-text-fill: white;

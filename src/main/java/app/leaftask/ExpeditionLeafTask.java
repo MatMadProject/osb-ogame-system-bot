@@ -306,18 +306,18 @@ public class ExpeditionLeafTask extends LeafTask{
         Waiter.sleep(1000,2000);
     }
 
-    /**
-     * Gets previous Event ID.
-     * @param id Current event id
-     * @return previous Event ID.
-     */
-    private String previousEventID(String id){
-        String[] tab = id.split("-");
-        StringBuilder stringBuilder = new StringBuilder();
-        int previousId = Integer.parseInt(tab[1])-1;
-        stringBuilder.append(tab[0]).append("-").append(previousId);
-        return stringBuilder.toString();
-    }
+//    /**
+//     * Gets previous Event ID.
+//     * @param id Current event id
+//     * @return previous Event ID.
+//     */
+//    private String previousEventID(String id){
+//        String[] tab = id.split("-");
+//        StringBuilder stringBuilder = new StringBuilder();
+//        int previousId = Integer.parseInt(tab[1])-1;
+//        stringBuilder.append(tab[0]).append("-").append(previousId);
+//        return stringBuilder.toString();
+//    }
 
     private long sumOfShips(ArrayList<FleetDetailsShip> returnedShips){
         long sum = 0;

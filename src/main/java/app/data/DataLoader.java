@@ -10,6 +10,7 @@ import app.data.planets.ColonyData;
 import app.data.planets.Planets;
 import app.data.player.PlayerData;
 import app.data.shipyard.ListShipItem;
+import app.data.transport.ListTransportItem;
 import ogame.utils.log.AppLog;
 
 public class DataLoader {
@@ -23,6 +24,7 @@ public class DataLoader {
     public static ListDefenceItem listDefenceItem;
     public static ListShipItem listShipItem;
     public static LevelBuildings levelBuildings;
+    public static ListTransportItem listTransportItem;
 
     public DataLoader(){
         planets = new Planets();
@@ -35,6 +37,7 @@ public class DataLoader {
         colonyData = new ColonyData();
         playerData = new PlayerData();
         levelBuildings = new LevelBuildings();
+        listTransportItem = new ListTransportItem();
         AppLog.print(DataLoader.class.getName(),0,"Bot data loaded success.");
     }
 }

@@ -12,7 +12,7 @@ public class ShipyardItem implements Serializable {
     private final Planet planet;
     private int value;
     private String id;
-    private app.leaftask.Status status;
+    private Status status;
     private long statusTimeInMilliseconds;
     private long timePeriodInSeconds;
     private long endTimeInSeconds;

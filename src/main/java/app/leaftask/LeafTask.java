@@ -2,14 +2,19 @@ package app.leaftask;
 
 import ogame.DataTechnology;
 import ogame.OgameWeb;
+import ogame.ResourcesBar;
 import ogame.Type;
 import ogame.eventbox.Event;
 import ogame.planets.Coordinate;
 import ogame.planets.Planet;
 import ogame.planets.PlanetsList;
+import ogame.planets.Resources;
+import ogame.ships.Mission;
 import ogame.tabs.*;
 import ogame.utils.AntiLooping;
 import ogame.utils.Waiter;
+
+import java.util.ArrayList;
 
 public class LeafTask implements Execute{
 
@@ -370,5 +375,69 @@ public class LeafTask implements Execute{
         }while(event == null); // Nie przypisano eventu
         getAntiLooping().reset();
         return event;
+    }
+
+    public boolean selectFleetMission(Mission mission){
+        //Otwieranie openEventBox
+        do{
+            FleetDispatch.selectMission(OgameWeb.webDriver,mission);
+            Waiter.sleep(200,300);
+            if(getAntiLooping().check()){
+                getAntiLooping().reset();
+                return false;
+            }
+        }while(!FleetDispatch.isMissionSelected(OgameWeb.webDriver,mission)); // Jest niewidoczne
+        getAntiLooping().reset();
+        return true;
+    }
+
+    public Resources resourcesOnPlanet(){
+        long metal = ResourcesBar.metal(OgameWeb.webDriver);
+        long crystal = ResourcesBar.crystal(OgameWeb.webDriver);
+        long deuterium = ResourcesBar.deuterium(OgameWeb.webDriver);
+        return new Resources(metal,crystal,deuterium,0);
+    }
+
+    /**
+     *
+     * @param eventList ***
+     * @param eventTargetCoordinate Expedition sent at the moment.
+     * @param timeShiftInSeconds Maximum difference in seconds between time from sending and time downloaded from event
+     * @param returnTimeSecond Calculated return time of the expedition. (Fly time *2 + Expedition time)
+     * @return Return null if expedition not found.
+     */
+    public Event getCorrectEventFromEventBox(ArrayList<Event> eventList, Coordinate eventTargetCoordinate, long timeShiftInSeconds, long returnTimeSecond){
+        Event event = null;
+        do{
+            for(Event tmpEvent : eventList)
+                if(tmpEvent.getDestinationCoordinate().equals(eventTargetCoordinate)) {
+                    long timeDifference = tmpEvent.getArrivalTime() - returnTimeSecond;
+                    //timeDifference between <-x;x>
+                    if(timeDifference <= timeShiftInSeconds && timeDifference >= timeShiftInSeconds*-1){
+                        event = tmpEvent;
+                        break;
+                    }
+                }
+            Waiter.sleep(200,300);
+            if(getAntiLooping().check()){
+                getAntiLooping().reset();
+                return null;
+            }
+
+        }while(event == null); // Nie przypisano eventu
+        getAntiLooping().reset();
+        return event;
+    }
+    /**
+     * Gets previous Event ID.
+     * @param id Current event id
+     * @return previous Event ID.
+     */
+    public String previousEventID(String id){
+        String[] tab = id.split("-");
+        StringBuilder stringBuilder = new StringBuilder();
+        int previousId = Integer.parseInt(tab[1])-1;
+        stringBuilder.append(tab[0]).append("-").append(previousId);
+        return stringBuilder.toString();
     }
 }

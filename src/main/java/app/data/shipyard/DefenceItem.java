@@ -1,6 +1,7 @@
 package app.data.shipyard;
 
 import app.data.DataLoader;
+import ogame.DataTechnology;
 import ogame.defence.Defence;
 import ogame.planets.Planet;
 
@@ -34,6 +35,11 @@ public class DefenceItem extends ShipyardItem implements Serializable {
         defenceItem.setStatus(getStatus());
         defenceItem.setStatusTimeInMilliseconds(getStatusTimeInMilliseconds());
         return defenceItem;
+    }
+
+    public boolean isShield(){
+        return defence.getDataTechnology() == DataTechnology.SHIELD_DOME_SMALL
+                || defence.getDataTechnology() == DataTechnology.SHIELD_DOME_LARGE;
     }
 
     @Override

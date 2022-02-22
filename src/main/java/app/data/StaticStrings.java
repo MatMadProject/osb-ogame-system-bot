@@ -31,7 +31,7 @@ public class StaticStrings {
     public static final String EXPEDITION_LOG_FILE = "expedition-log";
     //Autotransport
     public static final String AUTOTRANSPOSRT_CONFIG_FILE = "autotransport-config";
-    public static final String AUTOTRANSPORT_FILE = "autotransport"; //v2
+    public static final String AUTOTRANSPORT_FILE = "autotransport";
     //Farming
     public static final String FARMING_CONFIG_FILE = "farming-config";
     //Fleetsave

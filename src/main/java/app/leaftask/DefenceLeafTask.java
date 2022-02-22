@@ -129,7 +129,8 @@ public class DefenceLeafTask extends LeafTask{
         if(!clickOnDefenceItem(dataTechnology))
             return;
         do{
-            Defence.inputDefenceAmount(OgameWeb.webDriver, defenceItem.getValue());
+            if(!defenceItem.isShield())
+                Defence.inputDefenceAmount(OgameWeb.webDriver, defenceItem.getValue());
             Waiter.sleep(200,200);
             Defence.clickBuiltDefence(OgameWeb.webDriver);
             Waiter.sleep(400,400);
