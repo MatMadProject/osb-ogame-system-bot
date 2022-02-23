@@ -129,10 +129,13 @@ public class DefenceLeafTask extends LeafTask{
         if(!clickOnDefenceItem(dataTechnology))
             return;
         do{
-            if(!defenceItem.isShield())
+            if(defenceItem.isShield())
+                Defence.clickBuiltDefenceShield(OgameWeb.webDriver);
+            else{
                 Defence.inputDefenceAmount(OgameWeb.webDriver, defenceItem.getValue());
-            Waiter.sleep(200,200);
-            Defence.clickBuiltDefence(OgameWeb.webDriver);
+                Waiter.sleep(200,200);
+                Defence.clickBuiltDefence(OgameWeb.webDriver);
+            }
             Waiter.sleep(400,400);
         }while (Defence.statusOfDefence(OgameWeb.webDriver, dataTechnology) != ogame.Status.ACTIVE);
         long endInSeconds = Defence.endDateOfUpgrade(OgameWeb.webDriver, dataTechnology);

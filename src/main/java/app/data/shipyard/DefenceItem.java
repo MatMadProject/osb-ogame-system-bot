@@ -48,8 +48,11 @@ public class DefenceItem extends ShipyardItem implements Serializable {
         if (!(o instanceof DefenceItem)) return false;
         if (!super.equals(o)) return false;
         DefenceItem that = (DefenceItem) o;
-        return Objects.equals(getDefence(), that.getDefence()) && Objects.equals(getPlanet(),that.getPlanet());
+        return Objects.equals(getDefence(), that.getDefence()) && Objects.equals(getPlanet(),that.getPlanet())
+                && Objects.equals(getId(),that.getId());
     }
+
+
 
     @Override
     public int hashCode() {

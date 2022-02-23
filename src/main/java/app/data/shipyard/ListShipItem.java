@@ -93,13 +93,12 @@ public class ListShipItem implements Serializable, LSD {
     public int id(){return id;}
 
     public boolean add(ShipItem shipItem){
-        if(isExistOnQueueList(shipItem))
-            return false;
-        else {
+        if(!isExistOnQueueList(shipItem) || shipItem.isSingleExecute()){
             queueList.add(shipItem);
             save();
+            return true;
         }
-        return true;
+        return false;
     }
 
     public void addToHistory(ShipItem shipItem){
@@ -108,11 +107,12 @@ public class ListShipItem implements Serializable, LSD {
 
     public boolean isExistOnQueueList(ShipItem newShipItem){
         ShipItem shipItem = null;
-        if(!queueList.isEmpty())
+        if(!queueList.isEmpty()){
             shipItem = queueList.stream()
-                    .filter(ship -> ship.equals(newShipItem))
+                    .filter(item -> item.getPlanet().equals(newShipItem.getPlanet())
+                            && item.getShip().equals(newShipItem.getShip()))
                     .findFirst().orElse(null);
-
+        }
         return shipItem != null;
     }
 

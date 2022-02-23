@@ -92,25 +92,25 @@ public class ListDefenceItem implements Serializable, LSD {
     public int id(){return id;}
 
     public boolean add(DefenceItem defenceItem){
-        if(isExistOnQueueList(defenceItem))
-            return false;
-        else {
+        if(!isExistOnQueueList(defenceItem) || defenceItem.isSingleExecute()){
             queueList.add(defenceItem);
             save();
+            return true;
         }
-        return true;
+        return false;
     }
     public void addToHistory(DefenceItem defenceItem){
         historyList.add(defenceItem);
     }
     public boolean isExistOnQueueList(DefenceItem newDefenceItem){
+        DefenceItem defenceItem = null;
         if(!queueList.isEmpty()){
-            for(DefenceItem defenceItem : queueList){
-                if(newDefenceItem.equals(defenceItem))
-                    return true;
-            }
+            defenceItem = queueList.stream()
+                    .filter(item -> item.getPlanet().equals(newDefenceItem.getPlanet())
+                    && item.getDefence().equals(newDefenceItem.getDefence()))
+                    .findFirst().orElse(null);
         }
-        return false;
+        return defenceItem != null;
     }
     public List<DefenceItem> get50LatestItemOfHistoryList() {
         ArrayList<DefenceItem> list = new ArrayList<>();
@@ -139,9 +139,6 @@ public class ListDefenceItem implements Serializable, LSD {
                 .filter(item -> item.getStatus() == Status.BUILDING)
                 .findFirst()
                 .orElse(null);
-//        for(DefenceItem defenceItem : planetQueue)
-//            if(defenceItem.getStatus() == Status.BUILDING)
-//                return defenceItem;
     }
     public DefenceItem getDefenceStartingOnPlanet(Planet planet){
         ArrayList<DefenceItem> planetQueue = getPlanetQueue(planet);

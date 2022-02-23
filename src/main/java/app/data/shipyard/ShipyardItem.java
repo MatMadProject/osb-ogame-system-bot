@@ -102,7 +102,7 @@ public class ShipyardItem implements Serializable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         ShipyardItem that = (ShipyardItem) o;
-        return Objects.equals(planet, that.planet);
+        return Objects.equals(id, that.id);
     }
 
     @Override

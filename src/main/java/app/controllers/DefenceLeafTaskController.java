@@ -129,12 +129,15 @@ public class DefenceLeafTaskController {
     }
 
     public void updateDisplayError(){
-        if(!displayError())
+        if(!displayError()){
+            labelError.getStyleClass().remove("error-label");
             labelError.setText("");
+        }
     }
 
     private void setError(String errorText){
         labelError.setText(errorText);
+        labelError.getStyleClass().add("error-label");
         errorTimeStamp = System.currentTimeMillis();
     }
 

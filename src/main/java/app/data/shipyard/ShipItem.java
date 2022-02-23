@@ -55,7 +55,8 @@ public class ShipItem extends ShipyardItem implements Serializable {
         if (!(o instanceof ShipItem)) return false;
         if (!super.equals(o)) return false;
         ShipItem shipItem = (ShipItem) o;
-        return Objects.equals(getShip(), shipItem.getShip()) && Objects.equals(getPlanet(),shipItem.getPlanet());
+        return Objects.equals(getShip(), shipItem.getShip()) && Objects.equals(getPlanet(),shipItem.getPlanet())
+                && Objects.equals(getId(),shipItem.getId());
     }
 
     @Override

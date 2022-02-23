@@ -194,7 +194,7 @@ public class TransportItem implements Serializable {
         return (int)(resourcesToTransport/ship.currentCapacity(DataLoader.researches.hyperspaceTechnologyLevel())) + 1;
     }
     public long capacityOfShips(Ship ship, int value){
-        return (long) ship.currentCapacity(DataLoader.researches.hyperspaceTechnologyLevel()) * value;
+        return ship.currentCapacity(DataLoader.researches.hyperspaceTechnologyLevel()) * value;
     }
 
     public boolean isSelectedLargeTransporter() {
@@ -231,7 +231,7 @@ public class TransportItem implements Serializable {
         long capacity = 0;
         if(!fleet.isEmpty())
             for(Ship ship : fleet)
-                capacity += (long) ship.currentCapacity(DataLoader.researches.hyperspaceTechnologyLevel()) * ship.getValue();
+                capacity += ship.currentCapacity(DataLoader.researches.hyperspaceTechnologyLevel()) * ship.getValue();
 
 
         return capacity;
@@ -265,11 +265,11 @@ public class TransportItem implements Serializable {
         if (this == o) return true;
         if (!(o instanceof TransportItem)) return false;
         TransportItem that = (TransportItem) o;
-        return getPlanetStart().equals(that.getPlanetStart()) && getPlanetEnd().equals(that.getPlanetEnd());
+        return Objects.equals(getId(), that.getId());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getPlanetStart(), getPlanetEnd());
+        return Objects.hash(getId());
     }
 }

@@ -91,13 +91,12 @@ public class ListTransportItem implements Serializable, LSD {
     }
 
     public boolean add(TransportItem transportItem){
-        if(isExistOnQueueList(transportItem))
-            return false;
-        else{
+        if(!isExistOnQueueList(transportItem) || transportItem.isSingleExecute()){
             queueList.add(transportItem);
             save();
+            return true;
         }
-        return true;
+        return false;
     }
     public void addToHistory(TransportItem transportItem){
         historyList.add(transportItem);
@@ -106,7 +105,8 @@ public class ListTransportItem implements Serializable, LSD {
         TransportItem transportItem = null;
         if(!queueList.isEmpty())
             transportItem = queueList.stream()
-                    .filter(item -> item.equals(newTransportItem))
+                    .filter(item -> item.getPlanetStart().equals(newTransportItem.getPlanetStart())
+                    && item.getPlanetEnd().equals(newTransportItem.getPlanetEnd()))
                     .findFirst().orElse(null);
 
         return transportItem != null;

@@ -50,7 +50,7 @@ public class ShipLeafTaskItemController {
         }else{
             DataLoader.listShipItem.getQueueList().remove(shipItem);
             shipLeafTaskController.updateQueueList();
-            AppLog.print(ShipLeafTaskItemController.class.getName(),2,"Remove from defence queue, id =  " + shipItem.getId() + ".");
+            AppLog.print(ShipLeafTaskItemController.class.getName(),2,"Remove from ship queue, id =  " + shipItem.getId() + ".");
         }
         DataLoader.listShipItem.save();
     }
