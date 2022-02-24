@@ -1,18 +1,18 @@
 package app.data.expedition;
 
 import app.data.DataLoader;
+import app.leaftask.Status;
 import ogame.eventbox.Event;
 import ogame.eventbox.FleetDetails;
 import ogame.eventbox.FleetDetailsShip;
 import ogame.planets.Coordinate;
 import ogame.planets.Planet;
 import ogame.planets.Resources;
+import ogame.ships.Ship;
 import ogame.utils.watch.Calendar;
-import ogame.utils.watch.Timer;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Objects;
 
 public class Expedition implements Serializable {
@@ -20,28 +20,37 @@ public class Expedition implements Serializable {
     private static final long serialVersionUID = 1992L;
     private final Planet planet;
     private final Coordinate destinationCoordinate;
-    private ArrayList<ItemShipList> itemShipLists;
-    private HashMap<String,Integer> returningFleet = new HashMap<>();
+    private ArrayList<Ship> declaredShips;
+    private ArrayList<FleetDetailsShip> returningFleet = new ArrayList<>();
     private String id;
     private long shipsBefore;
     private long shipsAfter;
     private long storage;
-    private Resources lootedResources;
+    private Resources lootedResources = new Resources(0L,0L,0L,0);
     private Status status;
-    private long statusTime;
     private long flyDuration;
     private Event flyToExpeditionEvent;
     private Event flyOnExpeditionEvent;
     private Event flyFromExpeditionEvent;
-    private Timer timer;
+    private long endTimeInSeconds;
+    private long statusTimeInMilliseconds;
+//
+//    public Expedition(Planet startObject, Coordinate targetCoordinate, ArrayList<ItemShipList> itemShipLists) {
+//        this.planet = startObject;
+//        this.destinationCoordinate = targetCoordinate;
+//        this.itemShipLists = itemShipLists;
+//        status = Status.SENDING;
+//        statusTime = System.currentTimeMillis();
+//        id = String.valueOf(DataLoader.expeditions.getId());
+//        setShipsBefore();
+//    }
 
-    public Expedition(Planet startObject, Coordinate targetCoordinate, ArrayList<ItemShipList> itemShipLists) {
+    public Expedition(Planet startObject, Coordinate targetCoordinate, ArrayList<Ship> declaredShips) {
         this.planet = startObject;
         this.destinationCoordinate = targetCoordinate;
-        this.itemShipLists = itemShipLists;
-        lootedResources = new Resources(0,0,0,0);
+        this.declaredShips = declaredShips;
         status = Status.SENDING;
-        statusTime = System.currentTimeMillis();
+        statusTimeInMilliseconds = System.currentTimeMillis();
         id = String.valueOf(DataLoader.expeditions.getId());
         setShipsBefore();
     }
@@ -54,13 +63,7 @@ public class Expedition implements Serializable {
         return destinationCoordinate;
     }
 
-    public ArrayList<ItemShipList> getItemShipLists() {
-        return itemShipLists;
-    }
 
-    public void setItemShipLists(ArrayList<ItemShipList> itemShipLists) {
-        this.itemShipLists = itemShipLists;
-    }
 
     public String getId() {
         return id;
@@ -94,29 +97,13 @@ public class Expedition implements Serializable {
         this.flyDuration = flyDuration;
     }
 
-    public Status getStatus() {
-        return status;
-    }
-
-    public void setStatus(Status status) {
-        this.status = status;
-    }
-
-    public long getStatusTime() {
-        return statusTime;
-    }
-
-    public void setStatusTime(long statusTime) {
-        this.statusTime = statusTime;
-    }
-
     public long getShipsBefore() {
         return shipsBefore;
     }
 
     public void setShipsBefore() {
-        for(ItemShipList itemShipList : itemShipLists)
-            shipsBefore += itemShipList.getValue();
+        for(Ship ship : declaredShips)
+            shipsBefore += ship.getValue();
     }
 
     public void setShipsBefore(long shipsBefore) {
@@ -131,19 +118,18 @@ public class Expedition implements Serializable {
         this.shipsAfter = shipsAfter;
     }
 
-    public HashMap<String, Integer> getReturningFleet() {
+    public ArrayList<FleetDetailsShip> getReturningFleet() {
         return returningFleet;
     }
 
-    public void setReturningFleet(HashMap<String, Integer> returningFleet) {
-        this.returningFleet = returningFleet;
+    public void setReturningFleet(ArrayList<FleetDetailsShip> ships) {
+        this.returningFleet = ships;
     }
 
     public void setReturningFleet(Event event) {
         FleetDetails fleetDetails = new FleetDetails(event.getFleetDetails());
         ArrayList<FleetDetailsShip> ships = fleetDetails.ships();
-        for(FleetDetailsShip ship : ships)
-            returningFleet.put(ship.getName(),Integer.parseInt(ship.getValue()));
+        returningFleet.addAll(ships);
 
     }
 
@@ -171,22 +157,49 @@ public class Expedition implements Serializable {
         this.flyFromExpeditionEvent = flyFromExpeditionEvent;
     }
 
-    public Timer getTimer() {
-        return timer;
-    }
-
-    public void setTimer(Timer timer) {
-        this.timer = timer;
-    }
-
     public void resetFields(){
         setStorage(0);
         setShipsBefore(0);
         setShipsAfter(0);
         setLootedResources(new Resources(0,0,0,0));
         setFlyDuration(0);
-        setTimer(null);
-        returningFleet = new HashMap<>();
+        setEndTimeInSeconds(0);
+        returningFleet.clear();
+    }
+
+    public Status getStatus() {
+        return status;
+    }
+
+    public void setStatus(Status status) {
+        this.status = status;
+    }
+
+    public long getEndTimeInSeconds() {
+        return endTimeInSeconds;
+    }
+
+    public void setEndTimeInSeconds(long endTimeInSeconds) {
+        this.endTimeInSeconds = endTimeInSeconds;
+    }
+
+    public long getStatusTimeInMilliseconds() {
+        return statusTimeInMilliseconds;
+    }
+
+    public void setStatusTimeInMilliseconds(long statusTimeInMilliseconds) {
+        this.statusTimeInMilliseconds = statusTimeInMilliseconds;
+    }
+    public void setStatusTimeInMilliseconds() {
+        this.statusTimeInMilliseconds = System.currentTimeMillis();
+    }
+
+    public ArrayList<Ship> getDeclaredShips() {
+        return declaredShips;
+    }
+
+    public void setDeclaredShips(ArrayList<Ship> declaredShips) {
+        this.declaredShips = declaredShips;
     }
 
     public String log(){
@@ -211,7 +224,7 @@ public class Expedition implements Serializable {
         return id + SEPARATOR + Calendar.getDateTime(System.currentTimeMillis()) + SEPARATOR + "\n" +
                 (flyFromExpeditionEvent != null ? flyFromExpeditionEvent.toString() : "null") + SEPARATOR +
                 lootedResources + SEPARATOR +
-                (itemShipLists.isEmpty() ? "null" : itemShipLists.toString()) + SEPARATOR +
+                (declaredShips.isEmpty() ? "null" : declaredShips.toString()) + SEPARATOR +
                 (returningFleet.isEmpty() ? "null" : returningFleet.toString()) + SEPARATOR +
                 flyToExpeditionEvent.getArrivalTime() + SEPARATOR +
                 flyToExpeditionEvent.getID() + SEPARATOR +
@@ -230,5 +243,23 @@ public class Expedition implements Serializable {
     @Override
     public int hashCode() {
         return Objects.hash(id);
+    }
+
+    public boolean isMaxExpeditionReached(int currentExpeditions, int maxExpeditions){
+        return currentExpeditions == maxExpeditions;
+    }
+    public boolean isMaxFleetReached(int currentFleet, int maxFleet){
+        return currentFleet == maxFleet;
+    }
+
+    public Ship getShipFromList(ArrayList<Ship> ships, Ship wantedShip){
+        Ship ship = null;
+        if(!ships.isEmpty())
+           ship = ships.stream()
+                    .filter(item -> item.equals(wantedShip))
+                    .findFirst()
+                    .orElse(null);
+
+        return ship;
     }
 }

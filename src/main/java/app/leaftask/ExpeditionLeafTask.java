@@ -3,8 +3,6 @@ package app.leaftask;
 import app.data.DataLoader;
 import app.data.expedition.Expedition;
 import app.data.expedition.Expeditions;
-import app.data.expedition.ItemShipList;
-import app.data.expedition.Status;
 import ogame.OgameWeb;
 import ogame.ResourcesBar;
 import ogame.eventbox.Event;
@@ -22,7 +20,6 @@ import ogame.utils.log.AppLog;
 import ogame.utils.watch.Timer;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 public class ExpeditionLeafTask extends LeafTask{
@@ -79,10 +76,10 @@ public class ExpeditionLeafTask extends LeafTask{
     }
 
     private void wait(Expedition expedition) {
-        long timeToFinish = Timer.timeSeconds(expedition.getTimer().getFinishDate(),System.currentTimeMillis()/1000);
+        long timeToFinish = Timer.timeSeconds(expedition.getEndTimeInSeconds(),System.currentTimeMillis()/1000);
         if(timeToFinish < 0){
             expedition.setStatus(Status.SENDING);
-            expedition.setStatusTime(System.currentTimeMillis());
+            expedition.setStatusTimeInMilliseconds();
         }
     }
 
@@ -90,19 +87,19 @@ public class ExpeditionLeafTask extends LeafTask{
         Expeditions.saveLog(expedition.log());
         expedition.resetFields();
         expedition.setStatus(Status.SENDING);
-        expedition.setStatusTime(System.currentTimeMillis());
+        expedition.setStatusTimeInMilliseconds();
     }
 
     private void returns(Expedition expedition) {
-        long timeToFinish = Timer.timeSeconds(expedition.getTimer().getFinishDate(),System.currentTimeMillis()/1000);
+        long timeToFinish = Timer.timeSeconds(expedition.getEndTimeInSeconds(),System.currentTimeMillis()/1000);
         if(timeToFinish < 0){
             expedition.setStatus(Status.FINISHED);
-            expedition.setStatusTime(System.currentTimeMillis());
+            expedition.setStatusTimeInMilliseconds();
         }
     }
 
     private void expedition(Expedition expedition) {
-        long timeToFinish = Timer.timeSeconds(expedition.getTimer().getFinishDate(),System.currentTimeMillis()/1000);
+        long timeToFinish = Timer.timeSeconds(expedition.getEndTimeInSeconds(),System.currentTimeMillis()/1000);
         if(timeToFinish < 0){
             refreshWebPage();
             String idReturnEvent = expedition.getFlyFromExpeditionEvent().getID();
@@ -111,67 +108,68 @@ public class ExpeditionLeafTask extends LeafTask{
             List<Event> expeditionEvents = EventBoxContent.events(OgameWeb.webDriver,Mission.EXPEDITION);
             if(expeditionEvents.isEmpty()){
                 expedition.setStatus(Status.FINISHED);
-                expedition.setStatusTime(System.currentTimeMillis());
+                expedition.setStatusTimeInMilliseconds();
                 return;
             }
             if(!openEventBox())
                 return;
-            Event event = getEvent(idReturnEvent);
+            Event returnEvent = getEvent(idReturnEvent);
             //Fleet lost
-            if(event == null) {
+            if(returnEvent == null) {
                 expedition.setStatus(Status.FINISHED);
-                expedition.setStatusTime(System.currentTimeMillis());
-                expedition.setFlyFromExpeditionEvent(event);
+                expedition.setStatusTimeInMilliseconds();
+                expedition.setFlyFromExpeditionEvent(returnEvent);
                 AppLog.print(ExpeditionLeafTask.class.getName(),0,"Expedition " + expedition.getId() + " is lost.");
                 return;
             }
 
             //Fleet not delayed
-            if(event.getArrivalTime() == currentEvent.getArrivalTime())
+            if(returnEvent.getArrivalTime() == currentEvent.getArrivalTime())
                 expedition.setStatus(Status.RETURN);
             else//Fleet delayed or accelerated
                 expedition.setStatus(Status.RETURN_CHANGED);
 
-            expedition.setStatusTime(System.currentTimeMillis());
+            expedition.setStatusTimeInMilliseconds();
 
-            FleetDetails fleetDetails = new FleetDetails(event.getFleetDetails());
+            FleetDetails fleetDetails = new FleetDetails(returnEvent.getFleetDetails());
             Resources resources = fleetDetails.getResources();
             ArrayList<FleetDetailsShip> returnedShips = fleetDetails.ships();
             long shipsAfter = sumOfShips(returnedShips);
             expedition.setLootedResources(resources);
             expedition.setShipsAfter(shipsAfter);
-            expedition.setFlyFromExpeditionEvent(event);
-            expedition.setReturningFleet(event);
-            expedition.setTimer(new Timer(0,expedition.getFlyFromExpeditionEvent().getArrivalTime()));
+            expedition.setFlyFromExpeditionEvent(returnEvent);
+            expedition.setReturningFleet(returnedShips);
+            expedition.setEndTimeInSeconds(expedition.getFlyFromExpeditionEvent().getArrivalTime());
         }
     }
 
     private void sent(Expedition expedition) {
-        long timeToFinish = Timer.timeSeconds(expedition.getTimer().getFinishDate(),System.currentTimeMillis()/1000);
+        long timeToFinish = Timer.timeSeconds(expedition.getEndTimeInSeconds(),System.currentTimeMillis()/1000);
         if(timeToFinish < 0){
             expedition.setStatus(Status.EXPEDITION);
-            expedition.setStatusTime(System.currentTimeMillis());
-            expedition.setTimer(new Timer(0,expedition.getFlyOnExpeditionEvent().getArrivalTime()));
+            expedition.setStatusTimeInMilliseconds();
+            expedition.setEndTimeInSeconds(expedition.getFlyOnExpeditionEvent().getArrivalTime());
         }
     }
 
     private void dataDownloading(Expedition expedition) {
-        final long TIME_SHIFT_MILLISECONDS = 3L;
-        final long ONE_HOUR = 3600L;
-        long expeditionStatusTime = expedition.getStatusTime()/1000;
-        long expeditionFleetFlyDuration = expedition.getFlyDuration()*2/1000;
-        long returnTime = expeditionStatusTime + expeditionFleetFlyDuration + ONE_HOUR;
+        final long TIME_SHIFT_SECONDS = 3L;
+        final long EXPEDITION_TIME_IN_SECONDS = 3600L;
+        long expeditionStatusTime = expedition.getStatusTimeInMilliseconds()/1000;
+        long expeditionFleetFlyDuration = expedition.getFlyDuration()*2;
+        long returnTime = expeditionStatusTime + expeditionFleetFlyDuration + EXPEDITION_TIME_IN_SECONDS;
         Event returnEvent;
         if(!openEventBox())
             return;
         ArrayList<Event> eventList = EventBoxContent.events(OgameWeb.webDriver, Mission.EXPEDITION);
         //Downloads correct event of expedition
-        returnEvent = getCorrectEvent(eventList,expedition.getDestinationCoordinate(),TIME_SHIFT_MILLISECONDS,returnTime);
+        returnEvent = getCorrectEvent(eventList,expedition.getDestinationCoordinate(),TIME_SHIFT_SECONDS,returnTime);
         //Event doesn't exist.
         if(returnEvent == null){
             getAntiLooping().reset();
             expedition.setStatus(Status.SENDING);
-            expedition.setStatusTime(System.currentTimeMillis());
+            expedition.setStatusTimeInMilliseconds();
+            expedition.setEndTimeInSeconds(0);
             return;
         }
         expedition.setFlyFromExpeditionEvent(returnEvent);
@@ -180,8 +178,8 @@ public class ExpeditionLeafTask extends LeafTask{
         //Download incorrect data or another event ID shift occurred
         if(expeditionEvent == null){
             expedition.setStatus(Status.DATA_ERROR);
-            expedition.setStatusTime(System.currentTimeMillis());
-            expedition.setTimer(new Timer(0,returnEvent.getArrivalTime()));
+            expedition.setStatusTimeInMilliseconds();
+            expedition.setEndTimeInSeconds(returnEvent.getArrivalTime());
         }
         Event flyToExpeditionEvent = EventBoxContent.eventFromId(OgameWeb.webDriver, previousEventID(expeditionEvent.getID()));
 
@@ -192,15 +190,14 @@ public class ExpeditionLeafTask extends LeafTask{
         expedition.setFlyOnExpeditionEvent(expeditionEvent);
         expedition.setFlyToExpeditionEvent(flyToExpeditionEvent);
         expedition.setStatus(Status.SENT);
-        expedition.setStatusTime(System.currentTimeMillis());
-        expedition.setTimer(new Timer(0,flyToExpeditionEvent.getArrivalTime()));
-
-//        Expeditions.saveLog(expedition.log());
+        expedition.setStatusTimeInMilliseconds();
+        expedition.setEndTimeInSeconds(flyToExpeditionEvent.getArrivalTime());
     }
 
     private void sending(Expedition expedition){
         Planet planet = expedition.getPlanet();
-        ArrayList<ItemShipList> itemShipLists = expedition.getItemShipLists();
+        ArrayList<Ship> declaredShips = expedition.getDeclaredShips();
+//        ArrayList<ItemShipList> itemShipLists = expedition.getItemShipLists();
         long ships = 0;
 
         if(!clickPlanet(planet))
@@ -212,41 +209,42 @@ public class ExpeditionLeafTask extends LeafTask{
         int maxExpeditions = FleetDispatch.maxExpeditionSlots(OgameWeb.webDriver);
         int currentExpeditions = FleetDispatch.currentExpeditionSlots(OgameWeb.webDriver);
         DataLoader.expeditions.setMaxExpeditions(maxExpeditions);
-        long WAIT_TIME = 10 * 60;
-        if(currentExpeditions == maxExpeditions){
+        long WAIT_TIME = 10 * 60L;
+        if(expedition.isMaxExpeditionReached(currentExpeditions,maxExpeditions)){
             expedition.setStatus(Status.MAX_EXPEDITION);
-            expedition.setStatusTime(System.currentTimeMillis());
-            expedition.setTimer(new Timer(0, System.currentTimeMillis()/1000 + WAIT_TIME));
+            expedition.setStatusTimeInMilliseconds();
+            expedition.setEndTimeInSeconds(System.currentTimeMillis()/1000 + WAIT_TIME);
             return;
         }
 
         if(!FleetDispatch.isAnyFleetOnPlanet(OgameWeb.webDriver)){
             expedition.setStatus(Status.NO_FLEET);
-            expedition.setStatusTime(System.currentTimeMillis());
-            expedition.setTimer(new Timer(0, System.currentTimeMillis()/1000 + WAIT_TIME));
+            expedition.setStatusTimeInMilliseconds();
+            expedition.setEndTimeInSeconds(System.currentTimeMillis()/1000 + WAIT_TIME);
             return;
         }
 
         int maxFleetSlots = FleetDispatch.maxFleetSlots(OgameWeb.webDriver);
         int currentSlots = FleetDispatch.currentFleetSlots(OgameWeb.webDriver);
-        if(currentSlots == maxFleetSlots){
+        if(expedition.isMaxFleetReached(currentSlots,maxFleetSlots)){
             expedition.setStatus(Status.MAX_FLEET_SLOT);
-            expedition.setStatusTime(System.currentTimeMillis());
-            expedition.setTimer(new Timer(0,System.currentTimeMillis()/1000 + WAIT_TIME));
+            expedition.setStatusTimeInMilliseconds();
+            expedition.setEndTimeInSeconds(System.currentTimeMillis()/1000 + WAIT_TIME);
+            return;
         }
 
         //Current ships on planet data
-        HashMap<Ship,Integer> currentShips = new HashMap<>();
-        for(ItemShipList item : itemShipLists){
-            Ship ship = item.getShip();
+        ArrayList<Ship> currentShipOnPlanet = new ArrayList<>();
+        for(Ship ship : declaredShips){
+            Ship currentShip = new Ship(ship.getDataTechnology());
             int value = FleetDispatch.getValueShips(OgameWeb.webDriver,ship.getDataTechnology());
-            currentShips.put(ship,value);
+            currentShip.setValue(value);
+            currentShipOnPlanet.add(currentShip);
         }
         //Selecting ships
-        for(ItemShipList item : itemShipLists){
-            Ship ship = item.getShip();
-            int value = item.getValue();
-            int currentValue = currentShips.get(ship);
+        for(Ship ship : declaredShips){
+            int value = ship.getValue();
+            int currentValue = expedition.getShipFromList(currentShipOnPlanet,ship).getValue();
 
             //Sent all
             if(value == -1){
@@ -268,8 +266,8 @@ public class ExpeditionLeafTask extends LeafTask{
         double shipsAvailable = (ships * 1.0f)/expedition.getShipsBefore();
         if(shipsAvailable <= 0.5){
             expedition.setStatus(Status.NO_FLEET);
-            expedition.setStatusTime(System.currentTimeMillis());
-            expedition.setTimer(new Timer(0, System.currentTimeMillis()/1000 + WAIT_TIME));
+            expedition.setStatusTimeInMilliseconds();
+            expedition.setEndTimeInSeconds(System.currentTimeMillis()/1000 + WAIT_TIME);
             return;
         }
         if(!FleetDispatch.isClickContinueToFleet2ON(OgameWeb.webDriver))
@@ -283,12 +281,12 @@ public class ExpeditionLeafTask extends LeafTask{
         long deuteriumOnPlanet = ResourcesBar.deuterium(OgameWeb.webDriver);
         if(deuteriumConsumption > deuteriumOnPlanet){
             expedition.setStatus(Status.NO_FUEL);
-            expedition.setStatusTime(System.currentTimeMillis());
-            expedition.setTimer(new Timer(0, System.currentTimeMillis()/1000 + WAIT_TIME));
+            expedition.setStatusTimeInMilliseconds();
+            expedition.setEndTimeInSeconds(System.currentTimeMillis()/1000 + WAIT_TIME);
             return;
         }
         Waiter.sleep(200,250);
-        long flyDuration = FleetDispatch.flyDurationMilliseconds(OgameWeb.webDriver);
+        long flyDuration = FleetDispatch.flyDurationSeconds(OgameWeb.webDriver);
         long storage = FleetDispatch.maxStorage(OgameWeb.webDriver);
 
         if(flyDuration == 0 || storage == 0)
@@ -298,26 +296,13 @@ public class ExpeditionLeafTask extends LeafTask{
         expedition.setStorage(storage);
         expedition.setShipsBefore(ships);
 
+        expedition.setStatusTimeInMilliseconds();
         if(!FleetDispatch.sendFleet(OgameWeb.webDriver))
             return;
 
         expedition.setStatus(Status.DATA_DOWNLOADING);
-        expedition.setStatusTime(System.currentTimeMillis());
         Waiter.sleep(1000,2000);
     }
-
-//    /**
-//     * Gets previous Event ID.
-//     * @param id Current event id
-//     * @return previous Event ID.
-//     */
-//    private String previousEventID(String id){
-//        String[] tab = id.split("-");
-//        StringBuilder stringBuilder = new StringBuilder();
-//        int previousId = Integer.parseInt(tab[1])-1;
-//        stringBuilder.append(tab[0]).append("-").append(previousId);
-//        return stringBuilder.toString();
-//    }
 
     private long sumOfShips(ArrayList<FleetDetailsShip> returnedShips){
         long sum = 0;

@@ -1,7 +1,7 @@
 package app.data.expedition;
 
 import java.io.Serializable;
-
+@Deprecated
 public enum Status implements Serializable {
 
     SENDING,

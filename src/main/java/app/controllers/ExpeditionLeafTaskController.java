@@ -6,7 +6,6 @@ import app.data.DataLoader;
 import app.data.expedition.*;
 import app.data.planets.ComboBoxPlanet;
 import javafx.collections.FXCollections;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.layout.VBox;
@@ -49,7 +48,7 @@ public class ExpeditionLeafTaskController {
         checkBoxAll.selectedProperty().addListener((observable, oldValue, newValue) -> textFieldValue.setDisable(newValue));
     }
 
-    private ArrayList<ItemShipList> itemShipLists = new ArrayList<>();
+    private ArrayList<Ship> ships = new ArrayList<>();
     @FXML
     void addShip() {
         Ship ship = comboBoxShip.getValue().getShip();
@@ -59,19 +58,19 @@ public class ExpeditionLeafTaskController {
         else{
             if(textFieldValue.getText().isEmpty())
                 return;
-
             value = Integer.parseInt(textFieldValue.getText());
         }
 
-        ItemShipList itemShipList = new ItemShipList(ship,value);
-        if(!itemShipLists.contains(itemShipList)){
-            ExpeditionLeafTaskShipItemConnector connector = new ExpeditionLeafTaskShipItemConnector(itemShipList);
-            itemShipLists.add(itemShipList);
+        Ship shipTmp = new Ship(ship.getDataTechnology());
+        shipTmp.setValue(value);
+        if(!ships.contains(shipTmp)){
+            ExpeditionLeafTaskShipItemConnector connector = new ExpeditionLeafTaskShipItemConnector(shipTmp);
+            ships.add(shipTmp);
             vBoxAddedShips.getChildren().add(connector.content());
         }
         else{
-            int index = itemShipLists.indexOf(itemShipList);
-            itemShipLists.set(index,itemShipList);
+            int index = ships.indexOf(shipTmp);
+            ships.set(index,shipTmp);
             updateVBoxAddedShips();
         }
         DataLoader.expeditions.save();
@@ -86,7 +85,7 @@ public class ExpeditionLeafTaskController {
         Coordinate coordinate = new Coordinate(galaxy,system,16);
         Planet planet = comboBoxPlanet.getValue().getPlanet();
 
-        Expedition expedition = new Expedition(planet,coordinate,new ArrayList<>(itemShipLists));
+        Expedition expedition = new Expedition(planet,coordinate,new ArrayList<>(ships));
         DataLoader.expeditions.add(expedition);
         updateQueue();
         DataLoader.expeditions.save();
@@ -94,8 +93,8 @@ public class ExpeditionLeafTaskController {
 
     public void updateVBoxAddedShips(){
         vBoxAddedShips.getChildren().clear();
-        for(ItemShipList itemShipList : itemShipLists){
-            ExpeditionLeafTaskShipItemConnector connector = new ExpeditionLeafTaskShipItemConnector(itemShipList);
+        for(Ship ship : ships){
+            ExpeditionLeafTaskShipItemConnector connector = new ExpeditionLeafTaskShipItemConnector(ship);
             vBoxAddedShips.getChildren().add(connector.content());
         }
     }
@@ -134,7 +133,7 @@ public class ExpeditionLeafTaskController {
                 botWindowController.setRequirementsTechnology(ship.getDataTechnology().getRequiredTechnologies(),planet);
             }
         });
-        itemShipLists.clear();
+        ships.clear();
         updateVBoxAddedShips();
     }
 
@@ -143,7 +142,9 @@ public class ExpeditionLeafTaskController {
         this.botWindowController = botWindowController;
     }
     public void saveShipsList() {
-        selectedExpedition.setItemShipLists(new ArrayList<>(itemShipLists));
+        selectedExpedition.setDeclaredShips(new ArrayList<>(ships));
+        selectedExpedition.setShipsBefore(0);
+        selectedExpedition.setShipsBefore();
         selectedExpedition = null;
         disableEditButton();
         clearShipsList();
@@ -155,8 +156,8 @@ public class ExpeditionLeafTaskController {
         this.selectedExpedition = selectedExpedition;
     }
 
-    public void setItemShipLists(ArrayList<ItemShipList> itemShipLists) {
-        this.itemShipLists = itemShipLists;
+    public void setDeclaredShips(ArrayList<Ship> ships) {
+        this.ships = ships;
     }
 
     /**
@@ -178,7 +179,7 @@ public class ExpeditionLeafTaskController {
         editButton.setDisable(!editButton.isDisable());
     }
     public void clearShipsList(){
-        itemShipLists.clear();
+        ships.clear();
     }
 
 

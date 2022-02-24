@@ -2,14 +2,13 @@ package app.controllers;
 
 import app.data.DataLoader;
 import app.data.expedition.Expedition;
-import app.data.expedition.ItemShipList;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import ogame.planets.Resources;
 import ogame.utils.log.AppLog;
 import ogame.utils.watch.Calendar;
+import ogame.utils.watch.Timer;
 
 import java.util.ArrayList;
 
@@ -61,14 +60,11 @@ public class ExpeditionLeafTaskExpeditionItemController {
                     expedition.getLootedResources().getCrystal()+ "/"+
                     expedition.getLootedResources().getDeuterium());
         }
-        if(expedition.getTimer()!= null)
-            labelTimer.setText(expedition.getTimer().leftTimeSecond());
-        else
-            labelTimer.setText("--:--:--");
+        labelTimer.setText(expedition.getEndTimeInSeconds() == 0 ? "--:--:--" : Timer.leftTimeSecond(expedition.getEndTimeInSeconds()));
 
         labelFleet.setText(expedition.getShipsBefore()+"/"+expedition.getShipsAfter());
         labelStatus.setText(expedition.getStatus().name());
-        labelStatusTime.setText(Calendar.getDateTime(expedition.getStatusTime()));
+        labelStatusTime.setText(Calendar.getDateTime(expedition.getStatusTimeInMilliseconds()));
         if(!expeditionLeafTaskController.isExpeditionContainerSelected(expedition))
             hBoxRoot.getStyleClass().remove("expediton-item-selected");
     }
@@ -94,7 +90,7 @@ public class ExpeditionLeafTaskExpeditionItemController {
                 expeditionLeafTaskController.setSelectedExpedition(expedition);
                 hBoxRoot.getStyleClass().add("expediton-item-selected");
                 expeditionLeafTaskController.disableEditButton();
-                expeditionLeafTaskController.setItemShipLists(new ArrayList<>(expedition.getItemShipLists()));
+                expeditionLeafTaskController.setDeclaredShips(new ArrayList<>(expedition.getDeclaredShips()));
                 expeditionLeafTaskController.updateVBoxAddedShips();
             }
     }

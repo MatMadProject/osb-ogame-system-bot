@@ -5,6 +5,7 @@ import ogame.ships.Ship;
 import java.io.Serializable;
 import java.util.Objects;
 
+@Deprecated
 public class ItemShipList implements Serializable {
     private static final long serialVersionUID = 1992L;
     private final Ship ship;
