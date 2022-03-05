@@ -2,9 +2,11 @@ package app.controllers;
 
 import app.controllers_connector.ExpeditionLeafTaskExpeditionItemConnector;
 import app.controllers_connector.ExpeditionLeafTaskShipItemConnector;
+import app.controllers_connector.TransportLeafTaskItemConnector;
 import app.data.DataLoader;
 import app.data.expedition.*;
 import app.data.planets.ComboBoxPlanet;
+import app.data.transport.TransportItem;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
@@ -14,6 +16,7 @@ import ogame.planets.Planet;
 import ogame.ships.Ship;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class ExpeditionLeafTaskController {
     @FXML
@@ -23,6 +26,8 @@ public class ExpeditionLeafTaskController {
     @FXML
     public TextField textFieldPlanet;
     public Button editButton;
+    public Label labelError;
+    public VBox vBoxHistory;
     @FXML
     private ComboBox<ComboBoxPlanet> comboBoxPlanet;
 
@@ -78,17 +83,21 @@ public class ExpeditionLeafTaskController {
 
     @FXML
     void addExpedition() {
-        if(textFieldGalaxy.getText().isEmpty() || textFieldSystem.getText().isEmpty())
+        if(textFieldGalaxy.getText().isEmpty() || textFieldSystem.getText().isEmpty()) {
+            setError("Galaxy or system is 0");
             return;
+        }
         int galaxy = Integer.parseInt(textFieldGalaxy.getText());
         int system = Integer.parseInt(textFieldSystem.getText());
         Coordinate coordinate = new Coordinate(galaxy,system,16);
         Planet planet = comboBoxPlanet.getValue().getPlanet();
 
         Expedition expedition = new Expedition(planet,coordinate,new ArrayList<>(ships));
-        DataLoader.expeditions.add(expedition);
-        updateQueue();
-        DataLoader.expeditions.save();
+        if(DataLoader.expeditions.add(expedition)){
+            updateQueue();
+            DataLoader.expeditions.save();
+        }else
+            setError("Achieves maximum expeditions value");
     }
 
     public void updateVBoxAddedShips(){
@@ -182,6 +191,36 @@ public class ExpeditionLeafTaskController {
         ships.clear();
     }
 
+    private long errorTimeStamp = 0;
+
+    public void updateDisplayError(){
+        if(!displayError()){
+            labelError.getStyleClass().remove("error-label");
+            labelError.setText("");
+        }
+    }
+
+    private void setError(String errorText){
+        labelError.setText(errorText);
+        labelError.getStyleClass().add("error-label");
+        errorTimeStamp = System.currentTimeMillis();
+    }
+
+    private boolean displayError(){
+        long ERROR_DISPLAY_TIME = 3 * 1000L;
+        return System.currentTimeMillis() - errorTimeStamp < ERROR_DISPLAY_TIME;
+    }
 
 
+    public void updateHistoryList() {
+        List<Expedition> historyList = DataLoader.expeditions.get50LatestItemOfHistoryList();
+        if(historyList.size() != vBoxHistory.getChildren().size()){
+            vBoxHistory.getChildren().clear();
+            for(Expedition expedition : historyList){
+                ExpeditionLeafTaskExpeditionItemConnector connector = new ExpeditionLeafTaskExpeditionItemConnector(expedition,this);
+                connector.getController().setHistoryItem();
+                vBoxHistory.getChildren().add(connector.content());
+            }
+        }
+    }
 }

@@ -7,11 +7,13 @@ import ogame.utils.log.AppLog;
 
 import java.io.*;
 import java.util.ArrayList;
+import java.util.List;
 
 public class Expeditions  implements LSD, Serializable {
 
     private static final long serialVersionUID = 1992L;
     private ArrayList<Expedition> expeditionList = new ArrayList<>();
+    private ArrayList<Expedition> historyList = new ArrayList<>();
     private int maxExpeditions = 1; //-1
     private int id = 0;
 
@@ -35,6 +37,7 @@ public class Expeditions  implements LSD, Serializable {
                 Expeditions object = (Expeditions) o.readObject();
                 this.expeditionList = object.getExpeditionList();
                 this.maxExpeditions = object.getMaxExpeditions();
+                this.historyList = object.getHistoryList();
                 id = object.id();
 
                 o.close();
@@ -98,13 +101,14 @@ public class Expeditions  implements LSD, Serializable {
         }
     }
 
-    public void add(Expedition expedition){
+    public boolean add(Expedition expedition){
         if(expeditionList.size() < maxExpeditions){
             expeditionList.add(expedition);
             AppLog.print(Expeditions.class.getName(),0,"Added new expeditions.");
-
+            return true;
         }else{
             AppLog.print(Expeditions.class.getName(),0,"Achieves maximum expeditions value.");
+            return false;
         }
     }
 
@@ -126,4 +130,22 @@ public class Expeditions  implements LSD, Serializable {
     }
     public int id(){return id;}
 
+    public ArrayList<Expedition> getHistoryList() {
+        return historyList;
+    }
+    public void addToHistory (Expedition expedition){
+        historyList.add(expedition);
+    }
+
+    public List<Expedition> get50LatestItemOfHistoryList() {
+        ArrayList<Expedition> list = new ArrayList<>();
+        int size = historyList.size();
+        if(size > 50){
+            for(int i = size - 1 ; i > size - 50; i--)
+                list.add(historyList.get(i));
+
+            return list;
+        }
+        return historyList;
+    }
 }

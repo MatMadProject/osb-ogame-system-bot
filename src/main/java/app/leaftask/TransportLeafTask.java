@@ -123,7 +123,7 @@ public class TransportLeafTask extends LeafTask{
     }
 
     private void dataDownloading(TransportItem transportItem) {
-        final long TIME_SHIFT_SECONDS = 3L;
+        final long TIME_SHIFT_SECONDS = 4L;
         long itemStatusTime = transportItem.getStatusTimeInMilliseconds()/1000;
         long flightDuration = transportItem.getFlyDurationInSeconds() * 2;
         long estimatedReturnTime = itemStatusTime + flightDuration;
@@ -131,7 +131,7 @@ public class TransportLeafTask extends LeafTask{
         Event returnEvent;
         if(!openEventBox())
             return;
-
+        Waiter.sleep(200,200);
         ArrayList<Event> eventList = EventBoxContent.events(OgameWeb.webDriver, Mission.TRANSPORT);
         //Downloads correct event of expedition
         returnEvent = getCorrectEventFromEventBox(eventList,transportItem.getPlanetEnd().getCoordinate(),TIME_SHIFT_SECONDS,estimatedReturnTime);
@@ -171,7 +171,7 @@ public class TransportLeafTask extends LeafTask{
         transportItem.setSentResources(sentResources);
         transportItem.setStatus(Status.SENT);
         transportItem.setStatusTimeInMilliseconds();
-        transportItem.setEndTimeInSeconds(returnEvent.getArrivalTime());
+        transportItem.setEndTimeInSeconds(flightToDestinationEvent.getArrivalTime());
     }
 
     private void sending(TransportItem transportItem) {

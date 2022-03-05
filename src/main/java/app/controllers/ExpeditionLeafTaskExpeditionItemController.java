@@ -10,7 +10,9 @@ import ogame.utils.log.AppLog;
 import ogame.utils.watch.Calendar;
 import ogame.utils.watch.Timer;
 
+import java.text.NumberFormat;
 import java.util.ArrayList;
+import java.util.Locale;
 
 public class ExpeditionLeafTaskExpeditionItemController {
 
@@ -40,11 +42,19 @@ public class ExpeditionLeafTaskExpeditionItemController {
 
     private ExpeditionLeafTaskController expeditionLeafTaskController;
     private Expedition expedition;
+    private boolean historyItem = false;
+
     @FXML
     void delete() {
-        DataLoader.expeditions.getExpeditionList().remove(expedition);
-        expeditionLeafTaskController.updateQueue();
-        AppLog.print(ExpeditionLeafTaskController.class.getName(),2,"Remove from expedition queue " + expedition.getId() + ".");
+        if(historyItem){
+            DataLoader.expeditions.getHistoryList().remove(expedition);
+            expeditionLeafTaskController.updateHistoryList();
+            AppLog.print(ExpeditionLeafTaskController.class.getName(),2,"Remove from  history expedition, id = " + expedition.getId() + ".");
+        }else{
+            DataLoader.expeditions.getExpeditionList().remove(expedition);
+            expeditionLeafTaskController.updateQueue();
+            AppLog.print(ExpeditionLeafTaskController.class.getName(),2,"Remove from expedition queue, id = " + expedition.getId() + ".");
+        }
         DataLoader.expeditions.save();
     }
 
@@ -53,13 +63,25 @@ public class ExpeditionLeafTaskExpeditionItemController {
         labelPlanet.setText(expedition.getPlanet().getCoordinate().getText());
         labelTarget.setText(expedition.getDestinationCoordinate().getText());
         Resources resources = expedition.getLootedResources();
-        if(resources == null)
-            labelStorage.setText("0");
-        else{
-            labelStorage.setText(expedition.getLootedResources().getMetal()+"/"+
-                    expedition.getLootedResources().getCrystal()+ "/"+
-                    expedition.getLootedResources().getDeuterium());
+        if(historyItem){
+            if(resources == null)
+                labelStorage.setText("0");
+            else{
+                double sum = expedition.getLootedResources().sum();
+                NumberFormat numberFormat = NumberFormat.getPercentInstance(new Locale("pl", "PL"));
+                labelStorage.setText(sum+"/"
+                        + numberFormat.format(sum/expedition.getStorage()));
+            }
+        }else{
+            if(resources == null)
+                labelStorage.setText("0");
+            else{
+                labelStorage.setText(expedition.getLootedResources().getMetal()+"/"+
+                        expedition.getLootedResources().getCrystal()+ "/"+
+                        expedition.getLootedResources().getDeuterium());
+            }
         }
+
         labelTimer.setText(expedition.getEndTimeInSeconds() == 0 ? "--:--:--" : Timer.leftTimeSecond(expedition.getEndTimeInSeconds()));
 
         labelFleet.setText(expedition.getShipsBefore()+"/"+expedition.getShipsAfter());
@@ -93,5 +115,9 @@ public class ExpeditionLeafTaskExpeditionItemController {
                 expeditionLeafTaskController.setDeclaredShips(new ArrayList<>(expedition.getDeclaredShips()));
                 expeditionLeafTaskController.updateVBoxAddedShips();
             }
+    }
+
+    public void setHistoryItem() {
+        this.historyItem = true;
     }
 }

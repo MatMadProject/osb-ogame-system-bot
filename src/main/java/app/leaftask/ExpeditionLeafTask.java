@@ -84,6 +84,7 @@ public class ExpeditionLeafTask extends LeafTask{
     }
 
     private void finished(Expedition expedition) {
+        DataLoader.expeditions.addToHistory(expedition.copy());
         Expeditions.saveLog(expedition.log());
         expedition.resetFields();
         expedition.setStatus(Status.SENDING);

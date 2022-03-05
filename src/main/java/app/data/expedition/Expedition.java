@@ -34,16 +34,6 @@ public class Expedition implements Serializable {
     private Event flyFromExpeditionEvent;
     private long endTimeInSeconds;
     private long statusTimeInMilliseconds;
-//
-//    public Expedition(Planet startObject, Coordinate targetCoordinate, ArrayList<ItemShipList> itemShipLists) {
-//        this.planet = startObject;
-//        this.destinationCoordinate = targetCoordinate;
-//        this.itemShipLists = itemShipLists;
-//        status = Status.SENDING;
-//        statusTime = System.currentTimeMillis();
-//        id = String.valueOf(DataLoader.expeditions.getId());
-//        setShipsBefore();
-//    }
 
     public Expedition(Planet startObject, Coordinate targetCoordinate, ArrayList<Ship> declaredShips) {
         this.planet = startObject;
@@ -167,6 +157,18 @@ public class Expedition implements Serializable {
         returningFleet.clear();
     }
 
+    public Expedition copy(){
+        Expedition expedition = new Expedition(this.planet,this.destinationCoordinate,this.declaredShips);
+        expedition.setLootedResources(this.lootedResources);
+        expedition.setStorage(this.storage);
+        expedition.setShipsBefore(this.shipsBefore);
+        expedition.setShipsAfter(this.shipsAfter);
+        expedition.setStatus(this.status);
+        expedition.setStatusTimeInMilliseconds(this.statusTimeInMilliseconds);
+        expedition.setFlyFromExpeditionEvent(this.flyFromExpeditionEvent);
+        return expedition;
+    }
+
     public Status getStatus() {
         return status;
     }
@@ -211,20 +213,6 @@ public class Expedition implements Serializable {
                 lootedResources + SEPARATOR +
                 shipsBefore + SEPARATOR +
                 shipsAfter + SEPARATOR +
-                (returningFleet.isEmpty() ? "null" : returningFleet.toString()) + SEPARATOR +
-                flyToExpeditionEvent.getArrivalTime() + SEPARATOR +
-                flyToExpeditionEvent.getID() + SEPARATOR +
-                flyOnExpeditionEvent.getArrivalTime() + SEPARATOR +
-                flyOnExpeditionEvent.getID() + SEPARATOR;
-    }
-
-    public String logOld(){
-        final String SEPARATOR =";";
-
-        return id + SEPARATOR + Calendar.getDateTime(System.currentTimeMillis()) + SEPARATOR + "\n" +
-                (flyFromExpeditionEvent != null ? flyFromExpeditionEvent.toString() : "null") + SEPARATOR +
-                lootedResources + SEPARATOR +
-                (declaredShips.isEmpty() ? "null" : declaredShips.toString()) + SEPARATOR +
                 (returningFleet.isEmpty() ? "null" : returningFleet.toString()) + SEPARATOR +
                 flyToExpeditionEvent.getArrivalTime() + SEPARATOR +
                 flyToExpeditionEvent.getID() + SEPARATOR +

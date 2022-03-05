@@ -102,6 +102,8 @@ public class GUIUpdater extends Task {
                 LeafTaskConnector  leafTaskConnector = botWindowController.getSelectedLeafTask().getLeafTaskConnector();
                 if(leafTaskConnector instanceof ExpeditionLeafTaskConnector){
                     ((ExpeditionLeafTaskConnector) leafTaskConnector).getController().updateQueue();
+                    ((ExpeditionLeafTaskConnector) leafTaskConnector).getController().updateHistoryList();
+                    ((ExpeditionLeafTaskConnector) leafTaskConnector).getController().updateDisplayError();
                 }
             }
         }

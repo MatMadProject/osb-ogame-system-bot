@@ -12,7 +12,7 @@
 <?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.VBox?>
 
-<AnchorPane prefHeight="638.0" prefWidth="782.0" stylesheets="@../css/bot-window.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.controllers.ExpeditionLeafTaskController">
+<AnchorPane prefHeight="638.0" prefWidth="782.0" stylesheets="@../css/bot-window.css" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.controllers.ExpeditionLeafTaskController">
     <children>
         <VBox prefHeight="638.0" prefWidth="782.0" spacing="2.0" styleClass="expedition">
             <children>
@@ -87,7 +87,7 @@
                         <Insets />
                     </VBox.margin>
                 </Label>
-                <ScrollPane prefHeight="150.0" prefWidth="782.0">
+                <ScrollPane prefHeight="175.0" prefWidth="782.0">
                     <content>
                         <VBox prefWidth="777.0" spacing="1.0" styleClass="vbox-imperium-data">
                             <children>
@@ -108,6 +108,30 @@
                             </children></VBox>
                     </content>
                 </ScrollPane>
+            <Label alignment="CENTER" layoutX="10.0" layoutY="162.0" prefWidth="782.0" styleClass="footer" text="HISTORY" textAlignment="CENTER" />
+            <ScrollPane prefHeight="250.0" prefWidth="782.0">
+               <content>
+                  <VBox prefWidth="777.0" spacing="1.0" styleClass="vbox-imperium-data">
+                     <children>
+                        <HBox prefHeight="17.0" prefWidth="777.0" spacing="2.0" styleClass="vbox-imperium-data" stylesheets="@../css/bot-window.css">
+                           <children>
+                              <Label prefWidth="25.0" styleClass="label-title" text="ID" />
+                              <Label prefWidth="70.0" styleClass="label-title" text="PLANET" />
+                              <Label prefWidth="70.0" styleClass="label-title" text="TARGET" />
+                              <Label prefWidth="125.0" styleClass="label-title" text="STORAGE" />
+                              <Label layoutX="190.0" layoutY="10.0" prefWidth="120.0" styleClass="label-title" text="FLEET" />
+                              <Label prefWidth="140.0" styleClass="label-title" text="STATUS" />
+                              <Label prefWidth="120.0" styleClass="label-title" text="STATUS TIME" />
+                              <Label prefWidth="65.0" styleClass="label-title" text="TIMER" />
+                              <Label prefWidth="25.0" styleClass="label-title" />
+                           </children>
+                        </HBox>
+                        <VBox fx:id="vBoxHistory" prefWidth="777.0" spacing="1.0" />
+                     </children>
+                  </VBox>
+               </content>
+            </ScrollPane>
+            <Label fx:id="labelError" alignment="CENTER" prefWidth="782.0" styleClass="footer" textAlignment="CENTER" />
             </children>
         </VBox>
     </children>
