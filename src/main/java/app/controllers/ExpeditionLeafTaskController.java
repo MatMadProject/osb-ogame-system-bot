@@ -2,17 +2,14 @@ package app.controllers;
 
 import app.controllers_connector.ExpeditionLeafTaskExpeditionItemConnector;
 import app.controllers_connector.ExpeditionLeafTaskShipItemConnector;
-import app.controllers_connector.TransportLeafTaskItemConnector;
 import app.data.DataLoader;
 import app.data.expedition.*;
 import app.data.planets.ComboBoxPlanet;
-import app.data.transport.TransportItem;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.layout.VBox;
 import ogame.planets.Coordinate;
-import ogame.planets.Planet;
 import ogame.ships.Ship;
 
 import java.util.ArrayList;
@@ -90,9 +87,9 @@ public class ExpeditionLeafTaskController {
         int galaxy = Integer.parseInt(textFieldGalaxy.getText());
         int system = Integer.parseInt(textFieldSystem.getText());
         Coordinate coordinate = new Coordinate(galaxy,system,16);
-        Planet planet = comboBoxPlanet.getValue().getPlanet();
+        Object planetListObject = comboBoxPlanet.getValue().getObject();
 
-        Expedition expedition = new Expedition(planet,coordinate,new ArrayList<>(ships));
+        Expedition expedition = new Expedition(planetListObject,coordinate,new ArrayList<>(ships));
         if(DataLoader.expeditions.add(expedition)){
             updateQueue();
             DataLoader.expeditions.save();
@@ -124,7 +121,7 @@ public class ExpeditionLeafTaskController {
     }
 
     public void update() {
-        ArrayList<ComboBoxPlanet> comboBoxPlanetArrayList = ComboBoxPlanet.list(DataLoader.planets.getPlanetList());
+        ArrayList<ComboBoxPlanet> comboBoxPlanetArrayList = ComboBoxPlanet.planetAndMoonList(DataLoader.planets.getPlanetList());
         if(!comboBoxPlanetArrayList.isEmpty()) {
             comboBoxPlanet.setItems(FXCollections.observableArrayList(comboBoxPlanetArrayList));
             comboBoxPlanet.setValue(comboBoxPlanetArrayList.get(0));
@@ -136,10 +133,10 @@ public class ExpeditionLeafTaskController {
             comboBoxShip.setValue(comboBoxShipsArrayList.get(0));
         }
         comboBoxShip.valueProperty().addListener((observable, oldValue, newValue) -> {
-            Planet planet = comboBoxPlanet.getValue().getPlanet();
+            Object planetListObject = comboBoxPlanet.getValue().getObject();
             if(newValue != null){
                 Ship ship = comboBoxShip.getValue().getShip();
-                botWindowController.setRequirementsTechnology(ship.getDataTechnology().getRequiredTechnologies(),planet);
+                botWindowController.setRequirementsTechnology(ship.getDataTechnology().getRequiredTechnologies(),planetListObject);
             }
         });
         ships.clear();

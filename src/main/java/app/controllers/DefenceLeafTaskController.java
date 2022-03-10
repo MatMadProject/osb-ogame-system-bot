@@ -52,7 +52,7 @@ public class DefenceLeafTaskController {
     }
 
     public void update() {
-        ArrayList<ComboBoxPlanet> comboBoxPlanetArrayList = ComboBoxPlanet.list(DataLoader.planets.getPlanetList());
+        ArrayList<ComboBoxPlanet> comboBoxPlanetArrayList = ComboBoxPlanet.planetList(DataLoader.planets.getPlanetList());
         if(!comboBoxPlanetArrayList.isEmpty()) {
             comboBoxPlanet.setItems(FXCollections.observableArrayList(comboBoxPlanetArrayList));
             comboBoxPlanet.setValue(comboBoxPlanetArrayList.get(0));
@@ -65,7 +65,7 @@ public class DefenceLeafTaskController {
         }
 
         comboBoxDefence.valueProperty().addListener((observable, oldValue, newValue) -> {
-            Planet planet = comboBoxPlanet.getValue().getPlanet();
+            Planet planet = (Planet) comboBoxPlanet.getValue().getObject();
             if(newValue != null){
                 Defence defence = comboBoxDefence.getValue().getDefence();
                 botWindowController.setRequirementsTechnology(defence.getDataTechnology().getRequiredTechnologies(),planet);
@@ -78,7 +78,7 @@ public class DefenceLeafTaskController {
     private final ArrayList<DefenceLeafTaskItemConnector> connectors = new ArrayList<>();
     @FXML
     public void add() {
-        Planet planet = comboBoxPlanet.getValue().getPlanet();
+        Planet planet = (Planet) comboBoxPlanet.getValue().getObject();
         Defence defence = comboBoxDefence.getValue().getDefence();
         int value = Integer.parseInt(textFieldValue.getText().equals("") ? "0":textFieldValue.getText());
         int hour = Integer.parseInt(textFieldHour.getText().equals("") ? "0":textFieldHour.getText());

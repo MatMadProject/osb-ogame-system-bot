@@ -4,8 +4,13 @@ import app.data.DataLoader;
 import app.data.expedition.Expedition;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
+import javafx.scene.control.Tooltip;
 import javafx.scene.layout.HBox;
+import ogame.eventbox.FleetDetailsShip;
+import ogame.planets.Moon;
+import ogame.planets.Planet;
 import ogame.planets.Resources;
+import ogame.ships.Ship;
 import ogame.utils.log.AppLog;
 import ogame.utils.watch.Calendar;
 import ogame.utils.watch.Timer;
@@ -44,6 +49,16 @@ public class ExpeditionLeafTaskExpeditionItemController {
     private Expedition expedition;
     private boolean historyItem = false;
 
+    Tooltip tooltipStorage = new Tooltip("Metal: 0 \n" +
+            "Crystal: 0 \n" +
+            "Deuterium: 0");
+    Tooltip tooltipFleet = new Tooltip("Before: 0 \n" +
+            "After: 0" );
+    @FXML
+    void initialize(){
+        labelStorage.setTooltip(tooltipStorage);
+        labelFleet.setTooltip(tooltipFleet);
+    }
     @FXML
     void delete() {
         if(historyItem){
@@ -54,31 +69,35 @@ public class ExpeditionLeafTaskExpeditionItemController {
             DataLoader.expeditions.getExpeditionList().remove(expedition);
             expeditionLeafTaskController.updateQueue();
             AppLog.print(ExpeditionLeafTaskController.class.getName(),2,"Remove from expedition queue, id = " + expedition.getId() + ".");
+            expeditionLeafTaskController.clearShipsList();
+            expeditionLeafTaskController.disableEditButton();
         }
         DataLoader.expeditions.save();
     }
 
     public void update() {
         labelId.setText(expedition.getId());
-        labelPlanet.setText(expedition.getPlanet().getCoordinate().getText());
+        labelPlanet.setText(expedition.getPlanetListObject() instanceof Planet ?
+                ((Planet)expedition.getPlanetListObject()).getCoordinate().getText()
+                : ((Moon)expedition.getPlanetListObject()).getCoordinate().getText()+" [M]");
         labelTarget.setText(expedition.getDestinationCoordinate().getText());
         Resources resources = expedition.getLootedResources();
         if(historyItem){
-            if(resources == null)
+            if(resources.sum() == 0)
                 labelStorage.setText("0");
             else{
-                double sum = expedition.getLootedResources().sum();
+                double sum = resources.sum();
                 NumberFormat numberFormat = NumberFormat.getPercentInstance(new Locale("pl", "PL"));
                 labelStorage.setText(sum+"/"
                         + numberFormat.format(sum/expedition.getStorage()));
             }
         }else{
-            if(resources == null)
+            if(resources.sum() == 0)
                 labelStorage.setText("0");
             else{
-                labelStorage.setText(expedition.getLootedResources().getMetal()+"/"+
-                        expedition.getLootedResources().getCrystal()+ "/"+
-                        expedition.getLootedResources().getDeuterium());
+                labelStorage.setText(resources.getMetal()+"/"+
+                        resources.getCrystal()+ "/"+
+                        resources.getDeuterium());
             }
         }
 
@@ -87,6 +106,10 @@ public class ExpeditionLeafTaskExpeditionItemController {
         labelFleet.setText(expedition.getShipsBefore()+"/"+expedition.getShipsAfter());
         labelStatus.setText(expedition.getStatus().name());
         labelStatusTime.setText(Calendar.getDateTime(expedition.getStatusTimeInMilliseconds()));
+        tooltipStorage.setText("Metal: " +  resources.getMetal() +"\n" +
+                "Crystal: " +  resources.getCrystal() +"\n" +
+                "Deuterium: " +  resources.getDeuterium());
+        tooltipFleet.setText(fleetToolTip(expedition.getDeclaredShips(),expedition.getReturningFleet()));
         if(!expeditionLeafTaskController.isExpeditionContainerSelected(expedition))
             hBoxRoot.getStyleClass().remove("expediton-item-selected");
     }
@@ -119,5 +142,18 @@ public class ExpeditionLeafTaskExpeditionItemController {
 
     public void setHistoryItem() {
         this.historyItem = true;
+    }
+
+    private String fleetToolTip(ArrayList<Ship> declaredShips, ArrayList<FleetDetailsShip> returningFleet){
+        StringBuilder tooltip = new StringBuilder("Before: 0 \n");
+
+        for(Ship ship : declaredShips)
+            tooltip.append(ship.getLocalName()).append(" ").append(ship.getValue()).append("\n");
+
+        tooltip.append("After: 0 \n");
+        if(!returningFleet.isEmpty())
+            for(FleetDetailsShip ship : returningFleet)
+                tooltip.append(ship.getName()).append(" ").append(ship.getValue()).append("\n");
+        return tooltip.toString();
     }
 }

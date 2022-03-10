@@ -5,7 +5,6 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.layout.HBox;
 import ogame.RequiredTechnology;
-import ogame.planets.Planet;
 
 import java.io.IOException;
 
@@ -14,11 +13,11 @@ public class RequirementsContainerConnector implements LeafTaskConnector {
     private RequirementsContainerController controller;
     private HBox content;
     private final RequiredTechnology requiredTechnology;
-    private final Planet planet;
+    private final Object planetListObject;
 
-    public RequirementsContainerConnector(RequiredTechnology requiredTechnology, Planet planet){
+    public RequirementsContainerConnector(RequiredTechnology requiredTechnology, Object planetListObject){
         this.requiredTechnology = requiredTechnology;
-        this.planet = planet;
+        this.planetListObject = planetListObject;
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/gui/requirements-container.fxml"));
         try {
             content = fxmlLoader.load();
@@ -31,7 +30,7 @@ public class RequirementsContainerConnector implements LeafTaskConnector {
     @Override
     public Node content() {
         if(controller != null) {
-            controller.update(requiredTechnology, planet);
+            controller.update(requiredTechnology, planetListObject);
         }
         return content;
     }

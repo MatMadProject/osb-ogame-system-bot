@@ -13,7 +13,6 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
 import ogame.RequiredTechnology;
-import ogame.planets.Planet;
 import ogame.utils.log.AppLog;
 import ogame.utils.watch.Calendar;
 
@@ -133,12 +132,12 @@ public class BotWindowController {
         }
     }
     //Display reuirements for object.
-    public void setRequirementsTechnology(ArrayList<RequiredTechnology> requiredTechnologyArrayList, Planet planet){
+    public void setRequirementsTechnology(ArrayList<RequiredTechnology> requiredTechnologyArrayList, Object planetListObject){
         vBoxRequirements.getChildren().clear();
         //When object has required technolgies
         if(requiredTechnologyArrayList != null)
             for(RequiredTechnology requiredTechnology : requiredTechnologyArrayList){
-                RequirementsContainerConnector requirementsContainerConnector = new RequirementsContainerConnector(requiredTechnology, planet);
+                RequirementsContainerConnector requirementsContainerConnector = new RequirementsContainerConnector(requiredTechnology, planetListObject);
                 vBoxRequirements.getChildren().add(requirementsContainerConnector.content());
             }
     }

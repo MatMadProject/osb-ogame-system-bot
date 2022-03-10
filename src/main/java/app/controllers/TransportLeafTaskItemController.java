@@ -3,6 +3,8 @@ package app.controllers;
 import app.data.DataLoader;
 import app.data.transport.TransportItem;
 import javafx.scene.control.Label;
+import ogame.planets.Moon;
+import ogame.planets.Planet;
 import ogame.utils.log.AppLog;
 import ogame.utils.watch.Calendar;
 import ogame.utils.watch.Timer;
@@ -37,8 +39,14 @@ public class TransportLeafTaskItemController {
     }
     public void update(){
         labelId.setText(transportItem.getId());
-        labelPlanetStart.setText(transportItem.getPlanetStart().getCoordinate().getText());
-        labelPlanetEnd.setText(transportItem.getPlanetEnd().getCoordinate().getText());
+        if(transportItem.getObjectStart() instanceof Planet)
+            labelPlanetStart.setText(((Planet)transportItem.getObjectStart()).getCoordinate().getText());
+        else
+            labelPlanetStart.setText(((Moon)transportItem.getObjectStart()).getCoordinate().getText()+" [M]");
+        if(transportItem.getObjectEnd() instanceof Planet)
+            labelPlanetEnd.setText(((Planet)transportItem.getObjectEnd()).getCoordinate().getText());
+        else
+            labelPlanetEnd.setText(((Moon)transportItem.getObjectEnd()).getCoordinate().getText()+" [M]");
         labelValue.setText(transportItem.resources());
         labelStatus.setText(transportItem.getStatus().name());
         labelStatusTime.setText(Calendar.getDateTime(transportItem.getStatusTimeInMilliseconds()));

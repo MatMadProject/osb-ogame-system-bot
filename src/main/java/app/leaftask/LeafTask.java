@@ -5,10 +5,7 @@ import ogame.OgameWeb;
 import ogame.ResourcesBar;
 import ogame.Type;
 import ogame.eventbox.Event;
-import ogame.planets.Coordinate;
-import ogame.planets.Planet;
-import ogame.planets.PlanetsList;
-import ogame.planets.Resources;
+import ogame.planets.*;
 import ogame.ships.Mission;
 import ogame.tabs.*;
 import ogame.utils.AntiLooping;
@@ -156,6 +153,42 @@ public class LeafTask implements Execute{
         return true;
     }
 
+    /**
+     * Clicks on planet list object [Planet, Moon]
+     * @return If fail, return false.
+     */
+    public boolean clickOnPlanetListObject(Object planetListObject){
+        boolean planetSelected;
+        do {
+            if(planetListObject instanceof Planet){
+                Planet planet = (Planet) planetListObject;
+                if (PlanetsList.clickOnPlanet(OgameWeb.webDriver, planet.getPositionOnList()))
+                    break;
+                Waiter.sleep(200, 200);
+                if (getAntiLooping().check()) {
+                    getAntiLooping().reset();
+                    return false;
+                }
+                Planet tmpPlanet = PlanetsList.selectedPlanet(OgameWeb.webDriver);
+                planetSelected = tmpPlanet.getId().equals(planet.getId());
+            }else{
+                Moon moon = (Moon) planetListObject;
+                if (PlanetsList.clickOnMoon(OgameWeb.webDriver, moon.getPositionOnList()))
+                    break;
+                Waiter.sleep(200, 200);
+                if (getAntiLooping().check()) {
+                    getAntiLooping().reset();
+                    return false;
+                }
+                Planet tmpPlanet = PlanetsList.selectedMoon(OgameWeb.webDriver);
+                planetSelected = tmpPlanet.getPositionOnList() == moon.getPositionOnList();
+            }
+
+        } while (planetSelected);
+        getAntiLooping().reset();
+        return true;
+    }
+
     public boolean clickOverview(){
         //Klikanie podgląd
         do{
@@ -262,6 +295,20 @@ public class LeafTask implements Execute{
                 return false;
             }
         }while(!Defence.visible(OgameWeb.webDriver)); // Jest niewidoczne
+        getAntiLooping().reset();
+        return true;
+    }
+
+    public boolean sendFleet(){
+        boolean isSent = false;
+        do{
+            isSent = FleetDispatch.sendFleet(OgameWeb.webDriver);
+            Waiter.sleep(200,300);
+            if(getAntiLooping().check()){
+                getAntiLooping().reset();
+                return false;
+            }
+        }while(isSent); // Jest niewidoczne
         getAntiLooping().reset();
         return true;
     }
@@ -376,6 +423,19 @@ public class LeafTask implements Execute{
         getAntiLooping().reset();
         return event;
     }
+    public boolean selectMoonDestinationObject(){
+        //Otwieranie openEventBox
+        do{
+            FleetDispatch.clickTargetMoon(OgameWeb.webDriver);
+            Waiter.sleep(200,300);
+            if(getAntiLooping().check()){
+                getAntiLooping().reset();
+                return false;
+            }
+        }while(!FleetDispatch.isTargetMoonSelected(OgameWeb.webDriver)); // Jest niewidoczne
+        getAntiLooping().reset();
+        return true;
+    }
 
     public boolean selectFleetMission(Mission mission){
         //Otwieranie openEventBox
@@ -418,6 +478,35 @@ public class LeafTask implements Execute{
                         break;
                     }
                 }
+            Waiter.sleep(200,300);
+            if(getAntiLooping().check()){
+                getAntiLooping().reset();
+                return null;
+            }
+
+        }while(event == null); // Nie przypisano eventu
+        getAntiLooping().reset();
+        return event;
+    }
+    /**
+     *
+     * @param eventList ***
+     * @param timeShiftInSeconds Maximum difference in seconds between time from sending and time downloaded from event
+     * @param returnTimeSecond Calculated return time of the expedition. (Fly time *2 + Expedition time)
+     * @return Return null if expedition not found.
+     */
+    public Event getCorrectEventFromEventBox(ArrayList<Event> eventList, long timeShiftInSeconds, long returnTimeSecond){
+        Event event = null;
+        do{
+            for(Event tmpEvent : eventList){
+                long timeDifference = tmpEvent.getArrivalTime() - returnTimeSecond;
+                //timeDifference between <-x;x>
+                if(timeDifference <= timeShiftInSeconds && timeDifference >= timeShiftInSeconds*-1){
+                    event = tmpEvent;
+                    break;
+                }
+            }
+
             Waiter.sleep(200,300);
             if(getAntiLooping().check()){
                 getAntiLooping().reset();

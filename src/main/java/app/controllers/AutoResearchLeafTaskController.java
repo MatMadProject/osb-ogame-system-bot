@@ -35,7 +35,7 @@ public class AutoResearchLeafTaskController {
     private BotWindowController botWindowController;
 
     public void add() {
-        Planet planet = comboBoxPlanet.getValue().getPlanet();
+        Planet planet = (Planet) comboBoxPlanet.getValue().getObject();
         Research research = comboBoxResearch.getValue().getResearch();
         research.setRequiredResources(null);
         research.setProductionTime(null);
@@ -52,7 +52,7 @@ public class AutoResearchLeafTaskController {
     }
 
     public void update() {
-        ArrayList<ComboBoxPlanet> comboBoxPlanetArrayList = ComboBoxPlanet.list(DataLoader.planets.getPlanetList());
+        ArrayList<ComboBoxPlanet> comboBoxPlanetArrayList = ComboBoxPlanet.planetList(DataLoader.planets.getPlanetList());
         if(!comboBoxPlanetArrayList.isEmpty()) {
             comboBoxPlanet.setItems(FXCollections.observableArrayList(comboBoxPlanetArrayList));
             comboBoxPlanet.setValue(comboBoxPlanetArrayList.get(0));
@@ -63,7 +63,7 @@ public class AutoResearchLeafTaskController {
             comboBoxResearch.setValue(comboBoxResearchArrayList.get(0));
         }
         comboBoxResearch.valueProperty().addListener((observable, oldValue, newValue) -> {
-            Planet planet = comboBoxPlanet.getValue().getPlanet();
+            Planet planet = (Planet) comboBoxPlanet.getValue().getObject();
             if(newValue != null){
                     Research research = newValue.getResearch();
                     int upgradeLevel = DataLoader.listItemAutoResearch.getHighestLevelOfResearchOnQueue(research)+1;

@@ -2,9 +2,7 @@ package app.data.transport;
 
 import app.data.DataLoader;
 import app.leaftask.Status;
-import com.sun.org.apache.bcel.internal.generic.INEG;
 import ogame.eventbox.Event;
-import ogame.planets.Planet;
 import ogame.planets.Resources;
 import ogame.ships.Ship;
 
@@ -15,8 +13,8 @@ import java.util.Objects;
 
 public class TransportItem implements Serializable {
     private static final long serialVersionUID = 1992L;
-    private final Planet planetStart;
-    private final Planet planetEnd;
+    private final Object planetStart;
+    private final Object planetEnd;
     private Resources declaredResources = new Resources(0L,0L,0L,0);
     private Resources sentResources = new Resources(0L,0L,0L,0);
     private String id;
@@ -37,7 +35,7 @@ public class TransportItem implements Serializable {
     private boolean selectedExplorer;
     private boolean requiredNextFlight;
 
-    public TransportItem(Planet planetStart, Planet planetEnd, long timePeriodInSeconds) {
+    public TransportItem(Object planetStart, Object planetEnd, long timePeriodInSeconds) {
         this.planetStart = planetStart;
         this.planetEnd = planetEnd;
         this.timePeriodInSeconds = timePeriodInSeconds;
@@ -56,11 +54,12 @@ public class TransportItem implements Serializable {
         flyDurationInSeconds = 0;
         requiredNextFlight = false;
     }
-    public Planet getPlanetStart() {
+
+    public Object getObjectStart() {
         return planetStart;
     }
 
-    public Planet getPlanetEnd() {
+    public Object getObjectEnd() {
         return planetEnd;
     }
 

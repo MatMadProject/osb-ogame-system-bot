@@ -9,7 +9,6 @@ import ogame.eventbox.Event;
 import ogame.eventbox.FleetDetails;
 import ogame.eventbox.FleetDetailsShip;
 import ogame.planets.Coordinate;
-import ogame.planets.Planet;
 import ogame.planets.Resources;
 import ogame.ships.Mission;
 import ogame.ships.Ship;
@@ -196,12 +195,12 @@ public class ExpeditionLeafTask extends LeafTask{
     }
 
     private void sending(Expedition expedition){
-        Planet planet = expedition.getPlanet();
+        Object planetListObject = expedition.getPlanetListObject();
         ArrayList<Ship> declaredShips = expedition.getDeclaredShips();
 //        ArrayList<ItemShipList> itemShipLists = expedition.getItemShipLists();
         long ships = 0;
 
-        if(!clickPlanet(planet))
+        if(!clickOnPlanetListObject(planetListObject))
             return;
         if(!clickFleetDispatch())
             return;
@@ -271,8 +270,8 @@ public class ExpeditionLeafTask extends LeafTask{
             expedition.setEndTimeInSeconds(System.currentTimeMillis()/1000 + WAIT_TIME);
             return;
         }
-        if(!FleetDispatch.isClickContinueToFleet2ON(OgameWeb.webDriver))
-            return;
+//        if(!FleetDispatch.isClickContinueToFleet2ON(OgameWeb.webDriver))
+//            return;
         FleetDispatch.clickContinueToFleet2(OgameWeb.webDriver);
         //Input coordinate
         if(!inputCoordinateExpedition(expedition.getDestinationCoordinate()))

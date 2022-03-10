@@ -17,7 +17,7 @@ public class RequirementsContainerController {
 
     private RequiredTechnology requiredTechnology;
 
-    public void update(RequiredTechnology requiredTechnology, Planet planet) {
+    public void update(RequiredTechnology requiredTechnology, Object planetListObject) {
         this.requiredTechnology = requiredTechnology;
         DataTechnology dataTechnology = requiredTechnology.getRequiredTechnology();
         int currentLevel = -1;
@@ -32,7 +32,11 @@ public class RequirementsContainerController {
                 break;
             case PRODUCTION:
             case TECHNOLOGIES:
-                currentLevel = planet.getBuilding(dataTechnology).getLevel();
+                if(planetListObject instanceof Planet)
+                    currentLevel = ((Planet)planetListObject).getBuilding(dataTechnology).getLevel();
+                else{
+                    //todo Moon
+                }
                 break;
             case BATTLE:
             case CIVIL:

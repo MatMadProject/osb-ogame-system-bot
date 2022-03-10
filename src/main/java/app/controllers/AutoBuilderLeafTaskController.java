@@ -36,7 +36,7 @@ public class AutoBuilderLeafTaskController {
     Planet comboBoxPlanetValue;
     private BotWindowController botWindowController;
     public void update(){
-        ArrayList<ComboBoxPlanet> comboBoxPlanetArrayList = ComboBoxPlanet.list(DataLoader.planets.getPlanetList());
+        ArrayList<ComboBoxPlanet> comboBoxPlanetArrayList = ComboBoxPlanet.planetList(DataLoader.planets.getPlanetList());
         if(!comboBoxPlanetArrayList.isEmpty()){
             comboBoxPlanet.setItems(FXCollections.observableArrayList(comboBoxPlanetArrayList));
             comboBoxPlanet.setValue(comboBoxPlanetArrayList.get(0));
@@ -44,7 +44,7 @@ public class AutoBuilderLeafTaskController {
             comboBoxPlanet.valueProperty().addListener((observable, oldValue, newValue) -> {
 
                 if(newValue != null){
-                    comboBoxPlanetValue = newValue.getPlanet();
+                    comboBoxPlanetValue = (Planet) newValue.getObject();
                     ArrayList<ComboBoxBuilding> comboBoxBuildingArrayList = ComboBoxBuilding.list(comboBoxPlanetValue);
                     comboBoxBuilding.setItems(FXCollections.observableArrayList(comboBoxBuildingArrayList));
                     comboBoxBuilding.setValue(comboBoxBuildingArrayList.get(0));
@@ -72,7 +72,7 @@ public class AutoBuilderLeafTaskController {
     }
 
     public void add() {
-        Planet planet = comboBoxPlanet.getValue().getPlanet();
+        Planet planet = (Planet) comboBoxPlanet.getValue().getObject();
         Building building = comboBoxBuilding.getValue().getBuilding();
         building.setRequiredResources(null);
         building.setProductionTime(null);

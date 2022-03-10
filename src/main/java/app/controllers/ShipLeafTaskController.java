@@ -52,7 +52,7 @@ public class ShipLeafTaskController {
     }
 
     public void update() {
-        ArrayList<ComboBoxPlanet> comboBoxPlanetArrayList = ComboBoxPlanet.list(DataLoader.planets.getPlanetList());
+        ArrayList<ComboBoxPlanet> comboBoxPlanetArrayList = ComboBoxPlanet.planetList(DataLoader.planets.getPlanetList());
         if(!comboBoxPlanetArrayList.isEmpty()) {
             comboBoxPlanet.setItems(FXCollections.observableArrayList(comboBoxPlanetArrayList));
             comboBoxPlanet.setValue(comboBoxPlanetArrayList.get(0));
@@ -65,7 +65,7 @@ public class ShipLeafTaskController {
         }
 
         comboBoxShip.valueProperty().addListener((observable, oldValue, newValue) -> {
-            Planet planet = comboBoxPlanet.getValue().getPlanet();
+            Planet planet = (Planet) comboBoxPlanet.getValue().getObject();
             if(newValue != null){
                 Ship ship = comboBoxShip.getValue().getShip();
                 botWindowController.setRequirementsTechnology(ship.getDataTechnology().getRequiredTechnologies(),planet);
@@ -77,7 +77,7 @@ public class ShipLeafTaskController {
     private final ArrayList<ShipLeafTaskItemConnector> connectors = new ArrayList<>();
     @FXML
     public void add() {
-        Planet planet = comboBoxPlanet.getValue().getPlanet();
+        Planet planet = (Planet) comboBoxPlanet.getValue().getObject();
         Ship ship = comboBoxShip.getValue().getShip();
         int value = Integer.parseInt(textFieldValue.getText().equals("") ? "0":textFieldValue.getText());
         int hour = Integer.parseInt(textFieldHour.getText().equals("") ? "0":textFieldHour.getText());

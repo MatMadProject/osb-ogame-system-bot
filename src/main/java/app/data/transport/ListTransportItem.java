@@ -105,8 +105,8 @@ public class ListTransportItem implements Serializable, LSD {
         TransportItem transportItem = null;
         if(!queueList.isEmpty())
             transportItem = queueList.stream()
-                    .filter(item -> item.getPlanetStart().equals(newTransportItem.getPlanetStart())
-                    && item.getPlanetEnd().equals(newTransportItem.getPlanetEnd()))
+                    .filter(item -> item.getObjectStart().equals(newTransportItem.getObjectStart())
+                    && item.getObjectEnd().equals(newTransportItem.getObjectEnd()))
                     .findFirst().orElse(null);
 
         return transportItem != null;

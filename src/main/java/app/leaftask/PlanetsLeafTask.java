@@ -43,6 +43,7 @@ public class PlanetsLeafTask extends LeafTask{
             Moon moon;
             if(PlanetsList.planetHasMoon(OgameWeb.webDriver,i)){
                 moon = new Moon(i);
+                moon.setCoordinate(new Coordinate(coordinate));
                 planet.setMoon(moon);
             }
             //Update data planet: name and position on list

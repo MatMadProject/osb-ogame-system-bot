@@ -6,6 +6,8 @@ import ogame.DataTechnology;
 import ogame.OgameWeb;
 import ogame.eventbox.Event;
 import ogame.eventbox.FleetDetails;
+import ogame.planets.Coordinate;
+import ogame.planets.Moon;
 import ogame.planets.Planet;
 import ogame.planets.Resources;
 import ogame.ships.Mission;
@@ -123,18 +125,25 @@ public class TransportLeafTask extends LeafTask{
     }
 
     private void dataDownloading(TransportItem transportItem) {
-        final long TIME_SHIFT_SECONDS = 4L;
+        final long TIME_SHIFT_SECONDS = 5L;
         long itemStatusTime = transportItem.getStatusTimeInMilliseconds()/1000;
         long flightDuration = transportItem.getFlyDurationInSeconds() * 2;
         long estimatedReturnTime = itemStatusTime + flightDuration;
+        Coordinate startObjectCoordinate = transportItem.getObjectStart() instanceof Planet
+                ? ((Planet) transportItem.getObjectStart()).getCoordinate()
+                : ((Moon) transportItem.getObjectStart()).getCoordinate();
+        Coordinate endObjectCoordinate = transportItem.getObjectEnd() instanceof Planet
+                ? ((Planet) transportItem.getObjectEnd()).getCoordinate()
+                : ((Moon) transportItem.getObjectEnd()).getCoordinate();
         
         Event returnEvent;
         if(!openEventBox())
             return;
         Waiter.sleep(200,200);
-        ArrayList<Event> eventList = EventBoxContent.events(OgameWeb.webDriver, Mission.TRANSPORT);
+        ArrayList<Event> eventList = EventBoxContent.events(OgameWeb.webDriver, Mission.TRANSPORT,
+                startObjectCoordinate,endObjectCoordinate);
         //Downloads correct event of expedition
-        returnEvent = getCorrectEventFromEventBox(eventList,transportItem.getPlanetEnd().getCoordinate(),TIME_SHIFT_SECONDS,estimatedReturnTime);
+        returnEvent = getCorrectEventFromEventBox(eventList,TIME_SHIFT_SECONDS,estimatedReturnTime);
         if(returnEvent == null){
             getAntiLooping().reset();
             transportItem.setStatus(Status.SENDING);
@@ -175,11 +184,13 @@ public class TransportLeafTask extends LeafTask{
     }
 
     private void sending(TransportItem transportItem) {
-        Planet plantStart  = transportItem.getPlanetStart();
-        Planet planetEnd = transportItem.getPlanetEnd();
+        Object objectStart  = transportItem.getObjectStart();
+        Coordinate endObjectCoordinate = transportItem.getObjectEnd() instanceof Planet
+                ? ((Planet) transportItem.getObjectEnd()).getCoordinate()
+                : ((Moon) transportItem.getObjectEnd()).getCoordinate();
         final long ONE_HOUR = 3600L;
 
-        if(!clickPlanet(plantStart))
+        if(!clickOnPlanetListObject(objectStart))
             return;
         if(!clickFleetDispatch())
             return;
@@ -223,8 +234,11 @@ public class TransportLeafTask extends LeafTask{
             transportItem.setRequiredNextFlight(true);
 
         FleetDispatch.clickContinueToFleet2(OgameWeb.webDriver);
-        if(!inputCoordinate(planetEnd.getCoordinate()))
+        if(!inputCoordinate(endObjectCoordinate))
             return;
+        if(transportItem.getObjectEnd() instanceof Moon)
+            if(!selectMoonDestinationObject())
+                return;
 
         if(!selectFleetMission(Mission.TRANSPORT))
             return;
@@ -254,10 +268,10 @@ public class TransportLeafTask extends LeafTask{
         transportItem.setMaxStorage(maxStorage);
         transportItem.setFreeStorage(freeStorage);
 
-        transportItem.setStatus(Status.DATA_DOWNLOADING);
-        transportItem.setStatusTimeInMilliseconds();
-
-        FleetDispatch.sendFleet(OgameWeb.webDriver);
+        if(sendFleet()){
+            transportItem.setStatus(Status.DATA_DOWNLOADING);
+            transportItem.setStatusTimeInMilliseconds();
+        }
     }
 
     private void setRequiredShipToTransportResources(TransportItem transportItem, long resourcesToTransport){

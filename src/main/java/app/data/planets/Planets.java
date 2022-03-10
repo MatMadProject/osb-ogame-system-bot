@@ -91,8 +91,14 @@ public class Planets implements LSD, Serializable {
             planetList.add(planet);
             AppLog.print(Planets.class.getName(),0,"Added new planet. " + planet.getCoordinate().getText());
         }
-        else
+        else{
             AppLog.print(Planets.class.getName(),0,"Planet " + planet.getCoordinate().getText() + "  exists on list.");
+            if(planet.hasMoon() && !getPlanet(planet).hasMoon()){
+                getPlanet(planet).setMoon(planet.getMoon());
+                AppLog.print(Planets.class.getName(),0,"Added moon to planet. " + planet.getCoordinate().getText());
+            }
+        }
+
     }
 
     /**

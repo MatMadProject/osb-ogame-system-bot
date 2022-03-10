@@ -11,7 +11,6 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
-import ogame.planets.Planet;
 import ogame.planets.Resources;
 import ogame.utils.log.AppLog;
 
@@ -95,8 +94,8 @@ public class TransportLeafTaskController {
     }
     @FXML
     void add() {
-        Planet planetStart = comboBoxPlanetStart.getValue().getPlanet();
-        Planet planetEnd = comboBoxPlanetEnd.getValue().getPlanet();
+        Object objectStart = comboBoxPlanetStart.getValue().getObject();
+        Object objectEnd =  comboBoxPlanetEnd.getValue().getObject();
         int hour = Integer.parseInt(textFieldHour.getText().equals("") ? "0":textFieldHour.getText());
         int minute = Integer.parseInt(textFieldMinute.getText().equals("") ? "0":textFieldMinute.getText());
         int seconds = Integer.parseInt(textFieldSeconds.getText().equals("") ? "0":textFieldSeconds.getText());
@@ -105,7 +104,7 @@ public class TransportLeafTaskController {
         long crystal = Long.parseLong(textFieldCrystal.getText().equals("") ? "0" : textFieldCrystal.getText());
         long deuterium = Long.parseLong(textFieldDeuter.getText().equals("") ? "0" : textFieldDeuter.getText());
 
-        TransportItem transportItem = new TransportItem(planetStart,planetEnd, time);
+        TransportItem transportItem = new TransportItem(objectStart,objectEnd, time);
         transportItem.setAutotransport(selectedAutotransport);
         transportItem.setSingleExecute(selectedSingle);
         transportItem.setSelectedSmallTransporter(selectedSmallTransporter);
@@ -114,7 +113,7 @@ public class TransportLeafTaskController {
         if(!selectedAutotransport)
             transportItem.setDeclaredResources(new Resources(metal,crystal,deuterium,0));
 
-        if(planetEnd.equals(planetStart)){
+        if(objectEnd.equals(objectStart)){
             setError("Selected the same planet for start and end flight.");
             return;
         }
@@ -122,14 +121,14 @@ public class TransportLeafTaskController {
             TransportLeafTaskItemConnector connector = new TransportLeafTaskItemConnector(transportItem,this);
             vBoxQueue.getChildren().add(connector.content());
             connectors.add(connector);
-            AppLog.print(TransportLeafTaskController.class.getName(),2,"Add to queue transport from " + planetStart.getCoordinate().getText()
-                    + " to " + planetEnd.getCoordinate().getText());
+            AppLog.print(TransportLeafTaskController.class.getName(),2,"Add to queue transport from " + comboBoxPlanetStart.getValue()
+                    + " to " + comboBoxPlanetEnd.getValue());
         }else
-            setError("On queue exists transport from " + planetStart.getCoordinate().getText() + " to "
-                    + planetEnd.getCoordinate().getText());
+            setError("On queue exists transport from " + comboBoxPlanetStart.getValue() + " to "
+                    + comboBoxPlanetEnd.getValue());
     }
     public void update() {
-        ArrayList<ComboBoxPlanet> comboBoxPlanetArrayList = ComboBoxPlanet.list(DataLoader.planets.getPlanetList());
+        ArrayList<ComboBoxPlanet> comboBoxPlanetArrayList = ComboBoxPlanet.planetAndMoonList(DataLoader.planets.getPlanetList());
         if(!comboBoxPlanetArrayList.isEmpty()) {
             comboBoxPlanetStart.setItems(FXCollections.observableArrayList(comboBoxPlanetArrayList));
             comboBoxPlanetStart.setValue(comboBoxPlanetArrayList.get(0));

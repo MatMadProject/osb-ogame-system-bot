@@ -18,7 +18,7 @@ import java.util.Objects;
 public class Expedition implements Serializable {
 
     private static final long serialVersionUID = 1992L;
-    private final Planet planet;
+    private final Object planetListObject;
     private final Coordinate destinationCoordinate;
     private ArrayList<Ship> declaredShips;
     private ArrayList<FleetDetailsShip> returningFleet = new ArrayList<>();
@@ -35,8 +35,9 @@ public class Expedition implements Serializable {
     private long endTimeInSeconds;
     private long statusTimeInMilliseconds;
 
+    @Deprecated
     public Expedition(Planet startObject, Coordinate targetCoordinate, ArrayList<Ship> declaredShips) {
-        this.planet = startObject;
+        this.planetListObject = startObject;
         this.destinationCoordinate = targetCoordinate;
         this.declaredShips = declaredShips;
         status = Status.SENDING;
@@ -45,8 +46,18 @@ public class Expedition implements Serializable {
         setShipsBefore();
     }
 
-    public Planet getPlanet() {
-        return planet;
+    public Expedition(Object startObject, Coordinate targetCoordinate, ArrayList<Ship> declaredShips) {
+        this.planetListObject = startObject;
+        this.destinationCoordinate = targetCoordinate;
+        this.declaredShips = declaredShips;
+        status = Status.SENDING;
+        statusTimeInMilliseconds = System.currentTimeMillis();
+        id = String.valueOf(DataLoader.expeditions.getId());
+        setShipsBefore();
+    }
+
+    public Object getPlanetListObject() {
+        return planetListObject;
     }
 
     public Coordinate getDestinationCoordinate() {
@@ -158,7 +169,7 @@ public class Expedition implements Serializable {
     }
 
     public Expedition copy(){
-        Expedition expedition = new Expedition(this.planet,this.destinationCoordinate,this.declaredShips);
+        Expedition expedition = new Expedition(this.planetListObject,this.destinationCoordinate,this.declaredShips);
         expedition.setLootedResources(this.lootedResources);
         expedition.setStorage(this.storage);
         expedition.setShipsBefore(this.shipsBefore);
