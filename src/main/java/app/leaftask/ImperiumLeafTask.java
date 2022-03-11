@@ -1,6 +1,7 @@
 package app.leaftask;
 
 import app.data.DataLoader;
+import app.data.local.LocalName;
 import app.data.planets.ColonyData;
 import app.data.planets.ColonyDataItem;
 import app.data.planets.Planets;
@@ -14,10 +15,7 @@ import ogame.DataTechnology;
 import ogame.planets.*;
 import ogame.researches.Research;
 import ogame.Type;
-import ogame.tabs.Facilities;
-import ogame.tabs.Overview;
-import ogame.tabs.ResourceSettings;
-import ogame.tabs.Supplies;
+import ogame.tabs.*;
 import ogame.utils.Waiter;
 import ogame.utils.watch.Date;
 import ogame.utils.watch.Time;
@@ -44,11 +42,16 @@ public class ImperiumLeafTask extends LeafTask{
                     updatePlayerData();
                 if(DataLoader.researches.isUpdateData())
                     updateResearches(DataLoader.researches.getResearchList());
+                if(!DataLoader.localNameGameObjects.isDataLoaded()){
+                    setShipLocalName();
+                    setDefenceLocalName();
+                }
 
                 setLastTimeExecute(System.currentTimeMillis());
             }
         }
     }
+
 
     private void updateData(){
         Planets planets = DataLoader.planets;
@@ -69,6 +72,37 @@ public class ImperiumLeafTask extends LeafTask{
                     break;
             }
             DataLoader.planets.save();
+        }
+    }
+
+    private void setDefenceLocalName() {
+        if(!DataLoader.localNameGameObjects.isDefenceLocalNameLoaded()){
+            List<DataTechnology> defence = DataTechnology.dataTechnologyList(Type.DEFENCE);
+            if(!clickDefence())
+                return;
+            for(DataTechnology dataTechnology : defence){
+                String localName = Defence.localNameOfDefence(OgameWeb.webDriver,dataTechnology);
+                DataLoader.localNameGameObjects.addLocalName(new LocalName(localName,dataTechnology));
+            }
+            DataLoader.localNameGameObjects.setDefenceLocalNameLoaded();
+        }
+    }
+
+    private void setShipLocalName() {
+        if(!DataLoader.localNameGameObjects.isShipsLocalNameLoaded()){
+            List<DataTechnology> batlleShips = DataTechnology.dataTechnologyList(Type.BATTLE);
+            List<DataTechnology> civilShips = DataTechnology.dataTechnologyList(Type.CIVIL);
+            if(!clickShipyard())
+                return;
+            for(DataTechnology dataTechnology : batlleShips){
+                String localName = Shipyard.localNameOfShip(OgameWeb.webDriver,dataTechnology);
+                DataLoader.localNameGameObjects.addLocalName(new LocalName(localName,dataTechnology));
+            }
+            for(DataTechnology dataTechnology : civilShips){
+                String localName = Shipyard.localNameOfShip(OgameWeb.webDriver,dataTechnology);
+                DataLoader.localNameGameObjects.addLocalName(new LocalName(localName,dataTechnology));
+            }
+            DataLoader.localNameGameObjects.setShipsLocalNameLoaded();
         }
     }
 
@@ -108,7 +142,12 @@ public class ImperiumLeafTask extends LeafTask{
             research.setLevel(level);
             research.setLocalName(localName);
             research.setStatus(status);
+            if(!DataLoader.localNameGameObjects.isResearchesLocalNameLoaded()){
+                DataLoader.localNameGameObjects.addLocalName(new LocalName(localName,research.getDataTechnology()));
+            }
         }
+        if(!DataLoader.localNameGameObjects.isResearchesLocalNameLoaded())
+            DataLoader.localNameGameObjects.setResearchesLocalNameLoaded();
         DataLoader.researches.save();
         DataLoader.researches.setUpdateData(false);
     }
@@ -226,7 +265,12 @@ public class ImperiumLeafTask extends LeafTask{
                         building.setLocalName(localName);
                         building.setStatus(status);
                     }
+                    if(!DataLoader.localNameGameObjects.isProductionBuildingsLocalNameLoaded())
+                        DataLoader.localNameGameObjects.addLocalName(new LocalName(localName,building.getDataTechnology()));
+
                 }
+                if(!DataLoader.localNameGameObjects.isProductionBuildingsLocalNameLoaded())
+                    DataLoader.localNameGameObjects.setProductionBuildingsLocalNameLoaded();
                 planet.setUpdateResourceBuilding(false);
             }
         }
@@ -257,7 +301,12 @@ public class ImperiumLeafTask extends LeafTask{
                     building.setLevel(level);
                     building.setLocalName(localName);
                     building.setStatus(status);
+                    if(!DataLoader.localNameGameObjects.isTechnologyBuildingsLocalNameLoaded())
+                        DataLoader.localNameGameObjects.addLocalName(new LocalName(localName,building.getDataTechnology()));
+
                 }
+                if(!DataLoader.localNameGameObjects.isTechnologyBuildingsLocalNameLoaded())
+                    DataLoader.localNameGameObjects.setTechnologyBuildingsLocalNameLoaded();
                 planet.setUpdateTechnologyBuilding(false);
             }
         }

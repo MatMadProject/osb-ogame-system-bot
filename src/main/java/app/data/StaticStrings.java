@@ -54,7 +54,7 @@ public class StaticStrings {
     //Ship
     public static final String SHIP_FILE = "ship";
     //Local
-    public static final String LOCAL_FILE = "local-name";
+    public static final String LOCAL_NAME_FILE = "local-name";
     /*
     FOLDERS
      */
