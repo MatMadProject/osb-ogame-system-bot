@@ -45,12 +45,13 @@ public class AutoResearchLeafTaskItemController {
             AppLog.print(AutoResearchLeafTaskItemController.class.getName(),2,"Remove research from history: Upgrade "+ itemAutoResearch.getResearch().getName() + " to "
                     + itemAutoResearch.getUpgradeLevel() +" level on " + itemAutoResearch.getPlanet().getCoordinate().getText() + ".");
         }else{
+            if(itemAutoResearch.isFirstOnQueue())
+                DataLoader.listItemAutoResearch.startNextResearchOnQueue();
+
             DataLoader.listItemAutoResearch.getQueueList().remove(itemAutoResearch);
             autoResearchLeafTaskController.updateQueueList();
             AppLog.print(AutoResearchLeafTaskItemController.class.getName(),2,"Remove research from queue: Upgrade "+ itemAutoResearch.getResearch().getName() + " to "
                     + itemAutoResearch.getUpgradeLevel() +" level on " + itemAutoResearch.getPlanet().getCoordinate().getText() + ".");
-            if(itemAutoResearch.isFirstOnQueue())
-                DataLoader.listItemAutoResearch.startNextResearchOnQueue();
         }
         DataLoader.listItemAutoResearch.save();
     }

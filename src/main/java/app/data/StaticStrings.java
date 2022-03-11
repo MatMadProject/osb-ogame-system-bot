@@ -53,6 +53,8 @@ public class StaticStrings {
     public static final String DEFENCE_FILE = "defence";
     //Ship
     public static final String SHIP_FILE = "ship";
+    //Local
+    public static final String LOCAL_FILE = "local-name";
     /*
     FOLDERS
      */

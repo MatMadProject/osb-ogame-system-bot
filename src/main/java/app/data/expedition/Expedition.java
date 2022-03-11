@@ -170,6 +170,7 @@ public class Expedition implements Serializable {
 
     public Expedition copy(){
         Expedition expedition = new Expedition(this.planetListObject,this.destinationCoordinate,this.declaredShips);
+        expedition.setReturningFleet(this.returningFleet);
         expedition.setLootedResources(this.lootedResources);
         expedition.setStorage(this.storage);
         expedition.setShipsBefore(this.shipsBefore);
